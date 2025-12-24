@@ -5,14 +5,19 @@ import { useRouter } from 'next/navigation';
 
 export default function ManageItemPage() {
   const router = useRouter();
-    
+  
   useEffect(() => {
     router.push('/manageitem/products');
   }, [router]);
 
-  return (
-    
-      Loading
-    
-  );
+  return null;
 }
+
+
+
+
+// import { redirect } from "next/navigation";
+
+// export default function ManageItemPage() {
+//   redirect("/manageitem");
+// }
