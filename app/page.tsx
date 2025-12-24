@@ -1,3 +1,24 @@
+import { redirect } from 'next/navigation';
+
+export default function HomePage() {
+  redirect('/adminProfile');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import Image from "next/image";
 
 // export default function Home() {
@@ -63,10 +84,3 @@
 //     </div>
 //   );
 // }
-
-
-import { redirect } from 'next/navigation';
-
-export default function HomePage() {
-  redirect('/activityHistoryPage');
-}

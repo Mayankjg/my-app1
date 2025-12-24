@@ -2,20 +2,8 @@
 
 import React, { useState } from 'react';
 
-interface FormData {
-    userName: string;
-    firstName: string;
-    lastName: string;
-    designation: string;
-    country: string;
-    countryCode: string;
-    contactNo: string;
-    gender: string;
-    profileImage: File | null;
-}
-
 export default function AdminProfile() {
-    const [formData, setFormData] = useState<FormData>({
+    const [formData, setFormData] = useState({
         userName: '',
         firstName: '',
         lastName: '',
@@ -27,25 +15,25 @@ export default function AdminProfile() {
         profileImage: null
     });
 
-    const [emailUpdates, setEmailUpdates] = useState<boolean>(true);
-    const [reminderMandatory, setReminderMandatory] = useState<string>('Yes');
-    const [showSuccess, setShowSuccess] = useState<boolean>(false);
-    const [timezone, setTimezone] = useState<string>('Asia/Kolkata');
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [emailUpdates, setEmailUpdates] = useState(true);
+    const [reminderMandatory, setReminderMandatory] = useState('Yes');
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [timezone, setTimezone] = useState('Asia/Kolkata');
+    const [imagePreview, setImagePreview] = useState(null);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
         if (!file) return;
 
         setFormData(prev => ({ ...prev, profileImage: file }));
 
         const reader = new FileReader();
-        reader.onloadend = () => setImagePreview(reader.result as string);
+        reader.onloadend = () => setImagePreview(reader.result);
         reader.readAsDataURL(file);
     };
 
