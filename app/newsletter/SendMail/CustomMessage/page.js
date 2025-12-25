@@ -20,9 +20,7 @@ export default function CustomMessage() {
 
   useEffect(() => {
     const savedTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
-    if (savedTemplates.length > 0) {
-      setTemplates(prevTemplates => [...prevTemplates, ...savedTemplates]);
-    }
+    setTemplates(savedTemplates);
   }, []);
 
   useEffect(() => {
@@ -228,6 +226,10 @@ export default function CustomMessage() {
   const applyTemplate = (templateId) => {
     if (!templateId) {
       setSelectedTemplate("");
+      if (quillRef.current) {
+        quillRef.current.setContents([]);
+      }
+      setShowTemplateDropdown(false);
       return;
     }
     
@@ -335,9 +337,6 @@ export default function CustomMessage() {
                     className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 border-b border-gray-100 last:border-b-0"
                   >
                     <div className="font-medium">{t.name}</div>
-                    {t.isCustom && (
-                      <div className="text-xs text-blue-600 mt-0.5">Custom Template</div>
-                    )}
                   </div>
                 ))}
               </div>
