@@ -16,13 +16,14 @@ export default function CustomMessage() {
   const [showSourceCode, setShowSourceCode] = useState(false);
   const [sourceCode, setSourceCode] = useState('');
   const [quillLoaded, setQuillLoaded] = useState(false);
+  const [templates, setTemplates] = useState([]);
 
-  const templates = [
-    { id: 1, name: 'Welcome Email', content: '<h2>Welcome to Our Service!</h2><p>Thank you for joining us...</p>' },
-    { id: 2, name: 'Product Launch', content: '<h2>New Product Alert!</h2><p>We are excited to announce...</p>' },
-    { id: 3, name: 'Newsletter', content: '<h2>Monthly Newsletter</h2><p>Here are the latest updates...</p>' },
-    { id: 4, name: 'Promotional Offer', content: '<h2>Special Discount!</h2><p>Get 50% off on selected items...</p>' },
-  ];
+  useEffect(() => {
+    const savedTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
+    if (savedTemplates.length > 0) {
+      setTemplates(prevTemplates => [...prevTemplates, ...savedTemplates]);
+    }
+  }, []);
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -224,13 +225,15 @@ export default function CustomMessage() {
     </div>
   );
 
-  const applyTemplate = (id) => {
-    if (!id) {
+  const applyTemplate = (templateId) => {
+    if (!templateId) {
       setSelectedTemplate("");
       return;
     }
-    setSelectedTemplate(id);
-    const temp = templates.find(t => t.id === id);
+    
+    setSelectedTemplate(templateId);
+    const temp = templates.find(t => t.id === templateId);
+    
     if (temp && quillRef.current) {
       quillRef.current.root.innerHTML = temp.content;
     }
@@ -241,6 +244,9 @@ export default function CustomMessage() {
     <>
       <style>{`
         .ql-container{font-family:inherit}
+        .ql-editor{color:black!important}
+        .ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul{color:black!important}
+        .ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
         .ql-tooltip{left:auto!important;right:0!important;transform:none!important}
         .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
         .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
@@ -323,8 +329,15 @@ export default function CustomMessage() {
               <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto">
                 <div onClick={() => applyTemplate("")} className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Choose Template</div>
                 {templates.map(t => (
-                  <div key={t.id} onClick={() => applyTemplate(t.id)} className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">
-                    {t.name}
+                  <div 
+                    key={t.id} 
+                    onClick={() => applyTemplate(t.id)} 
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 border-b border-gray-100 last:border-b-0"
+                  >
+                    <div className="font-medium">{t.name}</div>
+                    {t.isCustom && (
+                      <div className="text-xs text-blue-600 mt-0.5">Custom Template</div>
+                    )}
                   </div>
                 ))}
               </div>
