@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 
 export default function CustomMessage() {
+  const router = useRouter();
   const quillRef = useRef(null);
   const editorContainerRef = useRef(null);
   const editorElementRef = useRef(null);
@@ -18,6 +20,7 @@ export default function CustomMessage() {
   const [quillLoaded, setQuillLoaded] = useState(false);
   const [templates, setTemplates] = useState([]);
 
+  // Load saved templates from localStorage
   useEffect(() => {
     const savedTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
     setTemplates(savedTemplates);
@@ -226,6 +229,7 @@ export default function CustomMessage() {
   const applyTemplate = (templateId) => {
     if (!templateId) {
       setSelectedTemplate("");
+      // Clear the editor when "Choose Template" is selected
       if (quillRef.current) {
         quillRef.current.setContents([]);
       }
@@ -424,7 +428,7 @@ export default function CustomMessage() {
 
         <div className="flex flex-wrap gap-6 pt-1">
           <button
-            onClick={() => alert('Single mail sent!')}
+            onClick={() => router.push('/newsletter/SendMail/SendSingleMail')}
             className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2 px-6 rounded text-sm flex items-center space-x-2 shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75"
           >
             <span>Send single Mail</span>
