@@ -54,28 +54,20 @@ export default function SendSingleMail() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="bg-white px-6 py-4 border-b border-gray-300 flex items-center justify-between sticky top-0 shadow-sm">
-        <h1 className="text-2xl font-normal text-gray-700">
-          Send <strong>Mail</strong>
-        </h1>
-        <div className="flex items-center gap-4">
-          <div className="bg-amber-700 text-white px-6 py-2.5 rounded shadow-md">
+    <div className="min-h-screen bg-gray-100 p-10">
+      <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-300 flex items-center justify-between">
+          <h1 className="text-2xl font-normal text-gray-700">
+            Send <strong>Mail</strong>
+          </h1>
+          <div className="bg-amber-700 text-white px-4 py-1 rounded shadow-md">
             <span className="font-medium">Remaining Emails:</span>
-            <span className="ml-3 font-bold text-lg">12363</span>
+            <span className="ml-3 font-bold text-lg">0</span>
           </div>
-          <button
-            onClick={() => router.back()}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2.5 rounded font-medium transition-colors"
-          >
-            ← Back
-          </button>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <div className="mb-4">
+        <div className="p-5">
+          <div className="mb-3">
             <label className="block text-gray-600 font-medium mb-2 text-base">
               Contact Name
             </label>
@@ -85,9 +77,10 @@ export default function SendSingleMail() {
               onChange={(e) => setContactName(e.target.value)}
               placeholder="Contact Name"
               onKeyPress={(e) => e.key === 'Enter' && document.getElementById('contactEmail').focus()}
-              className="w-full max-w-2xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 hover:border-gray-400 transition-colors"
+              className="w-full max-w-xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 hover:border-gray-400 transition-colors"
             />
           </div>
+
           <div className="mb-6">
             <label className="block text-gray-600 font-medium mb-2 text-base">
               Contact Email
@@ -99,42 +92,40 @@ export default function SendSingleMail() {
               onChange={(e) => setContactEmail(e.target.value)}
               placeholder="Contact Email"
               onKeyPress={(e) => e.key === 'Enter' && handleAddContact()}
-              className="w-full max-w-2xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 hover:border-gray-400 transition-colors"
+              className="w-full max-w-xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 hover:border-gray-400 transition-colors"
             />
           </div>
 
           <button
             onClick={handleAddContact}
-            className="bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-1 px-9 rounded mb-8 focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-md transition-colors"
+            className="bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-1 px-9 rounded mb-8 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors"
           >
             Add
           </button>
 
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">ContactList</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-1">ContactList</h2>
             
             <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
-              {/* Table Header */}
               <div className="bg-gray-100 grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-300">
                 <div className="col-span-1 flex items-center">
                   <input
                     type="checkbox"
                     checked={contactList.length > 0 && contactList.every(c => c.selected)}
                     onChange={handleToggleAllContacts}
-                    className="w-5 h-5 cursor-pointer accent-cyan-500"
+                    className="w-4 h-4 cursor-pointer accent-cyan-500"
                   />
                 </div>
                 <div className="col-span-5">
-                  <span className="text-blue-600 font-bold text-base uppercase tracking-wide">NAME</span>
+                  <span className="text-blue-600 font-bold text-sm uppercase tracking-wide">NAME</span>
                 </div>
                 <div className="col-span-6">
-                  <span className="text-blue-600 font-bold text-base uppercase tracking-wide">EMAIL</span>
+                  <span className="text-blue-600 font-bold text-sm uppercase tracking-wide">EMAIL</span>
                 </div>
               </div>
 
-              {/* Table Body */}
               {contactList.length === 0 ? (
-                <div className="text-center py-16">
+                <div className="text-center py-5">
                   <p className="text-red-400 text-lg font-medium">No record Found</p>
                 </div>
               ) : (
@@ -146,14 +137,14 @@ export default function SendSingleMail() {
                           type="checkbox"
                           checked={contact.selected}
                           onChange={() => handleToggleContact(contact.id)}
-                          className="w-5 h-5 cursor-pointer accent-cyan-500"
+                          className="w-4 h-4 cursor-pointer accent-cyan-500"
                         />
                       </div>
                       <div className="col-span-5 flex items-center">
-                        <span className="text-gray-700 text-base">{contact.name}</span>
+                        <span className="text-gray-700 text-sm">{contact.name}</span>
                       </div>
                       <div className="col-span-6 flex items-center">
-                        <span className="text-gray-700 text-base">{contact.email}</span>
+                        <span className="text-gray-700 text-sm">{contact.email}</span>
                       </div>
                     </div>
                   ))}
@@ -162,12 +153,11 @@ export default function SendSingleMail() {
             </div>
           </div>
 
-          {/* Send Button */}
           {contactList.length > 0 && (
-            <div className="flex justify-end mt-8">
+            <div className="flex justify-end mt-3">
               <button
                 onClick={handleSendMail}
-                className="bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-3 px-10 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400 shadow-md transition-colors"
+                className="bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors"
               >
                 Send Mail
               </button>
