@@ -17,7 +17,6 @@ export default function CustomMessage() {
   const [sourceCode, setSourceCode] = useState('');
   const [quillLoaded, setQuillLoaded] = useState(false);
 
-  // Sample templates data
   const templates = [
     { id: 1, name: 'Welcome Email', content: '<h2>Welcome to Our Service!</h2><p>Thank you for joining us...</p>' },
     { id: 2, name: 'Product Launch', content: '<h2>New Product Alert!</h2><p>We are excited to announce...</p>' },
@@ -25,7 +24,6 @@ export default function CustomMessage() {
     { id: 4, name: 'Promotional Offer', content: '<h2>Special Discount!</h2><p>Get 50% off on selected items...</p>' },
   ];
 
-  // Load Quill editor
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
@@ -48,7 +46,6 @@ export default function CustomMessage() {
     };
   }, []);
 
-  // Initialize Quill after it's loaded and DOM is ready
   useEffect(() => {
     if (!quillLoaded || showSourceCode || quillRef.current) return;
 
@@ -250,10 +247,7 @@ export default function CustomMessage() {
         .resizable-editor{resize:vertical;overflow:auto;min-height:150px;max-height:600px}
       `}</style>
 
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6 space-y-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">✍️ Custom Message</h2>
-
-        {/* Select Product */}
+      <div>
         <div className="mb-6">
           <label htmlFor="product-select-custom" className="block text-sm font-semibold text-gray-700 mb-2">
             Select Product
@@ -278,12 +272,11 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* From Email */}
         <div className="mb-6">
           <label htmlFor="email-select-custom" className="block text-sm font-semibold text-gray-700 mb-2">
             From Email
           </label>
-          <div className="flex items-center gap-2 max-w-2xl">
+          <div className="flex items-center gap-2 max-w-2xl w-136">
             <div className="relative flex-grow">
               <select
                 id="email-select-custom"
@@ -310,7 +303,6 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* Template Selector */}
         <div className="mb-6">
           <label htmlFor="template-select" className="block text-sm font-semibold text-gray-700 mb-2">
             Reply with
@@ -340,7 +332,6 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* Subject */}
         <div className="mb-6">
           <label htmlFor="subject-input" className="block text-sm font-semibold text-gray-700 mb-2">
             Subject
@@ -355,9 +346,7 @@ export default function CustomMessage() {
           />
         </div>
 
-        {/* Message Editor */}
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
           {showSourceCode ? (
             <div>
               <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">🔧 Source Code Mode - Edit HTML directly</div>
@@ -369,7 +358,7 @@ export default function CustomMessage() {
               />
             </div>
           ) : (
-            <div ref={editorContainerRef} className="border-2 border-gray-300 rounded overflow-hidden resizable-editor bg-white">
+            <div ref={editorContainerRef} className="border-2 border-gray-300 rounded overflow-hidden resizable-editor">
               <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
                 <MenuButton label="File" items={[
                   { label: 'New message', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') },
@@ -421,8 +410,7 @@ export default function CustomMessage() {
           )}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-6 pt-4">
+        <div className="flex flex-wrap gap-6 pt-1">
           <button
             onClick={() => alert('Single mail sent!')}
             className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2 px-6 rounded text-sm flex items-center space-x-2 shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75"

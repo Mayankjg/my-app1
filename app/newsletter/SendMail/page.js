@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Template from './template/page';
+import Template from './Template/page';
 import CustomMessage from './CustomMessage/page';
 
 export default function SendMail() {
@@ -14,8 +14,7 @@ export default function SendMail() {
         *::-webkit-scrollbar{display:none!important}
       `}</style>
 
-      <div className="bg-gray-200 min-h-screen overflow-y-scroll p-4 sm:p-6 md:p-8 flex flex-col items-center" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        {/* Header */}
+      <div className="bg-gray-200 h-screen overflow-y-scroll p-4 sm:p-6 md:p-8 flex flex-col items-center" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <div className="w-full max-w-6xl bg-white shadow-sm rounded-t-lg border-b border-gray-300 px-4 sm:px-6 md:px-8 py-3 flex flex-wrap justify-between items-center gap-4 mb-0">
           <h1 className="text-xl sm:text-2xl font-normal text-gray-700">Send Mail</h1>
           <div className="flex items-center gap-4">
@@ -29,9 +28,7 @@ export default function SendMail() {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="w-full max-w-6xl bg-white rounded-b-lg shadow-md px-4 sm:px-6 md:px-8 py-6 mb-8">
-          {/* Message Type Selector */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Choose Message Type
@@ -62,9 +59,6 @@ export default function SendMail() {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 my-6"></div>
-
-          {/* Render Selected Component */}
           {messageType === 'template' ? <Template /> : <CustomMessage />}
         </div>
 
