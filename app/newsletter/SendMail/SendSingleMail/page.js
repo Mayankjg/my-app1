@@ -54,7 +54,7 @@ export default function SendSingleMail() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-300 flex items-center justify-between">
           <h1 className="text-2xl font-normal text-gray-700">
@@ -77,7 +77,7 @@ export default function SendSingleMail() {
               onChange={(e) => setContactName(e.target.value)}
               placeholder="Contact Name"
               onKeyPress={(e) => e.key === 'Enter' && document.getElementById('contactEmail').focus()}
-              className="w-full max-w-xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 hover:border-gray-400 transition-colors"
+              className="w-full max-w-xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-400 transition-colors"
             />
           </div>
 
@@ -92,13 +92,13 @@ export default function SendSingleMail() {
               onChange={(e) => setContactEmail(e.target.value)}
               placeholder="Contact Email"
               onKeyPress={(e) => e.key === 'Enter' && handleAddContact()}
-              className="w-full max-w-xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 hover:border-gray-400 transition-colors"
+              className="w-full max-w-xl border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none hover:bg-gray-100 hover:border-gray-400 transition-colors"
             />
           </div>
 
           <button
             onClick={handleAddContact}
-            className="bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-1 px-9 rounded mb-8 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors"
+            className="bg-cyan-400 hover:bg-cyan-500 text-white font-medium py-1 px-9 rounded mb-8 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors"
           >
             Add
           </button>

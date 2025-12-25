@@ -20,9 +20,9 @@ export default function SendMail() {
           <div className="flex items-center gap-4">
             <div className="bg-amber-800 text-white px-4 sm:px-6 py-2.5 rounded-md flex items-center gap-3">
               <span className="text-sm">Remaining Emails:</span>
-              <span className="bg-white text-amber-800 px-3 py-1 rounded font-semibold text-sm">455</span>
+              <span className="bg-white text-amber-800 px-3 py-0.5 rounded font-semibold text-sm">0</span>
             </div>
-            <button className="bg-pink-600 hover:bg-pink-700 text-white px-4 sm:px-6 py-2.5 rounded-md text-sm font-medium">
+            <button className="bg-pink-600 hover:bg-pink-700 text-white px-4 sm:px-6 py-3 rounded-md text-sm font-medium">
               Topup Now
             </button>
           </div>
