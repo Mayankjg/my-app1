@@ -20,7 +20,6 @@ export default function CustomMessage() {
   const [quillLoaded, setQuillLoaded] = useState(false);
   const [templates, setTemplates] = useState([]);
 
-  // Load saved templates from localStorage
   useEffect(() => {
     const savedTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
     setTemplates(savedTemplates);
@@ -229,7 +228,6 @@ export default function CustomMessage() {
   const applyTemplate = (templateId) => {
     if (!templateId) {
       setSelectedTemplate("");
-      // Clear the editor when "Choose Template" is selected
       if (quillRef.current) {
         quillRef.current.setContents([]);
       }
