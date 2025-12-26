@@ -6,6 +6,25 @@ export default function Template() {
   const [selectedProduct, setSelectedProduct] = useState('');
   const [selectedEmail, setSelectedEmail] = useState('');
   const [subject, setSubject] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+  const templates = [
+    {
+      id: 'default-01',
+      name: 'Default 01',
+      thumbnail: 'https://via.placeholder.com/200x280/e8d4c4/8b4513?text=Default+05'
+    },
+    {
+      id: 'default-02',
+      name: 'Default 02',
+      thumbnail: 'https://via.placeholder.com/200x280/f5c4c4/c24040?text=Default+04'
+    },
+    {
+      id: 'default-03',
+      name: 'Default 03',
+      thumbnail: 'https://via.placeholder.com/200x280/d4c4b4/6b5444?text=Default+06'
+    }
+  ];
 
   return (
     <div>
@@ -76,6 +95,46 @@ export default function Template() {
           placeholder="Subject"
           className="shadow appearance-none border border-gray-300 rounded w-full max-w-md py-2 px-4 text-gray-700 leading-tight focus:outline-none hover:bg-gray-100 text-sm"
         />
+      </div>
+
+      {/* Template Selection Section */}
+      <div className="mb-8">
+        <h3 className="text-sm font-semibold text-gray-700 mb-4">Select Template</h3>
+        <div className="flex flex-wrap gap-6">
+          {templates.map((template) => (
+            <div
+              key={template.id}
+              onClick={() => setSelectedTemplate(template.id)}
+              className={`cursor-pointer transition-all ${
+                selectedTemplate === template.id
+                  ? 'ring-4 ring-blue-400'
+                  : 'ring-1 ring-gray-300 hover:ring-2 hover:ring-gray-400'
+              }`}
+            >
+              <div className="bg-white rounded-lg shadow-md overflow-hidden w-50">
+                <div className="relative">
+                  <img
+                    src={template.thumbnail}
+                    alt={template.name}
+                    className="w-full h-40 object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                    <p className="text-white text-sm font-medium text-center">
+                      {template.name}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-center py-2">
+                  <div className={`w-3 h-3 rounded-full ${
+                    selectedTemplate === template.id
+                      ? 'bg-blue-500'
+                      : 'bg-gray-300'
+                  }`}></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-6 pt-1">
