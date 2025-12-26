@@ -15,10 +15,13 @@ export default function EmailSection() {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [subject, setSubject] = useState("");
   const [from, setFrom] = useState("");
+  const [fromEmails, setFromEmails] = useState(["mayank@gmail.com", "magan@gmail.com"]); // Default emails
+  const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [toEmail, setToEmail] = useState("mpl1@gmail.com");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showTemplateForm, setShowTemplateForm] = useState(false);
   const [newEmailField, setNewEmailField] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState("");
   const [templateName, setTemplateName] = useState("");
   const [templateVisibility, setTemplateVisibility] = useState("admin");
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
@@ -64,6 +67,12 @@ export default function EmailSection() {
         setTemplates([defaultTemplate, ...savedTemplates.filter(t => t?.id && t?.name)]);
         const savedLogs = JSON.parse(localStorage.getItem("emailLogs") || "[]");
         setEmailLogs(savedLogs.filter(log => log?.id));
+        
+        // Load saved email addresses
+        const savedEmails = JSON.parse(localStorage.getItem("fromEmails") || "[]");
+        if (savedEmails.length > 0) {
+          setFromEmails([...new Set([...fromEmails, ...savedEmails])]);
+        }
       } catch (error) { console.error("Error loading data:", error); }
     };
     loadData();
@@ -276,6 +285,50 @@ export default function EmailSection() {
     setShowTemplateDropdown(false); 
   };
 
+  const selectFromEmail = (email) => {
+    setFrom(email);
+    setShowFromDropdown(false);
+  };
+
+  const addNewEmail = () => {
+    if (!newEmailField.trim()) {
+      alert("Please enter an email address");
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newEmailField)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      const updatedEmails = [...fromEmails, newEmailField.trim()];
+      setFromEmails(updatedEmails);
+      localStorage.setItem("fromEmails", JSON.stringify(updatedEmails.slice(2))); // Save only added emails
+      setFrom(newEmailField.trim());
+      alert("Email added successfully!");
+      setShowAddForm(false);
+      setNewEmailField("");
+      setNewDisplayName("");
+    } catch (error) {
+      console.error("Error adding email:", error);
+      alert("Error adding email.");
+    }
+  };
+
+  const deleteFromEmail = (email, e) => {
+    e.stopPropagation();
+    if (window.confirm(`Delete ${email} from list?`)) {
+      const updatedEmails = fromEmails.filter(e => e !== email);
+      setFromEmails(updatedEmails);
+      const defaultEmails = ["mayank@gmail.com", "magan@gmail.com"];
+      const customEmails = updatedEmails.filter(e => !defaultEmails.includes(e));
+      localStorage.setItem("fromEmails", JSON.stringify(customEmails));
+      if (from === email) setFrom("");
+    }
+  };
+
   const sendEmail = () => {
     if (!quillRef.current) return;
     const messageText = quillRef.current.getText().trim();
@@ -335,25 +388,44 @@ export default function EmailSection() {
       {showAddForm && (
         <div className="fixed inset-0 bg-black/60 flex items-start justify-center z-50 pt-10">
           <div className="bg-white w-[90%] md:w-[700px] rounded-lg shadow-xl p-6 relative animate-slideDown">
-            <button onClick={() => setShowAddForm(false)} className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-700">×</button>
-            <h3 className="text-lg font-semibold mb-2 text-gray-800">Add and verify email address to send mail.</h3>
+            <button onClick={() => { setShowAddForm(false); setNewEmailField(""); setNewDisplayName(""); }} className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-700">×</button>
+            <h3 className="text-lg font-semibold mb-2 text-gray-800">Add New Email Address</h3>
             <div className="bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded mb-3">
-              Please check your mail After Click on verify button.
+              Add a new email address to use as sender.
             </div>
             <div className="mb-3">
               <label className="block mb-2 text-sm text-gray-700 font-medium">Display Name</label>
-              <input type="text" className="w-full border border-gray-300 px-3 py-2 rounded" placeholder="Enter display name" />
+              <input 
+                type="text" 
+                value={newDisplayName}
+                onChange={(e) => setNewDisplayName(e.target.value)}
+                className="w-full border border-gray-300 px-3 py-2 rounded" 
+                placeholder="Enter display name" 
+              />
             </div>
             <div className="mb-3">
-              <label className="block mb-2 text-sm text-gray-700 font-medium">Email</label>
-              <input type="email" value={newEmailField} onChange={(e) => setNewEmailField(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded" placeholder="Enter email address" />
+              <label className="block mb-2 text-sm text-gray-700 font-medium">Email Address</label>
+              <input 
+                type="email" 
+                value={newEmailField} 
+                onChange={(e) => setNewEmailField(e.target.value)} 
+                className="w-full border border-gray-300 px-3 py-2 rounded" 
+                placeholder="Enter email address" 
+              />
             </div>
             <div className="flex gap-3">
-              <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded font-medium" onClick={() => { 
-                if (newEmailField.trim()) { alert("Verification sent to: " + newEmailField); setShowAddForm(false); setNewEmailField(""); } 
-                else { alert("Please enter an email address"); }
-              }}>Verify</button>
-              <button className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-6 py-2 rounded font-medium" onClick={() => { setShowAddForm(false); setNewEmailField(""); }}>Cancel</button>
+              <button 
+                className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded font-medium" 
+                onClick={addNewEmail}
+              >
+                Add Email
+              </button>
+              <button 
+                className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-6 py-2 rounded font-medium" 
+                onClick={() => { setShowAddForm(false); setNewEmailField(""); setNewDisplayName(""); }}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -399,14 +471,45 @@ export default function EmailSection() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-4">
           <div className="flex-1 w-full">
             <label className="block mb-2 text-gray-700 font-medium">From</label>
-            <input type="text" className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100" value={from} placeholder="Enter From" onChange={(e) => setFrom(e.target.value)} />
+            <div className="relative">
+              <button 
+                onClick={() => setShowFromDropdown(!showFromDropdown)} 
+                className="border border-gray-300 w-full p-2.5 rounded-sm bg-white hover:bg-gray-100 text-left flex justify-between items-center"
+              >
+                <span className="text-gray-700">{from || "Select Email"}</span>
+                <span className="text-gray-400">▼</span>
+              </button>
+              {showFromDropdown && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-sm shadow-lg max-h-60 overflow-y-auto hide-scrollbar">
+                  <div onClick={() => selectFromEmail("")} className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-500">
+                    Select Email
+                  </div>
+                  {fromEmails.map((email, idx) => (
+                    <div key={idx} className="px-3 py-2 hover:bg-gray-100 cursor-pointer flex justify-between items-center group">
+                      <span onClick={() => selectFromEmail(email)} className="flex-1 text-gray-700">
+                         {email}
+                      </span>
+                      {idx >= 2 && (
+                        <button 
+                          onClick={(e) => deleteFromEmail(email, e)} 
+                          className="ml-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity" 
+                          title="Delete email"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           <button onClick={() => setShowAddForm(true)} className="bg-gray-500 text-white px-5 py-2.5 rounded hover:bg-gray-700 font-medium whitespace-nowrap">Add More</button>
         </div>
 
         <div className="mb-4">
           <label className="block mb-2 text-gray-700 font-medium">To</label>
-          <textarea className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100 resize-y hide-scrollbar" value={toEmail} onChange={(e) => setToEmail(e.target.value)} rows={2} />
+          <textarea className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100 resize-y hide-scrollbar" value={toEmail} onChange={(e) => setToEmail(e.target.value)} rows={1} />
         </div>
 
         <div className="mb-4">
