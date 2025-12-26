@@ -62,7 +62,6 @@ export default function AddCustomTemplatePage() {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
-  // File Menu Actions
   const handleFileAction = (action) => {
     if (action === 'new') {
       if (confirm('Create new document? Unsaved changes will be lost.')) {
@@ -92,7 +91,6 @@ export default function AddCustomTemplatePage() {
     setOpenMenu(null);
   };
 
-  // Edit Menu Actions
   const handleEditAction = (action) => {
     const editor = quillRef.current;
     if (!editor) return;
@@ -119,7 +117,6 @@ export default function AddCustomTemplatePage() {
     setOpenMenu(null);
   };
 
-  // Insert Menu Actions
   const handleInsertAction = (action) => {
     const editor = quillRef.current;
     if (!editor) return;
@@ -176,7 +173,6 @@ export default function AddCustomTemplatePage() {
     setOpenMenu(null);
   };
 
-  // View Menu Actions
   const handleViewAction = (action) => {
     if (action === 'sourceCode') {
       if (!showSourceCode) {
@@ -197,7 +193,6 @@ export default function AddCustomTemplatePage() {
     setOpenMenu(null);
   };
 
-  // Format Menu Actions
   const handleFormatAction = (format, value) => {
     const editor = quillRef.current;
     if (!editor) return;
@@ -251,7 +246,6 @@ export default function AddCustomTemplatePage() {
     }
   };
 
-  // Menu Button Component
   const MenuButton = ({ label, items }) => (
     <div className="relative inline-block">
       <button
@@ -284,8 +278,15 @@ export default function AddCustomTemplatePage() {
   );
 
   return (
-    <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-y-auto flex justify-center items-start font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
+    <>
       <style>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
         .ql-container {
           font-family: inherit;
         }
@@ -314,8 +315,6 @@ export default function AddCustomTemplatePage() {
           border: 1px solid #ddd; 
           padding: 8px; 
         }
-        
-        /* Resizable Editor */
         .resizable-editor {
           resize: vertical;
           overflow: auto;
@@ -324,175 +323,177 @@ export default function AddCustomTemplatePage() {
         }
       `}</style>
       
-      <div ref={editorContainerRef} className="bg-white w-full border border-[black] max-w-[1400px]">
-        <div className="bg-white w-full px-4 sm:px-6 py-4 border-b border-gray-300">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-xl sm:text-2xl font-normal text-gray-700">
-              Add Custom <strong>Template</strong>
-            </h1>
-            <button
-              onClick={() => router.push("/newsletter/TemplatesListPage")}
-              className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 active:bg-gray-500 text-gray-700 px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base font-medium transition-colors whitespace-nowrap"
-            >
-              ← Back to Templates
-            </button>
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-6 md:p-8">
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
-              Template Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={templateName}
-              onChange={(e) => setTemplateName(e.target.value)}
-              placeholder="Enter template name"
-              className="w-full border border-gray-300 text-black rounded-md px-3 sm:px-4 py-2.5 text-sm sm:text-base focus:outline-none focus:ring-2 hover:bg-gray-100 focus:border-transparent"
-            />
+      <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-y-auto hide-scrollbar flex justify-center items-start font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
+        <div ref={editorContainerRef} className="bg-white w-full border border-[black] max-w-[1400px]">
+          <div className="bg-white w-full px-4 sm:px-6 py-4 border-b border-gray-300">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h1 className="text-xl sm:text-2xl font-normal text-gray-700">
+                Add Custom <strong>Template</strong>
+              </h1>
+              <button
+                onClick={() => router.push("/newsletter/TemplatesListPage")}
+                className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 active:bg-gray-500 text-gray-700 px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base font-medium transition-colors whitespace-nowrap"
+              >
+                ← Back to Templates
+              </button>
+            </div>
           </div>
 
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
-              Message <strong className="text-red-500">(Note: Please Enter Plain Text Only For Better Result)</strong>
-            </label>
-            
-            {showSourceCode ? (
-              <div>
-                <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">
-                  🔧 Source Code Mode - Edit HTML directly
+          <div className="p-4 sm:p-6 md:p-8">
+            <div className="mb-4 sm:mb-6">
+              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
+                Template Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                placeholder="Enter template name"
+                className="w-full border border-gray-300 text-black rounded-md px-3 sm:px-4 py-2.5 text-sm sm:text-base focus:outline-none focus:ring-2 hover:bg-gray-100 focus:border-transparent"
+              />
+            </div>
+
+            <div className="mb-4 sm:mb-6">
+              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
+                Message <strong className="text-red-500">(Note: Please Enter Plain Text Only For Better Result)</strong>
+              </label>
+              
+              {showSourceCode ? (
+                <div>
+                  <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">
+                    🔧 Source Code Mode - Edit HTML directly
+                  </div>
+                  <textarea
+                    value={sourceCode}
+                    onChange={(e) => setSourceCode(e.target.value)}
+                    className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y"
+                    placeholder="HTML source code..."
+                  />
                 </div>
-                <textarea
-                  value={sourceCode}
-                  onChange={(e) => setSourceCode(e.target.value)}
-                  className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y"
-                  placeholder="HTML source code..."
+              ) : (
+                <div className="border-2 border-gray-300 rounded-lg overflow-hidden resizable-editor">
+                  <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
+                    <MenuButton 
+                      label="File"
+                      items={[
+                        { label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') },
+                        { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }
+                      ]}
+                    />
+                    <MenuButton 
+                      label="Edit"
+                      items={[
+                        { label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') },
+                        { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') },
+                        'divider',
+                        { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') },
+                        { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') },
+                        { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleEditAction('paste') },
+                        'divider',
+                        { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }
+                      ]}
+                    />
+                    <MenuButton 
+                      label="Insert"
+                      items={[
+                        { label: 'Insert image', onClick: () => handleInsertAction('image') },
+                        { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link') },
+                        { label: 'Insert video', onClick: () => handleInsertAction('video') },
+                        { label: 'Insert table', onClick: () => handleInsertAction('table') },
+                        { label: 'Horizontal line', onClick: () => handleInsertAction('hr') }
+                      ]}
+                    />
+                    <MenuButton 
+                      label="View"
+                      items={[
+                        { label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') },
+                        { label: 'Source code', onClick: () => handleViewAction('sourceCode') }
+                      ]}
+                    />
+                    <MenuButton 
+                      label="Format"
+                      items={[
+                        { label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') },
+                        { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') },
+                        { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') },
+                        { label: 'Strikethrough', onClick: () => handleFormatAction('strike') },
+                        'divider',
+                        { label: 'Superscript', onClick: () => handleFormatAction('script', 'super') },
+                        { label: 'Subscript', onClick: () => handleFormatAction('script', 'sub') }
+                      ]}
+                    />
+                    <MenuButton 
+                      label="Table"
+                      items={[
+                        { label: 'Insert table', onClick: () => handleInsertAction('table') }
+                      ]}
+                    />
+                    <MenuButton 
+                      label="Tools"
+                      items={[
+                        { label: 'Source code', onClick: () => handleViewAction('sourceCode') },
+                        { label: 'Word count', onClick: () => {
+                          const text = quillRef.current?.getText() || '';
+                          const words = text.trim().split(/\s+/).filter(w => w).length;
+                          const chars = text.length;
+                          alert(`📊 Statistics:\n\nWords: ${words}\nCharacters: ${chars}`);
+                        }}
+                      ]}
+                    />
+                  </div>
+
+                  <div id="editor" style={{ minHeight: '150px', backgroundColor: 'white' }}></div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="admin"
+                  checked={visibility === "admin"}
+                  onChange={(e) => setVisibility(e.target.value)}
+                  className="w-4 h-4 cursor-pointer accent-blue-600"
                 />
-              </div>
-            ) : (
-              <div className="border-2 border-gray-300 rounded-lg overflow-hidden resizable-editor">
-                <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
-                  <MenuButton 
-                    label="File"
-                    items={[
-                      { label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') },
-                      { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }
-                    ]}
-                  />
-                  <MenuButton 
-                    label="Edit"
-                    items={[
-                      { label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') },
-                      { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') },
-                      'divider',
-                      { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') },
-                      { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') },
-                      { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleEditAction('paste') },
-                      'divider',
-                      { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }
-                    ]}
-                  />
-                  <MenuButton 
-                    label="Insert"
-                    items={[
-                      { label: 'Insert image', onClick: () => handleInsertAction('image') },
-                      { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link') },
-                      { label: 'Insert video', onClick: () => handleInsertAction('video') },
-                      { label: 'Insert table', onClick: () => handleInsertAction('table') },
-                      { label: 'Horizontal line', onClick: () => handleInsertAction('hr') }
-                    ]}
-                  />
-                  <MenuButton 
-                    label="View"
-                    items={[
-                      { label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') },
-                      { label: 'Source code', onClick: () => handleViewAction('sourceCode') }
-                    ]}
-                  />
-                  <MenuButton 
-                    label="Format"
-                    items={[
-                      { label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') },
-                      { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') },
-                      { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') },
-                      { label: 'Strikethrough', onClick: () => handleFormatAction('strike') },
-                      'divider',
-                      { label: 'Superscript', onClick: () => handleFormatAction('script', 'super') },
-                      { label: 'Subscript', onClick: () => handleFormatAction('script', 'sub') }
-                    ]}
-                  />
-                  <MenuButton 
-                    label="Table"
-                    items={[
-                      { label: 'Insert table', onClick: () => handleInsertAction('table') }
-                    ]}
-                  />
-                  <MenuButton 
-                    label="Tools"
-                    items={[
-                      { label: 'Source code', onClick: () => handleViewAction('sourceCode') },
-                      { label: 'Word count', onClick: () => {
-                        const text = quillRef.current?.getText() || '';
-                        const words = text.trim().split(/\s+/).filter(w => w).length;
-                        const chars = text.length;
-                        alert(`📊 Statistics:\n\nWords: ${words}\nCharacters: ${chars}`);
-                      }}
-                    ]}
-                  />
-                </div>
+                <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900">
+                  Visible To Admin
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="all"
+                  checked={visibility === "all"}
+                  onChange={(e) => setVisibility(e.target.value)}
+                  className="w-4 h-4 cursor-pointer accent-blue-600"
+                />
+                <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900">
+                  Visible To All
+                </span>
+              </label>
+            </div>
 
-                <div id="editor" style={{ minHeight: '150px', backgroundColor: 'white' }}></div>
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                name="visibility"
-                value="admin"
-                checked={visibility === "admin"}
-                onChange={(e) => setVisibility(e.target.value)}
-                className="w-4 h-4 cursor-pointer accent-blue-600"
-              />
-              <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900">
-                Visible To Admin
-              </span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                name="visibility"
-                value="all"
-                checked={visibility === "all"}
-                onChange={(e) => setVisibility(e.target.value)}
-                className="w-4 h-4 cursor-pointer accent-blue-600"
-              />
-              <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900">
-                Visible To All
-              </span>
-            </label>
-          </div>
-
-          <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
-            <button
-              onClick={handleSaveCustomTemplate}
-              className="w-full sm:w-auto bg-cyan-500 text-white px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base hover:bg-cyan-600 active:bg-cyan-700 font-medium transition-colors shadow-sm"
-            >
-              Save Template
-            </button>
-          
-            <button
-              onClick={() => router.push("/newsletter/TemplatesListPage")}
-              className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 active:bg-gray-500 text-gray-700 px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base font-medium transition-colors shadow-sm"
-            >
-              Cancel
-            </button>
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
+              <button
+                onClick={handleSaveCustomTemplate}
+                className="w-full sm:w-auto bg-cyan-500 text-white px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base hover:bg-cyan-600 active:bg-cyan-700 font-medium transition-colors shadow-sm"
+              >
+                Save Template
+              </button>
+            
+              <button
+                onClick={() => router.push("/newsletter/TemplatesListPage")}
+                className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 active:bg-gray-500 text-gray-700 px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base font-medium transition-colors shadow-sm"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
