@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Template from './Template/page';
+import Template from './template/page';
 import CustomMessage from './CustomMessage/page';
 
 export default function SendMail() {
