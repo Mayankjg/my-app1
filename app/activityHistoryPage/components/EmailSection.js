@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Trash2, ChevronDown } from "lucide-react";
 
 const defaultTemplate = { id: "default-1", name: "Choose Template", content: "<p>Hello, this is a follow-up email.</p>", isCustom: false };
-
+  
 export default function EmailSection() {
   const quillRef = useRef(null);
   const editorContainerRef = useRef(null);
