@@ -15,7 +15,7 @@ export default function EmailSection() {
   const [from, setFrom] = useState("");
   const [fromEmails, setFromEmails] = useState(["mayank@gmail.com", "magan@gmail.com"]);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
-  const [toEmail, setToEmail] = useState("");
+  const [toEmail, setToEmail] = useState("mayank@gmail.com");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showTemplateForm, setShowTemplateForm] = useState(false);
   const [newEmailField, setNewEmailField] = useState("");
