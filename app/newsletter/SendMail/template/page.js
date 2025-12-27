@@ -203,6 +203,7 @@ export default function Template() {
 
   return (
     <>
+    
       <style>{`.ql-container{font-family:inherit}
       .ql-editor,.ql-editor p,.ql-editor h1,.ql-editor h2,
       .ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,
@@ -216,7 +217,9 @@ export default function Template() {
       .ql-toolbar.ql-snow .ql-formats{display:inline-flex!important;margin-right:15px!important}
       .ql-toolbar.ql-snow::-webkit-scrollbar{height:8px}.ql-toolbar.ql-snow::-webkit-scrollbar-track{background:#f1f1f1}
       .ql-toolbar.ql-snow::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
-      .ql-toolbar.ql-snow::-webkit-scrollbar-thumb:hover{background:#555}`}</style>
+      .ql-toolbar.ql-snow::-webkit-scrollbar-thumb:hover{background:#555}`}
+      </style>
+
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
           <label className="block text-sm font-semibold text-gray-700 mb-2">Select Product</label>
