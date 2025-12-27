@@ -14,7 +14,7 @@ export default function SendMail() {
         *::-webkit-scrollbar{display:none!important}
       `}</style>
 
-      <div className="bg-gray-200 h-screen overflow-y-scroll p-4 sm:p-6 md:p-8 flex flex-col items-center" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="bg-gray-200 h-screen overflow-y-scroll p-4 sm:p-6 md:p-4 flex flex-col items-center" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <div className="w-full max-w-6xl bg-white shadow-sm rounded-t-lg border-b border-gray-300 px-4 sm:px-6 md:px-8 py-3 flex flex-wrap justify-between items-center gap-4 mb-0">
           <h1 className="text-xl sm:text-2xl font-normal text-gray-700">Send Mail</h1>
           <div className="flex items-center gap-4">
