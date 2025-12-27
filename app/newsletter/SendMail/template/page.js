@@ -203,12 +203,26 @@ export default function Template() {
 
   return (
     <>
-      <style>{`.ql-container{font-family:inherit}.ql-editor,.ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}.ql-tooltip{left:auto!important;right:0!important;transform:none!important}.ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}.ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}.resizable-editor{resize:vertical;overflow:auto;min-height:400px;max-height:800px}.ql-toolbar.ql-snow{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;border-bottom:1px solid #ccc!important;padding:8px!important;white-space:nowrap!important}.ql-toolbar.ql-snow .ql-formats{display:inline-flex!important;margin-right:15px!important}.ql-toolbar.ql-snow::-webkit-scrollbar{height:8px}.ql-toolbar.ql-snow::-webkit-scrollbar-track{background:#f1f1f1}.ql-toolbar.ql-snow::-webkit-scrollbar-thumb{background:#888;border-radius:4px}.ql-toolbar.ql-snow::-webkit-scrollbar-thumb:hover{background:#555}`}</style>
+      <style>{`.ql-container{font-family:inherit}
+      .ql-editor,.ql-editor p,.ql-editor h1,.ql-editor h2,
+      .ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,
+      .ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,
+      .ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
+      .ql-tooltip{left:auto!important;right:0!important;transform:none!important}
+      .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
+      .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
+      .resizable-editor{resize:vertical;overflow:auto;min-height:400px;max-height:800px}
+      .ql-toolbar.ql-snow{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;border-bottom:1px solid #ccc!important;padding:8px!important;white-space:nowrap!important}
+      .ql-toolbar.ql-snow .ql-formats{display:inline-flex!important;margin-right:15px!important}
+      .ql-toolbar.ql-snow::-webkit-scrollbar{height:8px}.ql-toolbar.ql-snow::-webkit-scrollbar-track{background:#f1f1f1}
+      .ql-toolbar.ql-snow::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
+      .ql-toolbar.ql-snow::-webkit-scrollbar-thumb:hover{background:#555}`}</style>
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
           <label className="block text-sm font-semibold text-gray-700 mb-2">Select Product</label>
           <div className="relative max-w-md">
-            <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
+            <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} 
+            className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
               <option value="">Select Products</option><option value="Galaxy S1">Galaxy S1</option><option value="Motorola">Motorola</option><option value="Iphone 15">Iphone 15</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
