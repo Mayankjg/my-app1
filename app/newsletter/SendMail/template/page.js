@@ -17,33 +17,21 @@ export default function Template() {
   const [quillLoaded, setQuillLoaded] = useState(false);
 
   const templates = [
-    {
-      id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'],
-      content: {
-        title: 'Premium Business Solution', subtitle: 'Elevate Your Business to New Heights',
+    { id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'],
+      content: { title: 'Premium Business Solution', subtitle: 'Elevate Your Business to New Heights',
         description: 'Transform your business with our comprehensive solutions designed for modern enterprises.',
         body: 'We provide cutting-edge technology and personalized service to help you achieve your goals. Our team of experts is dedicated to ensuring your success every step of the way.',
-        callToAction: 'Get Started Today', footer: 'Thank you for choosing our services. We look forward to working with you.'
-      }
-    },
-    {
-      id: 'default-02', name: 'Default 02', colors: ['#f5c4c4', '#e89c9c', '#c24040'],
-      content: {
-        title: 'Creative Design Studio', subtitle: 'Where Ideas Come to Life',
+        callToAction: 'Get Started Today', footer: 'Thank you for choosing our services. We look forward to working with you.' }},
+    { id: 'default-02', name: 'Default 02', colors: ['#f5c4c4', '#e89c9c', '#c24040'],
+      content: { title: 'Creative Design Studio', subtitle: 'Where Ideas Come to Life',
         description: 'We are a team of passionate designers creating stunning digital experiences.',
         body: 'Our mission is to bring your vision to reality with creativity and precision. From concept to completion, we handle every detail with care and expertise.',
-        callToAction: 'View Our Portfolio', footer: 'Let\'s create something amazing together. Contact us today!'
-      }
-    },
-    {
-      id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'],
-      content: {
-        title: 'Organic Food Marketplace', subtitle: 'Fresh, Healthy, Sustainable',
+        callToAction: 'View Our Portfolio', footer: 'Let\'s create something amazing together. Contact us today!' }},
+    { id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'],
+      content: { title: 'Organic Food Marketplace', subtitle: 'Fresh, Healthy, Sustainable',
         description: 'Discover the finest organic products sourced directly from local farms.',
         body: 'We believe in sustainable farming practices and delivering fresh, nutritious food to your doorstep. Every product is carefully selected to meet our high standards of quality.',
-        callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.'
-      }
-    }
+        callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.' }}
   ];
 
   useEffect(() => {
@@ -63,31 +51,8 @@ export default function Template() {
 
   useEffect(() => {
     if (!quillLoaded || !selectedTemplate || showSourceCode) return;
-    const html = `<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif">
-    <div style="background:linear-gradient(135deg,${selectedTemplate.colors[0]} 0%,${selectedTemplate.colors[1]} 50%,${selectedTemplate.colors[2]} 100%);
-    padding:40px;border-radius:12px 12px 0 0;text-align:center">
-    <h1 style="color:#1f2937;font-size:32px;font-weight:bold;margin:0 0 10px 0">${selectedTemplate.content.title}</h1>
-    <h2 style="color:#374151;font-size:20px;font-weight:600;margin:0 0 15px 0">${selectedTemplate.content.subtitle}</h2>
-    <p style="color:#4b5563;font-size:16px;line-height:1.6;margin:0">${selectedTemplate.content.description}</p>
-    </div>
-    <div style="background:#fff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb">
-    <h3 style="color:#1f2937;font-size:22px;font-weight:bold;margin:0 0 20px 0">Welcome!</h3>
-    <p style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 20px 0">${selectedTemplate.content.body}</p>
-    <p style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 30px 0">We're excited to help you get started and look forward to supporting you every step of the way.</p>
-    <div style="text-align:center;margin:30px 0">
-    <a href="#" style="display:inline-block;background:linear-gradient(135deg,${selectedTemplate.colors[1]},${selectedTemplate.colors[2]});
-    color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1)">${selectedTemplate.content.callToAction}</a>
-    </div>
-    </div>
-    <div style="background:#f9fafb;padding:30px 40px;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none"><p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center">
-    ${selectedTemplate.content.footer}</p>
-    <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0">
-    <p style="color:#9ca3af;font-size:12px;text-align:center;margin:0">© 2024 Your Company. All rights reserved.
-    <br>123 Business St, Suite 100, City, State 12345<br><a href="#" style="color:#3b82f6;text-decoration:none">Unsubscribe</a> | <a href="#" style="color:#3b82f6;text-decoration:none">View in Browser</a>
-    </p>
-    </div>
-    </div>`;
-
+    const html = `<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif"><div style="background:linear-gradient(135deg,${selectedTemplate.colors[0]} 0%,${selectedTemplate.colors[1]} 50%,${selectedTemplate.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center"><h1 style="color:#1f2937;font-size:32px;font-weight:bold;margin:0 0 10px 0">${selectedTemplate.content.title}</h1><h2 style="color:#374151;font-size:20px;font-weight:600;margin:0 0 15px 0">${selectedTemplate.content.subtitle}</h2><p style="color:#4b5563;font-size:16px;line-height:1.6;margin:0">${selectedTemplate.content.description}</p></div><div style="background:#fff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb"><h3 style="color:#1f2937;font-size:22px;font-weight:bold;margin:0 0 20px 0">Welcome!</h3><p style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 20px 0">${selectedTemplate.content.body}</p><p style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 30px 0">We're excited to help you get started and look forward to supporting you every step of the way.</p><div style="text-align:center;margin:30px 0"><a href="#" style="display:inline-block;background:linear-gradient(135deg,${selectedTemplate.colors[1]},${selectedTemplate.colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1)">${selectedTemplate.content.callToAction}</a></div></div><div style="background:#f9fafb;padding:30px 40px;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none"><p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center">${selectedTemplate.content.footer}</p><hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0"><p style="color:#9ca3af;font-size:12px;text-align:center;margin:0">© 2024 Your Company. All rights reserved.<br>123 Business St, Suite 100, City, State 12345<br><a href="#" style="color:#3b82f6;text-decoration:none">Unsubscribe</a> | <a href="#" style="color:#3b82f6;text-decoration:none">View in Browser</a></p></div></div>`;
+    
     if (quillRef.current) {
       quillRef.current.setText('');
       setTimeout(() => { quillRef.current.clipboard.dangerouslyPasteHTML(0, html); quillRef.current.setSelection(quillRef.current.getLength()); }, 50);
@@ -100,12 +65,10 @@ export default function Template() {
       try {
         const quill = new window.Quill(el, {
           theme: 'snow', placeholder: 'Edit your template content here...',
-          modules: {
-            toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          modules: { toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
             ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
-            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
-          }
+            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']] }
         });
         quillRef.current = quill;
         setTimeout(() => { quill.clipboard.dangerouslyPasteHTML(0, html); quill.setSelection(quill.getLength()); }, 100);
@@ -147,18 +110,14 @@ export default function Template() {
     if (action === 'image') { const url = window.prompt('Enter image URL:'); if (url) ed.insertEmbed(idx, 'image', url); }
     else if (action === 'link') {
       const url = window.prompt('Enter URL:');
-      if (url) {
-        if (rng && rng.length > 0) ed.formatText(rng.index, rng.length, 'link', url);
-        else { const txt = window.prompt('Enter link text:'); if (txt) ed.insertText(idx, txt, 'link', url); }
-      }
+      if (url) { if (rng && rng.length > 0) ed.formatText(rng.index, rng.length, 'link', url);
+        else { const txt = window.prompt('Enter link text:'); if (txt) ed.insertText(idx, txt, 'link', url); } }
     } else if (action === 'video') { const url = window.prompt('Enter video URL:'); if (url) ed.insertEmbed(idx, 'video', url); }
     else if (action === 'table') {
       const r = window.prompt('Rows:', '3'); const c = window.prompt('Columns:', '3');
-      if (r && c) {
-        let tbl = '<table border="1" style="border-collapse:collapse;width:100%">';
+      if (r && c) { let tbl = '<table border="1" style="border-collapse:collapse;width:100%">';
         for (let i = 0; i < parseInt(r); i++) { tbl += '<tr>'; for (let j = 0; j < parseInt(c); j++) tbl += '<td style="border:1px solid #ddd;padding:8px">&nbsp;</td>'; tbl += '</tr>'; }
-        tbl += '</table>'; ed.clipboard.dangerouslyPasteHTML(idx, tbl);
-      }
+        tbl += '</table>'; ed.clipboard.dangerouslyPasteHTML(idx, tbl); }
     } else if (action === 'hr') ed.insertText(idx, '\n---\n');
     setOpenMenu(null);
   };
@@ -203,33 +162,16 @@ export default function Template() {
 
   return (
     <>
-    
-      <style>{`.ql-container{font-family:inherit}
-      .ql-editor,.ql-editor p,.ql-editor h1,.ql-editor h2,
-      .ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,
-      .ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,
-      .ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
-      .ql-tooltip{left:auto!important;right:0!important;transform:none!important}
-      .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
-      .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
-      .resizable-editor{resize:vertical;overflow:auto;min-height:400px;max-height:800px}
-      .ql-toolbar.ql-snow{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;border-bottom:1px solid #ccc!important;padding:8px!important;white-space:nowrap!important}
-      .ql-toolbar.ql-snow .ql-formats{display:inline-flex!important;margin-right:15px!important}
-      .ql-toolbar.ql-snow::-webkit-scrollbar{height:8px}.ql-toolbar.ql-snow::-webkit-scrollbar-track{background:#f1f1f1}
-      .ql-toolbar.ql-snow::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
-      .ql-toolbar.ql-snow::-webkit-scrollbar-thumb:hover{background:#555}`}
-      </style>
-
+      <style>{`.ql-container{font-family:inherit}.ql-editor,.ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}.ql-tooltip{left:auto!important;right:0!important;transform:none!important}.ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}.ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}.resizable-editor{resize:vertical;overflow:auto;min-height:400px;max-height:800px}.ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:8px!important}.ql-toolbar.ql-snow .ql-formats{margin-right:15px!important;margin-bottom:5px!important}`}</style>
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
           <label className="block text-sm font-semibold text-gray-700 mb-2">Select Product</label>
           <div className="relative max-w-md">
-            <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} 
-            className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
+            <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
               <option value="">Select Products</option><option value="Galaxy S1">Galaxy S1</option><option value="Motorola">Motorola</option><option value="Iphone 15">Iphone 15</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z"/></svg>
             </div>
           </div>
         </div>
@@ -241,7 +183,7 @@ export default function Template() {
                 <option value="">Select Email</option><option value="mayank@gmail.com">mayank@gmail.com</option><option value="magan@gmail.com">magan@gmail.com</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z"/></svg>
               </div>
             </div>
             <button onClick={() => alert('Add new email')} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors"><span className="text-xl font-light">+</span></button>
@@ -250,7 +192,7 @@ export default function Template() {
         </div>
         <div className="mb-6">
           <label className="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
-          <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject" className="shadow appearance-none border border-gray-300 rounded w-full max-w-md py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50 text-sm" />
+          <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject" className="shadow appearance-none border border-gray-300 rounded w-full max-w-md py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50 text-sm"/>
         </div>
         {selectedProduct && (
           <div className="mb-8">
@@ -274,20 +216,20 @@ export default function Template() {
                 {showSourceCode ? (
                   <div>
                     <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">🔧 Source Code Mode</div>
-                    <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." />
+                    <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..."/>
                   </div>
                 ) : (
                   <div ref={editorContainerRef} className="border-2 border-gray-300 rounded-lg overflow-hidden resizable-editor">
                     <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
-                      <MenuButton label="File" items={[{ label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') }, { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }]} />
-                      <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') }, { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') }, 'divider', { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') }, { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') }, 'divider', { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }]} />
-                      <MenuButton label="Insert" items={[{ label: 'Insert image', onClick: () => handleInsertAction('image') }, { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link') }, { label: 'Insert video', onClick: () => handleInsertAction('video') }, { label: 'Insert table', onClick: () => handleInsertAction('table') }, { label: 'Horizontal line', onClick: () => handleInsertAction('hr') }]} />
-                      <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') }, { label: 'Source code', onClick: () => handleViewAction('sourceCode') }]} />
-                      <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') }, { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') }, { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') }, { label: 'Strikethrough', onClick: () => handleFormatAction('strike') }]} />
-                      <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleInsertAction('table') }]} />
-                      <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') }, { label: 'Word count', onClick: () => { const txt = quillRef.current?.getText() || ''; const w = txt.trim().split(/\s+/).filter(x => x).length; alert(`📊 Statistics:\n\nWords: ${w}\nCharacters: ${txt.length}`) } }]} />
+                      <MenuButton label="File" items={[{label:'New document',shortcut:'Ctrl+N',onClick:()=>handleFileAction('new')},{label:'Print',shortcut:'Ctrl+P',onClick:()=>handleFileAction('print')}]}/>
+                      <MenuButton label="Edit" items={[{label:'Undo',shortcut:'Ctrl+Z',onClick:()=>handleEditAction('undo')},{label:'Redo',shortcut:'Ctrl+Y',onClick:()=>handleEditAction('redo')},'divider',{label:'Cut',shortcut:'Ctrl+X',onClick:()=>handleEditAction('cut')},{label:'Copy',shortcut:'Ctrl+C',onClick:()=>handleEditAction('copy')},'divider',{label:'Select all',shortcut:'Ctrl+A',onClick:()=>handleEditAction('selectAll')}]}/>
+                      <MenuButton label="Insert" items={[{label:'Insert image',onClick:()=>handleInsertAction('image')},{label:'Insert link',shortcut:'Ctrl+K',onClick:()=>handleInsertAction('link')},{label:'Insert video',onClick:()=>handleInsertAction('video')},{label:'Insert table',onClick:()=>handleInsertAction('table')},{label:'Horizontal line',onClick:()=>handleInsertAction('hr')}]}/>
+                      <MenuButton label="View" items={[{label:'Fullscreen',shortcut:'F11',onClick:()=>handleViewAction('fullscreen')},{label:'Source code',onClick:()=>handleViewAction('sourceCode')}]}/>
+                      <MenuButton label="Format" items={[{label:'Bold',shortcut:'Ctrl+B',onClick:()=>handleFormatAction('bold')},{label:'Italic',shortcut:'Ctrl+I',onClick:()=>handleFormatAction('italic')},{label:'Underline',shortcut:'Ctrl+U',onClick:()=>handleFormatAction('underline')},{label:'Strikethrough',onClick:()=>handleFormatAction('strike')}]}/>
+                      <MenuButton label="Table" items={[{label:'Insert table',onClick:()=>handleInsertAction('table')}]}/>
+                      <MenuButton label="Tools" items={[{label:'Source code',onClick:()=>handleViewAction('sourceCode')},{label:'Word count',onClick:()=>{const txt=quillRef.current?.getText()||'';const w=txt.trim().split(/\s+/).filter(x=>x).length;alert(`📊 Statistics:\n\nWords: ${w}\nCharacters: ${txt.length}`)}}]}/>
                     </div>
-                    <div ref={editorElementRef} style={{ minHeight: '200px', backgroundColor: 'white' }}></div>
+                    <div ref={editorElementRef} style={{minHeight:'200px',backgroundColor:'white'}}></div>
                   </div>
                 )}
               </div>
@@ -295,9 +237,9 @@ export default function Template() {
           </div>
         )}
         <div className="flex flex-wrap gap-4 pt-1">
-          <button onClick={() => validateSend() && alert('Single mail sent!')} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors">Send Single Mail</button>
-          <button onClick={() => validateSend() && alert('Entire list contacted!')} className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors">Send Entire List</button>
-          <button onClick={() => validateSend() && alert('Group contact notified!')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors">Send Group Contact</button>
+          <button onClick={()=>validateSend()&&alert('Single mail sent!')} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors">Send Single Mail</button>
+          <button onClick={()=>validateSend()&&alert('Entire list contacted!')} className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors">Send Entire List</button>
+          <button onClick={()=>validateSend()&&alert('Group contact notified!')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors">Send Group Contact</button>
         </div>
       </div>
     </>
