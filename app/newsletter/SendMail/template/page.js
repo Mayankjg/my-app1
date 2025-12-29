@@ -267,7 +267,8 @@ export default function Template() {
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Select Product</label>
           <div className="relative w-full sm:max-w-md sm:flex-1">
-            <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
+            <select value={selectedProduct} onChange={(e) =>
+              setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
               <option value="">Select Products</option><option value="Galaxy S1">Galaxy S1</option><option value="Motorola">Motorola</option><option value="Iphone 15">Iphone 15</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -279,7 +280,8 @@ export default function Template() {
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">From Email</label>
           <div className="flex items-center gap-2 flex-1 w-full">
             <div className="relative w-full sm:max-w-md">
-              <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
+              <select value={selectedEmail} onChange={(e) => 
+                setSelectedEmail(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
                 <option value="">Select Email</option><option value="mayank@gmail.com">mayank@gmail.com</option><option value="magan@gmail.com">magan@gmail.com</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
