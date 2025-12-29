@@ -87,8 +87,10 @@ export default function Template() {
     </div>`;
 
     if (quillRef.current) {
-      quillRef.current.setText('');
-      setTimeout(() => { quillRef.current.clipboard.dangerouslyPasteHTML(0, html); quillRef.current.setSelection(quillRef.current.getLength()); }, 50);
+      quillRef.current.root.innerHTML = '';
+      setTimeout(() => { 
+        quillRef.current.clipboard.dangerouslyPasteHTML(0, html); 
+      }, 50);
       return;
     }
 
@@ -97,18 +99,26 @@ export default function Template() {
       if (!el || !window.Quill) return;
       try {
         const quill = new window.Quill(el, {
-          theme: 'snow', placeholder: 'Edit your template content here...',
+          theme: 'snow', 
+          placeholder: 'Edit your template content here...',
           modules: {
-            toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
-            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
+            toolbar: [
+              [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], 
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+              ['bold', 'italic', 'underline', 'strike'], 
+              [{ 'color': [] }, { 'background': [] }], 
+              [{ 'script': 'sub' }, { 'script': 'super' }],
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], 
+              [{ 'direction': 'rtl' }, { 'align': [] }],
+              ['blockquote', 'code-block'], 
+              ['link', 'image', 'video', 'formula'], 
+              ['clean']
+            ]
           }
         });
         quillRef.current = quill;
         setTimeout(() => {
           quill.clipboard.dangerouslyPasteHTML(0, html);
-          quill.setSelection(quill.getLength());
         }, 100);
       }
       catch (e) {
@@ -248,7 +258,8 @@ export default function Template() {
   return (
     <>
       <style>{`
-      .ql-container{font-family:inherit}
+      .ql-container{font-family:inherit;height:300px}
+      .ql-editor{height:100%}
       .ql-editor,.ql-editor p,
       .ql-editor h1,.ql-editor h2,.ql-editor h3,
       .ql-editor h4,.ql-editor h5,.ql-editor h6,
@@ -258,12 +269,13 @@ export default function Template() {
       .ql-tooltip{left:auto!important;right:0!important;transform:none!important}
       .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
       .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
-      .resizable-editor{resize:vertical;overflow:auto;min-height:400px;max-height:800px}
+      .resizable-editor{resize:vertical;overflow:auto;min-height:300px;max-height:600px}
       .ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:8px!important}
       .ql-toolbar.ql-snow .ql-formats{margin-right:15px!important;margin-bottom:5px!important}`}
       </style>
 
       <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+        {/* Select Product */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Select Product</label>
           <div className="relative w-full sm:max-w-md sm:flex-1">
@@ -276,6 +288,8 @@ export default function Template() {
             </div>
           </div>
         </div>
+
+        {/* From Email */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">From Email</label>
           <div className="flex items-center gap-2 flex-1 w-full">
@@ -292,47 +306,58 @@ export default function Template() {
             <button onClick={() => alert('Remove email')} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors flex-shrink-0"><span className="text-xl font-light">−</span></button>
           </div>
         </div>
-        <div className="mb-5">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4">
-            <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
-            <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject"
-              className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50 text-sm" />
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-            <div className="sm:min-w-[120px]"></div>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:flex-1">
-              <button onClick={() => validateSend() && alert('Single mail sent!')}
-                className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Single Mail</button>
-              <button onClick={() => validateSend() && alert('Entire list contacted!')}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Entire List</button>
-              <button onClick={() => validateSend() && alert('Group contact notified!')}
-                className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Group Contact</button>
-            </div>
-          </div>
+
+        {/* Subject */}
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
+          <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject"
+            className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50 text-sm" />
         </div>
+
+        {/* Select Template - Responsive */}
         {selectedProduct && (
-          <div className="mb-8">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Select Template</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-              {templates.map((t) => (
-                <div key={t.id} onClick={() => setSelectedTemplate(t)} className={`cursor-pointer transition-all rounded-lg ${selectedTemplate?.id === t.id ? 'ring-4 ring-blue-500 shadow-xl' : 'ring-1 ring-gray-300 hover:ring-2 hover:ring-blue-400 hover:shadow-lg'}`}>
-                  <div className="bg-white rounded-lg overflow-hidden shadow-md">
-                    <div className="relative h-64 p-6 flex flex-col justify-between" style={{ background: `linear-gradient(135deg,${t.colors[0]} 0%,${t.colors[1]} 50%,${t.colors[2]} 100%)` }}>
-                      <div><h3 className="text-xl font-bold text-gray-800 mb-2">{t.content.title}</h3><p className="text-sm text-gray-700 font-medium mb-3">{t.content.subtitle}</p><p className="text-xs text-gray-600 line-clamp-4">{t.content.description}</p></div>
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4"><p className="text-white text-sm font-semibold text-center">{t.name}</p></div>
+          <div className="mb-5">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">Select Template</label>
+              <div className="flex gap-3 flex-wrap w-full">
+                {templates.map((t) => (
+                  <div key={t.id} onClick={() => setSelectedTemplate(t)} 
+                    className={`cursor-pointer transition-all rounded-lg w-full sm:w-[140px] ${selectedTemplate?.id === t.id ? 'ring-2 ring-blue-500 shadow-lg' : 'ring-1 ring-gray-300 hover:ring-2 hover:ring-blue-400 hover:shadow-md'}`}
+                    style={{ height: '100px' }}>
+                    <div className="bg-white rounded-lg overflow-hidden shadow-sm h-full">
+                      <div className="relative h-full p-3 flex flex-col justify-between" 
+                        style={{ background: `linear-gradient(135deg,${t.colors[0]} 0%,${t.colors[1]} 50%,${t.colors[2]} 100%)` }}>
+                        <div>
+                          <h3 className="text-xs font-bold text-gray-800 mb-1 line-clamp-2">{t.content.title}</h3>
+                          <p className="text-[10px] text-gray-700 line-clamp-2">{t.content.subtitle}</p>
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent p-2">
+                          <p className="text-white text-[10px] font-semibold text-center">{t.name}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-center py-3 bg-white"><div className={`w-3 h-3 rounded-full transition-colors ${selectedTemplate?.id === t.id ? 'bg-blue-500' : 'bg-gray-300'}`}></div></div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-            {selectedTemplate && (
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Message Editor <span className="ml-2 text-blue-600 text-xs">(Editing: {selectedTemplate.name})</span></label>
+          </div>
+        )}
+
+        {/* Message Editor - Responsive */}
+        {selectedTemplate && (
+          <div className="mb-5">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+              <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">
+                Message Editor
+                <span className="block text-blue-600 text-xs font-normal mt-1">(Editing: {selectedTemplate.name})</span>
+              </label>
+              <div className="w-full">
                 {showSourceCode ? (
                   <div>
                     <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">🔧 Source Code Mode</div>
-                    <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." />
+                    <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} 
+                      className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[250px] bg-gray-50 resize-y" 
+                      placeholder="HTML source code..." />
                   </div>
                 ) : (
                   <div ref={editorContainerRef} className="border-2 border-gray-300 rounded-lg overflow-hidden resizable-editor">
@@ -348,13 +373,26 @@ export default function Template() {
                       <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleInsertAction('table') }]} />
                       <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') }, { label: 'Word count', onClick: () => { const txt = quillRef.current?.getText() || ''; const w = txt.trim().split(/\s+/).filter(x => x).length; alert(`📊 Statistics:\n\nWords: ${w}\nCharacters: ${txt.length}`) } }]} />
                     </div>
-                    <div ref={editorElementRef} style={{ minHeight: '200px', backgroundColor: 'white' }}></div>
+                    <div ref={editorElementRef} style={{ minHeight: '300px', backgroundColor: 'white' }}></div>
                   </div>
                 )}
               </div>
-            )}
+            </div>
           </div>
         )}
+
+        {/* Send Buttons */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <div className="sm:min-w-[120px]"></div>
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:flex-1">
+            <button onClick={() => validateSend() && alert('Single mail sent!')}
+              className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Single Mail</button>
+            <button onClick={() => validateSend() && alert('Entire list contacted!')}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Entire List</button>
+            <button onClick={() => validateSend() && alert('Group contact notified!')}
+              className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Group Contact</button>
+          </div>
+        </div>
       </div>
     </>
   );
