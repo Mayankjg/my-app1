@@ -459,7 +459,7 @@ export default function CustomMessage() {
               </button>
               <button
                 onClick={() => alert('Group contact notified!')}
-                className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0"
+                className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0"
               >
                 <span>Send Group Contact</span>
               </button>
