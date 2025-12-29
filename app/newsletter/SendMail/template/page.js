@@ -179,12 +179,11 @@ export default function Template() {
 
       if (r && c) {
         let tbl = '<table border="1" style="border-collapse:collapse;width:100%">';
-        for (
-          let i = 0; i < parseInt(r); i++
-        ) {
+        for (let i = 0; i < parseInt(r); i++) {
           tbl += '<tr>';
           for (let j = 0; j < parseInt(c); j++)
-            tbl += '<td style="border:1px solid #ddd;padding:8px">&nbsp;</td>'; tbl += '</tr>';
+            tbl += '<td style="border:1px solid #ddd;padding:8px">&nbsp;</td>'; 
+          tbl += '</tr>';
         }
         tbl += '</table>';
         ed.clipboard.dangerouslyPasteHTML(idx, tbl);
@@ -264,10 +263,10 @@ export default function Template() {
       .ql-toolbar.ql-snow .ql-formats{margin-right:15px!important;margin-bottom:5px!important}`}
       </style>
 
-      <div className="p-6 max-w-7xl mx-auto">
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Select Product</label>
-          <div className="relative max-w-md">
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Select Product</label>
+          <div className="relative w-full sm:max-w-md sm:flex-1">
             <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
               <option value="">Select Products</option><option value="Galaxy S1">Galaxy S1</option><option value="Motorola">Motorola</option><option value="Iphone 15">Iphone 15</option>
             </select>
@@ -276,10 +275,10 @@ export default function Template() {
             </div>
           </div>
         </div>
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">From Email</label>
-          <div className="flex items-center gap-2 max-w-2xl w-136">
-            <div className="relative flex-grow">
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+          <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">From Email</label>
+          <div className="flex items-center gap-2 flex-1 w-full">
+            <div className="relative w-full sm:max-w-md">
               <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
                 <option value="">Select Email</option><option value="mayank@gmail.com">mayank@gmail.com</option><option value="magan@gmail.com">magan@gmail.com</option>
               </select>
@@ -287,13 +286,23 @@ export default function Template() {
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
               </div>
             </div>
-            <button onClick={() => alert('Add new email')} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors"><span className="text-xl font-light">+</span></button>
-            <button onClick={() => alert('Remove email')} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors"><span className="text-xl font-light">−</span></button>
+            <button onClick={() => alert('Add new email')} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors flex-shrink-0"><span className="text-xl font-light">+</span></button>
+            <button onClick={() => alert('Remove email')} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors flex-shrink-0"><span className="text-xl font-light">−</span></button>
           </div>
         </div>
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
-          <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject" className="shadow appearance-none border border-gray-300 rounded w-full max-w-md py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50 text-sm" />
+        <div className="mb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4">
+            <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
+            <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject" className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50 text-sm" />
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <div className="sm:min-w-[120px]"></div>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:flex-1">
+              <button onClick={() => validateSend() && alert('Single mail sent!')} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Single Mail</button>
+              <button onClick={() => validateSend() && alert('Entire list contacted!')} className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Entire List</button>
+              <button onClick={() => validateSend() && alert('Group contact notified!')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Group Contact</button>
+            </div>
+          </div>
         </div>
         {selectedProduct && (
           <div className="mb-8">
@@ -323,48 +332,12 @@ export default function Template() {
                   <div ref={editorContainerRef} className="border-2 border-gray-300 rounded-lg overflow-hidden resizable-editor">
                     <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
                       <MenuButton label="File" items={[{ label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') }, { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }]} />
-                      <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') },
-                      {
-                        label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo')
-                      }, 'divider', { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') },
-                      {
-                        label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy')
-                      }, 'divider',
-                      {
-                        label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll')
-                      }]} />
-                      <MenuButton label="Insert" items={[{ label: 'Insert image', onClick: () => handleInsertAction('image') },
-                      {
-                        label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link')
-                      },
-                      {
-                        label: 'Insert video', onClick: () => handleInsertAction('video')
-                      },
-                      {
-                        label: 'Insert table', onClick: () => handleInsertAction('table')
-                      },
-                      {
-                        label: 'Horizontal line', onClick: () => handleInsertAction('hr')
-                      }]} />
-                      <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') },
-                      {
-                        label: 'Source code', onClick: () => handleViewAction('sourceCode')
-                      }]} />
-                      <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') },
-                      {
-                        label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic')
-                      },
-                      {
-                        label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline')
-                      },
-                      {
-                        label: 'Strikethrough', onClick: () => handleFormatAction('strike')
-                      }]} />
+                      <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') }, { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') }, 'divider', { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') }, { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') }, 'divider', { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }]} />
+                      <MenuButton label="Insert" items={[{ label: 'Insert image', onClick: () => handleInsertAction('image') }, { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link') }, { label: 'Insert video', onClick: () => handleInsertAction('video') }, { label: 'Insert table', onClick: () => handleInsertAction('table') }, { label: 'Horizontal line', onClick: () => handleInsertAction('hr') }]} />
+                      <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') }, { label: 'Source code', onClick: () => handleViewAction('sourceCode') }]} />
+                      <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') }, { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') }, { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') }, { label: 'Strikethrough', onClick: () => handleFormatAction('strike') }]} />
                       <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleInsertAction('table') }]} />
-                      <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') },
-                      {
-                        label: 'Word count', onClick: () => { const txt = quillRef.current?.getText() || ''; const w = txt.trim().split(/\s+/).filter(x => x).length; alert(`📊 Statistics:\n\nWords: ${w}\nCharacters: ${txt.length}`) }
-                      }]} />
+                      <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') }, { label: 'Word count', onClick: () => { const txt = quillRef.current?.getText() || ''; const w = txt.trim().split(/\s+/).filter(x => x).length; alert(`📊 Statistics:\n\nWords: ${w}\nCharacters: ${txt.length}`) } }]} />
                     </div>
                     <div ref={editorElementRef} style={{ minHeight: '200px', backgroundColor: 'white' }}></div>
                   </div>
@@ -373,11 +346,6 @@ export default function Template() {
             )}
           </div>
         )}
-        <div className="flex flex-wrap gap-4 pt-1">
-          <button onClick={() => validateSend() && alert('Single mail sent!')} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors">Send Single Mail</button>
-          <button onClick={() => validateSend() && alert('Entire list contacted!')} className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors">Send Entire List</button>
-          <button onClick={() => validateSend() && alert('Group contact notified!')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors">Send Group Contact</button>
-        </div>
       </div>
     </>
   );
