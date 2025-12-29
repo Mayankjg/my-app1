@@ -11,12 +11,12 @@ export default function SendSingleMail() {
 
   useEffect(() => {
     const templateData = localStorage.getItem('selectedTemplateData');
-    
+
     if (templateData) {
       try {
         const template = JSON.parse(templateData);
         setSelectedTemplate(template);
-        console.log('Template loaded:', template); // Debug માટે
+        console.log('Template loaded:', template);
       } catch (e) {
         console.error('Error parsing template data:', e);
       }
@@ -48,7 +48,7 @@ export default function SendSingleMail() {
   };
 
   const handleToggleContact = (id) => {
-    setContactList(contactList.map(contact => 
+    setContactList(contactList.map(contact =>
       contact.id === id ? { ...contact, selected: !contact.selected } : contact
     ));
   };
@@ -64,12 +64,12 @@ export default function SendSingleMail() {
       alert('Please select at least one contact');
       return;
     }
-    
+
     if (!selectedTemplate || !selectedTemplate.content) {
       alert('No template content found. Please go back and select a template.');
       return;
     }
-    
+
     alert(`Sending mail to ${selectedContacts.length} contact(s)\n\nSubject: ${selectedTemplate.subject || '(no subject)'}\nFrom: ${selectedTemplate.selectedEmail || '(no email selected)'}`);
   };
 
@@ -221,7 +221,7 @@ export default function SendSingleMail() {
 
                 <div>
                   <h2 className="text-2xl font-bold text-gray-800 mb-3">Contact List</h2>
-                  
+
                   <div className="border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                     <div className="bg-gray-100 grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-300">
                       <div className="col-span-1 flex items-center">
@@ -270,24 +270,24 @@ export default function SendSingleMail() {
                 </div>
 
                 {contactList.length > 0 && (
-                  <div className="flex justify-end gap-3 mt-6 mb-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-end gap-3 mt-6 mb-6">
                     <button
                       onClick={handleSendMail}
-                      className="bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors"
+                      className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors"
                     >
-                       Send Mail
+                      Send Mail
                     </button>
                     <button
                       onClick={handlePreview}
-                      className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
+                      className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
                     >
-                       Preview
+                      Preview
                     </button>
                     <button
                       onClick={handleCancel}
-                      className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
+                      className="w-full sm:w-auto bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors"
                     >
-                       Cancel
+                      Cancel
                     </button>
                   </div>
                 )}
