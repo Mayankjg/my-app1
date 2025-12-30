@@ -17,27 +17,27 @@ export default function Template() {
     {
       id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'],
       content: {
-        title: 'Premium Business Solution', subtitle: 'Elevate Your Business to New Heights',
-        description: 'Transform your business with our comprehensive solutions designed for modern enterprises.',
-        body: 'We provide cutting-edge technology and personalized service to help you achieve your goals. Our team of experts is dedicated to ensuring your success every step of the way.',
+        title: 'Tenacious Sales', subtitle: 'Your Lead Manager',
+        description: 'Tenacious is one of the best online digital marketing agency for businesses and startups across the world for Website, Apps, SEO,SMM and SEM.',
+        body: 'Tenacious Group was founded in 2011, and so far we have served more than 175 clients across 15 countries all around the globe. We have delivered more than 253+ successful projects till date.',
         callToAction: 'Get Started Today', footer: 'Thank you for choosing our services. We look forward to working with you.'
       }
     },
     {
       id: 'default-02', name: 'Default 02', colors: ['#f5c4c4', '#e89c9c', '#c24040'],
       content: {
-        title: 'Creative Design Studio', subtitle: 'Where Ideas Come to Life',
-        description: 'We are a team of passionate designers creating stunning digital experiences.',
-        body: 'Our mission is to bring your vision to reality with creativity and precision. From concept to completion, we handle every detail with care and expertise.',
+        title: 'Food-Chow', subtitle: 'Online Ordering System',
+        description: 'It includes point-of-sale software to manage billing, orders, and payments in-house.',
+        body: 'FoodChow is a technology platform and software suite for online food ordering, restaurant point-of-sale (POS), and restaurant business management — primarily aimed at helping restaurants, cafés, cloud kitchens, and hospitality businesses go digital and accept orders without relying on third-party aggregators.',
         callToAction: 'View Our Portfolio', footer: 'Let\'s create something amazing together. Contact us today!'
       }
     },
     {
       id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'],
       content: {
-        title: 'Organic Food Marketplace', subtitle: 'Fresh, Healthy, Sustainable',
-        description: 'Discover the finest organic products sourced directly from local farms.',
-        body: 'We believe in sustainable farming practices and delivering fresh, nutritious food to your doorstep. Every product is carefully selected to meet our high standards of quality.',
+        title: 'Point of Sale.', subtitle: 'POS as the cash counter + brain of the business.',
+        description: 'It’s the system where a sale happens—when a customer pays and the business records the transaction.',
+        body: 'POS is the system where customers pay and businesses manage sales.',
         callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.'
       }
     }
@@ -322,7 +322,7 @@ export default function Template() {
                     <iframe 
                       ref={iframeRef}
                       className="w-full border-0"
-                      style={{ minHeight: '500px', background: '#fff' }}
+                      style={{ minHeight: '400px', background: '#fff' }}
                       title="Email Template Editor"
                     />
                   </div>
