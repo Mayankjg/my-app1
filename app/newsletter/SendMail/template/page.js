@@ -99,7 +99,7 @@ export default function Template() {
       if (iframeRef.current) {
         iframeRef.current.contentWindow.print();
       }
-    }
+    } 
     setOpenMenu(null);
   };
 
@@ -221,7 +221,7 @@ export default function Template() {
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Select Product</label>
           <div className="relative w-full sm:max-w-md sm:flex-1">
-            <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
+            <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
               <option value="">Select Products</option>
               <option value="Galaxy S1">Galaxy S1</option>
               <option value="Motorola">Motorola</option>
@@ -237,7 +237,7 @@ export default function Template() {
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">From Email</label>
           <div className="flex items-center gap-2 flex-1 w-full">
             <div className="relative w-full sm:max-w-md">
-              <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700">
+              <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
                 <option value="">Select Email</option>
                 <option value="mayank@gmail.com">mayank@gmail.com</option>
                 <option value="magan@gmail.com">magan@gmail.com</option>
@@ -254,7 +254,7 @@ export default function Template() {
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
           <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter email subject"
-            className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50 text-sm" />
+            className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 hover:bg-gray-50 text-sm" />
         </div>
 
         {selectedProduct && (
