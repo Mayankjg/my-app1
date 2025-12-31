@@ -12,7 +12,7 @@ export default function Template() {
   const [openMenu, setOpenMenu] = useState(null);
   const [showSourceCode, setShowSourceCode] = useState(false);
   const [htmlContent, setHtmlContent] = useState('');
-
+6
   const templates = [
     {
       id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'],
