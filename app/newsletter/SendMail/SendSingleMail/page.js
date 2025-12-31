@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function SendSingleMail() {
   const [contactName, setContactName] = useState('');
@@ -11,7 +11,6 @@ export default function SendSingleMail() {
 
   useEffect(() => {
     const templateData = localStorage.getItem('selectedTemplateData');
-
     if (templateData) {
       try {
         const template = JSON.parse(templateData);
@@ -21,7 +20,25 @@ export default function SendSingleMail() {
         console.error('Error parsing template data:', e);
       }
     }
+
+    const savedContactList = localStorage.getItem('contactList');
+    if (savedContactList) {
+      try {
+        const contacts = JSON.parse(savedContactList);
+        setContactList(contacts);
+        console.log('Contact list loaded:', contacts);
+      } catch (e) {
+        console.error('Error parsing contact list data:', e);
+      }
+    }
   }, []);
+
+  useEffect(() => {
+    if (contactList.length > 0) {
+      localStorage.setItem('contactList', JSON.stringify(contactList));
+      console.log('Contact list saved to localStorage');
+    }
+  }, [contactList]);
 
   const handleAddContact = () => {
     if (!contactName.trim() || !contactEmail.trim()) {
@@ -84,6 +101,7 @@ export default function SendSingleMail() {
   const handleCancel = () => {
     if (window.confirm('Are you sure you want to cancel? All contacts will be cleared.')) {
       setContactList([]);
+      localStorage.removeItem('contactList');
     }
   };
 
@@ -176,9 +194,11 @@ export default function SendSingleMail() {
                 <h1 className="text-2xl font-normal text-gray-700">
                   Send <strong>Mail</strong>
                 </h1>
-                <div className="bg-amber-700 text-white px-4 py-1 rounded shadow-md">
-                  <span className="font-medium">Remaining Emails:</span>
-                  <span className="ml-3 font-bold text-lg">0</span>
+                <div className="flex items-center gap-4">
+                  <div className="bg-amber-700 text-white px-4 py-1 rounded shadow-md">
+                    <span className="font-medium">Remaining Emails:</span>
+                    <span className="ml-3 font-bold text-lg">0</span>
+                  </div>
                 </div>
               </div>
 
@@ -242,7 +262,7 @@ export default function SendSingleMail() {
 
                     {contactList.length === 0 ? (
                       <div className="text-center py-5">
-                        <p className="text-red-400 text-lg font-medium">📭 No contacts added yet</p>
+                        <p className="text-red-400 text-lg font-medium">No contacts added yet</p>
                       </div>
                     ) : (
                       <div className="divide-y divide-gray-200">

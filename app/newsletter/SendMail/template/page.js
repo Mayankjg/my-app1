@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { ChevronDown, X, Maximize2 } from 'lucide-react';
 
 export default function Template() {
   const iframeRef = useRef(null);
@@ -36,17 +36,29 @@ export default function Template() {
       id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'],
       content: {
         title: 'Point of Sale.', subtitle: 'POS as the cash counter + brain of the business.',
-        description: 'It’s the system where a sale happens—when a customer pays and the business records the transaction.',
+        description: 'It\'s the system where a sale happens—when a customer pays and the business records the transaction.',
         body: 'POS is the system where customers pay and businesses manage sales.',
         callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.'
       }
-    }
+    },
   ];
 
   useEffect(() => {
     if (!selectedTemplate) return;
     
-    const html = `<!DOCTYPE html>
+    const html = generateHtmlContent(selectedTemplate);
+    setHtmlContent(html);
+    
+    if (iframeRef.current) {
+      const doc = iframeRef.current.contentDocument;
+      doc.open();
+      doc.write(html);
+      doc.close();
+    }
+  }, [selectedTemplate]);
+
+  const generateHtmlContent = (template) => {
+    return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -57,21 +69,21 @@ export default function Template() {
 </head>
 <body>
   <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
-    <div style="background:linear-gradient(135deg,${selectedTemplate.colors[0]} 0%,${selectedTemplate.colors[1]} 50%,${selectedTemplate.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
-      <h1 contenteditable="true" style="color:#1f2937;font-size:32px;font-weight:bold;margin:0 0 10px 0;outline:none">${selectedTemplate.content.title}</h1>
-      <h2 contenteditable="true" style="color:#374151;font-size:20px;font-weight:600;margin:0 0 15px 0;outline:none">${selectedTemplate.content.subtitle}</h2>
-      <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.6;margin:0;outline:none">${selectedTemplate.content.description}</p>
+    <div style="background:linear-gradient(135deg,${template.colors[0]} 0%,${template.colors[1]} 50%,${template.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
+      <h1 contenteditable="true" style="color:#1f2937;font-size:32px;font-weight:bold;margin:0 0 10px 0;outline:none">${template.content.title}</h1>
+      <h2 contenteditable="true" style="color:#374151;font-size:20px;font-weight:600;margin:0 0 15px 0;outline:none">${template.content.subtitle}</h2>
+      <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.6;margin:0;outline:none">${template.content.description}</p>
     </div>
     <div style="background:#fff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb">
       <h3 contenteditable="true" style="color:#1f2937;font-size:22px;font-weight:bold;margin:0 0 20px 0;outline:none">Welcome!</h3>
-      <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 20px 0;outline:none">${selectedTemplate.content.body}</p>
+      <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 20px 0;outline:none">${template.content.body}</p>
       <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 30px 0;outline:none">We're excited to help you get started and look forward to supporting you every step of the way.</p>
       <div style="text-align:center;margin:30px 0">
-        <a href="#" contenteditable="true" style="display:inline-block;background:linear-gradient(135deg,${selectedTemplate.colors[1]},${selectedTemplate.colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1);outline:none">${selectedTemplate.content.callToAction}</a>
+        <a href="#" contenteditable="true" style="display:inline-block;background:linear-gradient(135deg,${template.colors[1]},${template.colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1);outline:none">${template.content.callToAction}</a>
       </div>
     </div>
     <div style="background:#f9fafb;padding:30px 40px;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none">
-      <p contenteditable="true" style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center;outline:none">${selectedTemplate.content.footer}</p>
+      <p contenteditable="true" style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center;outline:none">${template.content.footer}</p>
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0">
       <p contenteditable="true" style="color:#9ca3af;font-size:12px;text-align:center;margin:0;outline:none">© 2024 Your Company. All rights reserved.<br>123 Business St, Suite 100, City, State 12345<br>
         <a href="#" style="color:#3b82f6;text-decoration:none">Unsubscribe</a> | <a href="#" style="color:#3b82f6;text-decoration:none">View in Browser</a>
@@ -80,16 +92,7 @@ export default function Template() {
   </div>
 </body>
 </html>`;
-    
-    setHtmlContent(html);
-    
-    if (iframeRef.current) {
-      const doc = iframeRef.current.contentDocument;
-      doc.open();
-      doc.write(html);
-      doc.close();
-    }
-  }, [selectedTemplate]);
+  };
 
   const handleFileAction = (action) => {
     if (action === 'new' && window.confirm('Create new document? Unsaved changes will be lost.')) {
@@ -215,6 +218,49 @@ export default function Template() {
     return true;
   };
 
+  // Template Preview Modal Component
+  const TemplatePreviewModal = ({ template, onClose, onSelect }) => {
+    if (!template) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+        <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
+          {/* Modal Header */}
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">{template.name}</h3>
+              <p className="text-sm text-gray-600 mt-1">Template Preview</p>
+            </div>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-200 rounded-full">
+              <X size={24} />
+            </button>
+          </div>
+
+          {/* Modal Body - Preview */}
+          <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div dangerouslySetInnerHTML={{ __html: generateHtmlContent(template) }} />
+            </div>
+          </div>
+
+          {/* Modal Footer */}
+          <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3">
+            <button onClick={onClose} className="px-6 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+              Close
+            </button>
+            <button onClick={() => {
+              onSelect(template);
+              onClose();
+            }} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2">
+              <Maximize2 size={16} />
+              Use This Template
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="p-4 sm:p-6 max-w-7xl mx-auto">
@@ -261,23 +307,49 @@ export default function Template() {
           <div className="mb-5">
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
               <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">Select Template</label>
-              <div className="flex gap-3 flex-wrap w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                 {templates.map((t) => (
-                  <div key={t.id} onClick={() => setSelectedTemplate(t)} 
-                    className={`cursor-pointer transition-all rounded-lg w-full sm:w-[140px] ${selectedTemplate?.id === t.id ? 'ring-2 ring-blue-500 shadow-lg' : 'ring-1 ring-gray-300 hover:ring-2 hover:ring-blue-400 hover:shadow-md'}`}
-                    style={{ height: '100px' }}>
-                    <div className="bg-white rounded-lg overflow-hidden shadow-sm h-full">
-                      <div className="relative h-full p-3 flex flex-col justify-between" 
-                        style={{ background: `linear-gradient(135deg,${t.colors[0]} 0%,${t.colors[1]} 50%,${t.colors[2]} 100%)` }}>
-                        <div>
-                          <h3 className="text-xs font-bold text-gray-800 mb-1 line-clamp-2">{t.content.title}</h3>
-                          <p className="text-[10px] text-gray-700 line-clamp-2">{t.content.subtitle}</p>
-                        </div>
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent p-2">
-                          <p className="text-white text-[10px] font-semibold text-center">{t.name}</p>
+                  <div key={t.id} className="relative group flex flex-col items-center">
+                    <div 
+                      onClick={() => setSelectedTemplate(t)} 
+                      className={`cursor-pointer transition-all rounded-lg w-full overflow-hidden ${
+                        selectedTemplate?.id === t.id 
+                          ? 'ring-2 ring-gray-500 shadow-xl scale-105' 
+                          : 'ring-2 ring-gray-200 hover:shadow-lg hover:scale-105'
+                      }`}
+                      style={{ 
+                        width: '250px',
+                        height: '180px',
+                        border: '8px solid #f1f0f0ff',
+                        borderRadius: '12px'
+                      }}
+                    >
+                      <div className="bg-white h-full">
+                        <div className="relative h-full p-4 flex flex-col justify-between" 
+                          style={{ background: `linear-gradient(135deg,${t.colors[0]} 0%,${t.colors[1]} 50%,${t.colors[2]} 100%)` }}>
+                          <div>
+                            <h3 className="text-sm font-bold text-gray-800 mb-2 line-clamp-2">{t.content.title}</h3>
+                            <p className="text-xs text-gray-700 line-clamp-3">{t.content.subtitle}</p>
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-3">
+                            <p className="text-white text-xs font-bold text-center">{t.name}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <label className="mt-5 flex items-center gap-2 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={selectedTemplate?.id === t.id}
+                        onChange={() => setSelectedTemplate(t)}
+                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded-full focus:ring-2 cursor-pointer appearance-none border-2"
+                        style={{
+                          backgroundColor: selectedTemplate?.id === t.id ? '#3be0f6ff' : '#f3f4f6',
+                          borderColor: selectedTemplate?.id === t.id ? '#3be0f6ff' : '#d1d5db',
+                          boxShadow: selectedTemplate?.id === t.id ? '0 0 0 2px white, 0 0 0 3px #3be0f6ff' : 'none'
+                        }}
+                      />
+                    </label>
                   </div>
                 ))}
               </div>
@@ -286,11 +358,11 @@ export default function Template() {
         )}
 
         {selectedTemplate && (
-          <div className="mb-5">
+          <div className="mb-5 mt-8">
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
               <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">
                 Message Editor
-                <span className="block text-blue-600 text-xs font-normal mt-1">(Editing: {selectedTemplate.name})</span>
+                {/* <span className="block text-blue-600 text-xs font-normal mt-1">(Editing: {selectedTemplate.name})</span> */}
               </label>
               <div className="w-full editor-container text-black">
                 {showSourceCode ? (
@@ -307,7 +379,7 @@ export default function Template() {
                   </div>
                 ) : (
                   <div className="border-2 border-gray-300 rounded-lg overflow-hidden">
-                    <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
+                    <div style={{ background: '#ffffffff', borderBottom: '1px solid #ffffffff', padding: '4px 8px' }}>
                       <MenuButton label="File" items={[{ label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') }, { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }]} />
                       <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') }, { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') }, 'divider',
                       { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') }, { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') }, 'divider', { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }]} />
