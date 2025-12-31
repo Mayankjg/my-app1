@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, X, Maximize2 } from 'lucide-react';
+import { ChevronDown} from 'lucide-react';
 
 export default function Template() {
   const iframeRef = useRef(null);
@@ -63,12 +63,12 @@ export default function Template() {
 <head>
   <meta charset="UTF-8">
   <style>
-    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f0f0f0; }
+    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f1f1f1ff; }
     * { box-sizing: border-box; }
   </style>
 </head>
 <body>
-  <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
+  <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#ebeaeaff;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
     <div style="background:linear-gradient(135deg,${template.colors[0]} 0%,${template.colors[1]} 50%,${template.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
       <h1 contenteditable="true" style="color:#1f2937;font-size:32px;font-weight:bold;margin:0 0 10px 0;outline:none">${template.content.title}</h1>
       <h2 contenteditable="true" style="color:#374151;font-size:20px;font-weight:600;margin:0 0 15px 0;outline:none">${template.content.subtitle}</h2>
@@ -226,9 +226,9 @@ export default function Template() {
           <div className="relative w-full sm:max-w-md sm:flex-1">
             <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
               <option value="">Select Products</option>
-              <option value="Galaxy S1">Galaxy S1</option>
+              {/* <option value="Galaxy S1">Galaxy S1</option>
               <option value="Motorola">Motorola</option>
-              <option value="Iphone 15">Iphone 15</option>
+              <option value="Iphone 15">Iphone 15</option> */}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
@@ -242,8 +242,8 @@ export default function Template() {
             <div className="relative w-full sm:max-w-md">
               <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
                 <option value="">Select Email</option>
-                <option value="mayank@gmail.com">mayank@gmail.com</option>
-                <option value="magan@gmail.com">magan@gmail.com</option>
+                {/* <option value="mayank@gmail.com">mayank@gmail.com</option>
+                <option value="magan@gmail.com">magan@gmail.com</option> */}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
