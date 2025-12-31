@@ -12,7 +12,7 @@ export default function Template() {
   const [openMenu, setOpenMenu] = useState(null);
   const [showSourceCode, setShowSourceCode] = useState(false);
   const [htmlContent, setHtmlContent] = useState('');
-6
+
   const templates = [
     {
       id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'],
@@ -218,49 +218,6 @@ export default function Template() {
     return true;
   };
 
-  // Template Preview Modal Component
-  const TemplatePreviewModal = ({ template, onClose, onSelect }) => {
-    if (!template) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-        <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
-          {/* Modal Header */}
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-gray-800">{template.name}</h3>
-              <p className="text-sm text-gray-600 mt-1">Template Preview</p>
-            </div>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-200 rounded-full">
-              <X size={24} />
-            </button>
-          </div>
-
-          {/* Modal Body - Preview */}
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div dangerouslySetInnerHTML={{ __html: generateHtmlContent(template) }} />
-            </div>
-          </div>
-
-          {/* Modal Footer */}
-          <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3">
-            <button onClick={onClose} className="px-6 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-              Close
-            </button>
-            <button onClick={() => {
-              onSelect(template);
-              onClose();
-            }} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2">
-              <Maximize2 size={16} />
-              Use This Template
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
       <div className="p-4 sm:p-6 max-w-7xl mx-auto">
@@ -307,37 +264,38 @@ export default function Template() {
           <div className="mb-5">
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
               <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">Select Template</label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
                 {templates.map((t) => (
-                  <div key={t.id} className="relative group flex flex-col items-center">
+                  <div key={t.id} className="flex flex-col items-center w-full">
                     <div 
                       onClick={() => setSelectedTemplate(t)} 
-                      className={`cursor-pointer transition-all rounded-lg w-full overflow-hidden ${
+                      className={`cursor-pointer transition-all rounded-lg overflow-hidden w-full ${
                         selectedTemplate?.id === t.id 
                           ? 'ring-2 ring-gray-500 shadow-xl scale-105' 
                           : 'ring-2 ring-gray-200 hover:shadow-lg hover:scale-105'
                       }`}
                       style={{ 
-                        width: '250px',
-                        height: '180px',
+                        maxWidth: '250px',
+                        aspectRatio: '5/3.6',
                         border: '8px solid #f1f0f0ff',
-                        borderRadius: '12px'
+                        borderRadius: '12px',
+                        margin: '0 auto'
                       }}
                     >
-                      <div className="bg-white h-full">
-                        <div className="relative h-full p-4 flex flex-col justify-between" 
+                      <div className="bg-white h-full w-full">
+                        <div className="relative h-full p-3 sm:p-4 flex flex-col justify-between" 
                           style={{ background: `linear-gradient(135deg,${t.colors[0]} 0%,${t.colors[1]} 50%,${t.colors[2]} 100%)` }}>
                           <div>
-                            <h3 className="text-sm font-bold text-gray-800 mb-2 line-clamp-2">{t.content.title}</h3>
-                            <p className="text-xs text-gray-700 line-clamp-3">{t.content.subtitle}</p>
+                            <h3 className="text-xs sm:text-sm font-bold text-gray-800 mb-1 sm:mb-2 line-clamp-2">{t.content.title}</h3>
+                            <p className="text-[10px] sm:text-xs text-gray-700 line-clamp-3">{t.content.subtitle}</p>
                           </div>
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-3">
-                            <p className="text-white text-xs font-bold text-center">{t.name}</p>
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-2 sm:p-3">
+                            <p className="text-white text-[10px] sm:text-xs font-bold text-center">{t.name}</p>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <label className="mt-5 flex items-center gap-2 cursor-pointer">
+                    <label className="mt-3 sm:mt-5 flex items-center gap-2 cursor-pointer">
                       <input 
                         type="checkbox" 
                         checked={selectedTemplate?.id === t.id}
@@ -362,7 +320,6 @@ export default function Template() {
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
               <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">
                 Message Editor
-                {/* <span className="block text-blue-600 text-xs font-normal mt-1">(Editing: {selectedTemplate.name})</span> */}
               </label>
               <div className="w-full editor-container text-black">
                 {showSourceCode ? (
