@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown} from 'lucide-react';
+import { Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Link, Image, Table, Code, Palette, Type, Undo, Redo } from 'lucide-react';
 
 export default function Template() {
   const iframeRef = useRef(null);
@@ -12,6 +12,8 @@ export default function Template() {
   const [openMenu, setOpenMenu] = useState(null);
   const [showSourceCode, setShowSourceCode] = useState(false);
   const [htmlContent, setHtmlContent] = useState('');
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [colorPickerType, setColorPickerType] = useState('text');
 
   const templates = [
     {
@@ -54,8 +56,37 @@ export default function Template() {
       doc.open();
       doc.write(html);
       doc.close();
+      setupKeyboardShortcuts(doc);
     }
   }, [selectedTemplate]);
+
+  const setupKeyboardShortcuts = (doc) => {
+    doc.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'a') {
+        e.preventDefault();
+        const selection = doc.getSelection();
+        const range = doc.createRange();
+        range.selectNodeContents(doc.body);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      } else if (e.ctrlKey && e.key === 'b') {
+        e.preventDefault();
+        doc.execCommand('bold');
+      } else if (e.ctrlKey && e.key === 'i') {
+        e.preventDefault();
+        doc.execCommand('italic');
+      } else if (e.ctrlKey && e.key === 'u') {
+        e.preventDefault();
+        doc.execCommand('underline');
+      } else if (e.ctrlKey && e.key === 'z') {
+        e.preventDefault();
+        doc.execCommand('undo');
+      } else if (e.ctrlKey && e.key === 'y') {
+        e.preventDefault();
+        doc.execCommand('redo');
+      }
+    });
+  };
 
   const generateHtmlContent = (template) => {
     return `<!DOCTYPE html>
@@ -65,6 +96,7 @@ export default function Template() {
   <style>
     body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f1f1f1ff; }
     * { box-sizing: border-box; }
+    ::selection { background-color: #3b82f6; color: white; }
   </style>
 </head>
 <body>
@@ -94,6 +126,13 @@ export default function Template() {
 </html>`;
   };
 
+  const execCommand = (command, value = null) => {
+    if (!iframeRef.current) return;
+    const doc = iframeRef.current.contentDocument;
+    doc.execCommand(command, false, value);
+    iframeRef.current.contentWindow.focus();
+  };
+
   const handleFileAction = (action) => {
     if (action === 'new' && window.confirm('Create new document? Unsaved changes will be lost.')) {
       setSelectedTemplate(null);
@@ -102,7 +141,7 @@ export default function Template() {
       if (iframeRef.current) {
         iframeRef.current.contentWindow.print();
       }
-    } 
+    }
     setOpenMenu(null);
   };
 
@@ -114,7 +153,14 @@ export default function Template() {
     else if (action === 'redo') doc.execCommand('redo');
     else if (action === 'cut') doc.execCommand('cut');
     else if (action === 'copy') doc.execCommand('copy');
-    else if (action === 'selectAll') doc.execCommand('selectAll');
+    else if (action === 'paste') doc.execCommand('paste');
+    else if (action === 'selectAll') {
+      const selection = doc.getSelection();
+      const range = doc.createRange();
+      range.selectNodeContents(doc.body);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
     
     setOpenMenu(null);
   };
@@ -184,31 +230,25 @@ export default function Template() {
     setOpenMenu(null);
   };
 
+  const handleColor = (color) => {
+    if (colorPickerType === 'text') {
+      execCommand('foreColor', color);
+    } else {
+      execCommand('backColor', color);
+    }
+    setShowColorPicker(false);
+  };
+
   const applySourceCodeChanges = () => {
     if (iframeRef.current) {
       const doc = iframeRef.current.contentDocument;
       doc.open();
       doc.write(htmlContent);
       doc.close();
+      setupKeyboardShortcuts(doc);
     }
     setShowSourceCode(false);
   };
-
-  const MenuButton = ({ label, items }) => (
-    <div className="relative inline-block">
-      <button onClick={() => setOpenMenu(openMenu === label.toLowerCase() ? null : label.toLowerCase())} className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 transition-colors">
-        {label} <ChevronDown className="inline" size={12} />
-      </button>
-      {openMenu === label.toLowerCase() && items && (
-        <div className="absolute top-full left-0 mt-0 bg-white border border-gray-300 shadow-lg z-50 min-w-[180px]">
-          {items.map((item, i) => item === 'divider' ? <div key={i} className="border-t border-gray-200 my-1"></div> :
-            <button key={i} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
-              <span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}
-            </button>)}
-        </div>
-      )}
-    </div>
-  );
 
   const validateSend = () => {
     if (!selectedProduct) return alert('Please select a product');
@@ -218,6 +258,36 @@ export default function Template() {
     return true;
   };
 
+  const MenuButton = ({ label, items }) => (
+    <div className="relative inline-block">
+      <button onClick={() => setOpenMenu(openMenu === label.toLowerCase() ? null : label.toLowerCase())} className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors rounded">
+        {label}
+      </button>
+      {openMenu === label.toLowerCase() && items && (
+        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 min-w-[200px] rounded">
+          {items.map((item, i) => item === 'divider' ? <div key={i} className="border-t border-gray-200 my-1"></div> :
+            <button key={i} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
+              <span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}
+            </button>)}
+        </div>
+      )}
+    </div>
+  );
+
+  const ToolbarButton = ({ onClick, icon: Icon, title }) => (
+    <button
+      onClick={onClick}
+      title={title}
+      className="p-2 hover:bg-gray-200 rounded transition-colors"
+    >
+      <Icon size={18} className="text-gray-700" />
+    </button>
+  );
+
+  const ToolbarDivider = () => <div className="w-px h-6 bg-gray-300 mx-1"></div>;
+
+  const colors = ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', '#3d1466'];
+
   return (
     <>
       <div className="p-4 sm:p-6 max-w-7xl mx-auto">
@@ -226,9 +296,7 @@ export default function Template() {
           <div className="relative w-full sm:max-w-md sm:flex-1">
             <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
               <option value="">Select Products</option>
-              {/* <option value="Galaxy S1">Galaxy S1</option>
-              <option value="Motorola">Motorola</option>
-              <option value="Iphone 15">Iphone 15</option> */}
+              <option value="Galaxy S1">Galaxy S1</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
@@ -242,8 +310,6 @@ export default function Template() {
             <div className="relative w-full sm:max-w-md">
               <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
                 <option value="">Select Email</option>
-                {/* <option value="mayank@gmail.com">mayank@gmail.com</option>
-                <option value="magan@gmail.com">magan@gmail.com</option> */}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
@@ -335,23 +401,166 @@ export default function Template() {
                       placeholder="HTML source code..." />
                   </div>
                 ) : (
-                  <div className="border-2 border-gray-300 rounded-lg overflow-hidden">
-                    <div style={{ background: '#ffffffff', borderBottom: '1px solid #ffffffff', padding: '4px 8px' }}>
-                      <MenuButton label="File" items={[{ label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') }, { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }]} />
-                      <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') }, { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') }, 'divider',
-                      { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') }, { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') }, 'divider', { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }]} />
-                      <MenuButton label="Insert" items={[{ label: 'Insert image', onClick: () => handleInsertAction('image') }, { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link') },
-                      { label: 'Insert table', onClick: () => handleInsertAction('table') }, { label: 'Horizontal line', onClick: () => handleInsertAction('hr') }]} />
-                      <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') }, { label: 'Source code', onClick: () => handleViewAction('sourceCode') }]} />
-                      <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') }, { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') }, { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') },
-                      { label: 'Strikethrough', onClick: () => handleFormatAction('strike') }]} />
-                      <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleInsertAction('table') }]} />
-                      <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') }]} />
+                  <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+                    {/* Menu Bar */}
+                    <div className="bg-gray-50 border-b border-gray-300 px-2 py-1">
+                      <div className="flex items-center gap-0">
+                        <MenuButton label="File" items={[
+                          { label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') }, 
+                          { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }
+                        ]} />
+                        <MenuButton label="Edit" items={[
+                          { label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') }, 
+                          { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') }, 
+                          'divider',
+                          { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') }, 
+                          { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') }, 
+                          { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleEditAction('paste') },
+                          'divider', 
+                          { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }
+                        ]} />
+                        <MenuButton label="Insert" items={[
+                          { label: 'Insert image', onClick: () => handleInsertAction('image') }, 
+                          { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link') },
+                          { label: 'Insert table', onClick: () => handleInsertAction('table') }, 
+                          { label: 'Horizontal line', onClick: () => handleInsertAction('hr') }
+                        ]} />
+                        <MenuButton label="View" items={[
+                          { label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') }, 
+                          { label: 'Source code', onClick: () => handleViewAction('sourceCode') }
+                        ]} />
+                        <MenuButton label="Format" items={[
+                          { label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') }, 
+                          { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') }, 
+                          { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') },
+                          { label: 'Strikethrough', onClick: () => handleFormatAction('strike') }
+                        ]} />
+                        <MenuButton label="Table" items={[
+                          { label: 'Insert table', onClick: () => handleInsertAction('table') }
+                        ]} />
+                        <MenuButton label="Tools" items={[
+                          { label: 'Source code', onClick: () => handleViewAction('sourceCode') }
+                        ]} />
+                      </div>
                     </div>
+
+                    {/* Toolbar */}
+                    <div className="bg-white border-b border-gray-300 p-2">
+                      <div className="flex flex-wrap items-center gap-1">
+                        {/* Font & Size */}
+                        <select onChange={(e) => execCommand('formatBlock', e.target.value)} className="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white hover:bg-gray-50">
+                          <option value="">Normal</option>
+                          <option value="h1">Heading 1</option>
+                          <option value="h2">Heading 2</option>
+                          <option value="h3">Heading 3</option>
+                          <option value="p">Paragraph</option>
+                        </select>
+
+                        <select onChange={(e) => execCommand('fontSize', e.target.value)} className="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white hover:bg-gray-50">
+                          <option value="">Size</option>
+                          <option value="1">Small</option>
+                          <option value="3">Normal</option>
+                          <option value="5">Large</option>
+                          <option value="7">Huge</option>
+                        </select>
+
+                        <ToolbarDivider />
+
+                        {/* Undo/Redo */}
+                        <ToolbarButton onClick={() => execCommand('undo')} icon={Undo} title="Undo (Ctrl+Z)" />
+                        <ToolbarButton onClick={() => execCommand('redo')} icon={Redo} title="Redo (Ctrl+Y)" />
+
+                        <ToolbarDivider />
+
+                        {/* Text Formatting */}
+                        <ToolbarButton onClick={() => execCommand('bold')} icon={Bold} title="Bold (Ctrl+B)" />
+                        <ToolbarButton onClick={() => execCommand('italic')} icon={Italic} title="Italic (Ctrl+I)" />
+                        <ToolbarButton onClick={() => execCommand('underline')} icon={Underline} title="Underline (Ctrl+U)" />
+                        <ToolbarButton onClick={() => execCommand('strikeThrough')} icon={Strikethrough} title="Strikethrough" />
+
+                        <ToolbarDivider />
+
+                        {/* Colors */}
+                        <div className="relative">
+                          <button
+                            onClick={() => { setColorPickerType('text'); setShowColorPicker(!showColorPicker); }}
+                            className="p-2 hover:bg-gray-200 rounded transition-colors"
+                            title="Text Color"
+                          >
+                            <Type size={18} className="text-gray-700" />
+                          </button>
+                          {showColorPicker && colorPickerType === 'text' && (
+                            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 p-2 rounded" style={{ width: '168px' }}>
+                              <div className="grid grid-cols-8 gap-1">
+                                {colors.map(color => (
+                                  <button
+                                    key={color}
+                                    onClick={() => handleColor(color)}
+                                    className="w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                    style={{ backgroundColor: color }}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="relative">
+                          <button
+                            onClick={() => { setColorPickerType('background'); setShowColorPicker(!showColorPicker); }}
+                            className="p-2 hover:bg-gray-200 rounded transition-colors"
+                            title="Background Color"
+                          >
+                            <Palette size={18} className="text-gray-700" />
+                          </button>
+                          {showColorPicker && colorPickerType === 'background' && (
+                            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 p-2 rounded" style={{ width: '168px' }}>
+                              <div className="grid grid-cols-8 gap-1">
+                                {colors.map(color => (
+                                  <button
+                                    key={color}
+                                    onClick={() => handleColor(color)}
+                                    className="w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                    style={{ backgroundColor: color }}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <ToolbarDivider />
+
+                        {/* Alignment */}
+                        <ToolbarButton onClick={() => execCommand('justifyLeft')} icon={AlignLeft} title="Align Left" />
+                        <ToolbarButton onClick={() => execCommand('justifyCenter')} icon={AlignCenter} title="Align Center" />
+                        <ToolbarButton onClick={() => execCommand('justifyRight')} icon={AlignRight} title="Align Right" />
+                        <ToolbarButton onClick={() => execCommand('justifyFull')} icon={AlignJustify} title="Justify" />
+
+                        <ToolbarDivider />
+
+                        {/* Lists */}
+                        <ToolbarButton onClick={() => execCommand('insertUnorderedList')} icon={List} title="Bullet List" />
+                        <ToolbarButton onClick={() => execCommand('insertOrderedList')} icon={ListOrdered} title="Numbered List" />
+
+                        <ToolbarDivider />
+
+                        {/* Insert */}
+                        <ToolbarButton onClick={() => handleInsertAction('link')} icon={Link} title="Insert Link" />
+                        <ToolbarButton onClick={() => handleInsertAction('image')} icon={Image} title="Insert Image" />
+                        <ToolbarButton onClick={() => handleInsertAction('table')} icon={Table} title="Insert Table" />
+
+                        <ToolbarDivider />
+
+                        {/* Clear Format */}
+                        <ToolbarButton onClick={() => execCommand('removeFormat')} icon={Code} title="Clear Formatting" />
+                      </div>
+                    </div>
+                    
                     <iframe 
                       ref={iframeRef}
                       className="w-full border-0"
-                      style={{ minHeight: '400px', background: '#fff' }}
+                      style={{ minHeight: '500px', background: '#fff' }}
                       title="Email Template Editor"
                     />
                   </div>
