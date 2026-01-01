@@ -10,6 +10,31 @@ export default function Template() {
     openMenu: null, showSourceCode: false, htmlContent: '', 
     showColorPicker: false, colorPickerType: 'text'
   });
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const loadProducts = () => {
+      const saved = JSON.parse(localStorage.getItem("products") || "[]");
+      setProducts(saved);
+    };
+
+    loadProducts();
+
+    const handleStorageChange = (e) => {
+      if (e.key === 'products') {
+        loadProducts();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    const interval = setInterval(loadProducts, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   const templates = [
     {
@@ -247,14 +272,17 @@ export default function Template() {
 
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto">
-      {/* Product Selection */}
       <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Select Product</label>
         <div className="relative w-full sm:max-w-md sm:flex-1">
           <select value={state.selectedProduct} onChange={(e) => setState(prev => ({ ...prev, selectedProduct: e.target.value }))} 
             className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
             <option value="">Select Products</option>
-            <option value="Galaxy S1">Galaxy S1</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.name}>
+                {product.name}
+              </option>
+            ))}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
@@ -262,7 +290,6 @@ export default function Template() {
         </div>
       </div>
 
-      {/* Email Selection */}
       <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">From Email</label>
         <div className="flex items-center gap-2 flex-1 w-full">
@@ -280,14 +307,12 @@ export default function Template() {
         </div>
       </div>
 
-      {/* Subject */}
       <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
         <input type="text" value={state.subject} onChange={(e) => setState(prev => ({ ...prev, subject: e.target.value }))} placeholder="Enter email subject"
           className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 hover:bg-gray-50 text-sm" />
       </div>
 
-      {/* Templates */}
       {state.selectedProduct && (
         <div className="mb-5">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
@@ -328,7 +353,6 @@ export default function Template() {
         </div>
       )}
 
-      {/* Editor */}
       {state.selectedTemplate && (
         <div className="mb-5 mt-8">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
@@ -355,7 +379,6 @@ export default function Template() {
                 </div>
               ) : (
                 <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
-                  {/* Menu Bar */}
                   <div className="bg-gray-50 border-b border-gray-300 px-2 py-1">
                     <div className="flex items-center gap-0">
                       <MenuButton label="File" items={[
@@ -393,7 +416,6 @@ export default function Template() {
                     </div>
                   </div>
 
-                  {/* Toolbar */}
                   <div className="bg-white border-b border-gray-300 p-2">
                     <div className="flex flex-wrap items-center gap-1">
                       <select onChange={(e) => execCommand('formatBlock', e.target.value)} className="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white hover:bg-gray-50">
@@ -479,7 +501,6 @@ export default function Template() {
         </div>
       )}
 
-      {/* Send Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <div className="sm:min-w-[120px]"></div>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:flex-1">
