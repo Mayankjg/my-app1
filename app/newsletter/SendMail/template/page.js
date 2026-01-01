@@ -88,7 +88,7 @@ export default function Template() {
     });
   };
 
-  const generateHtmlContent = (template) => {
+  const generateHtmlContent = (template, colors = template.colors) => {
     return `<!DOCTYPE html>
 <html>
 <head>
@@ -97,28 +97,32 @@ export default function Template() {
     body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f1f1f1ff; }
     * { box-sizing: border-box; }
     ::selection { background-color: #3b82f6; color: white; }
+    [contenteditable] { cursor: text; }
+    [contenteditable]:focus { outline: 2px solid #3b82f6; outline-offset: 2px; }
+    a[contenteditable="false"] { pointer-events: auto; cursor: pointer; }
   </style>
 </head>
-<body>
+<body contenteditable="true">
   <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;background:#ebeaeaff;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
-    <div style="background:linear-gradient(135deg,${template.colors[0]} 0%,${template.colors[1]} 50%,${template.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
-      <h1 contenteditable="true" style="color:#1f2937;font-size:32px;font-weight:bold;margin:0 0 10px 0;outline:none">${template.content.title}</h1>
-      <h2 contenteditable="true" style="color:#374151;font-size:20px;font-weight:600;margin:0 0 15px 0;outline:none">${template.content.subtitle}</h2>
-      <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.6;margin:0;outline:none">${template.content.description}</p>
+    <div style="background:linear-gradient(135deg,${colors[0]} 0%,${colors[1]} 50%,${colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
+      <h1 style="color:#1f2937;font-size:32px;font-weight:bold;margin:0 0 10px 0">${template.content.title}</h1>
+      <h2 style="color:#374151;font-size:20px;font-weight:600;margin:0 0 15px 0">${template.content.subtitle}</h2>
+      <p style="color:#4b5563;font-size:16px;line-height:1.6;margin:0">${template.content.description}</p>
     </div>
     <div style="background:#fff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb">
-      <h3 contenteditable="true" style="color:#1f2937;font-size:22px;font-weight:bold;margin:0 0 20px 0;outline:none">Welcome!</h3>
-      <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 20px 0;outline:none">${template.content.body}</p>
-      <p contenteditable="true" style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 30px 0;outline:none">We're excited to help you get started and look forward to supporting you every step of the way.</p>
+      <h3 style="color:#1f2937;font-size:22px;font-weight:bold;margin:0 0 20px 0">Welcome!</h3>
+      <p style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 20px 0">${template.content.body}</p>
+      <p style="color:#4b5563;font-size:16px;line-height:1.8;margin:0 0 30px 0">We're excited to help you get started and look forward to supporting you every step of the way.</p>
       <div style="text-align:center;margin:30px 0">
-        <a href="#" contenteditable="true" style="display:inline-block;background:linear-gradient(135deg,${template.colors[1]},${template.colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1);outline:none">${template.content.callToAction}</a>
+        <a href="#" style="display:inline-block;background:linear-gradient(135deg,${colors[1]},${colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1)">${template.content.callToAction}</a>
       </div>
     </div>
     <div style="background:#f9fafb;padding:30px 40px;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none">
-      <p contenteditable="true" style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center;outline:none">${template.content.footer}</p>
+      <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center">${template.content.footer}</p>
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0">
-      <p contenteditable="true" style="color:#9ca3af;font-size:12px;text-align:center;margin:0;outline:none">© 2024 Your Company. All rights reserved.<br>123 Business St, Suite 100, City, State 12345<br>
-        <a href="#" style="color:#3b82f6;text-decoration:none">Unsubscribe</a> | <a href="#" style="color:#3b82f6;text-decoration:none">View in Browser</a>
+      <p style="color:#9ca3af;font-size:12px;text-align:center;margin:0"> 301, Milestone Vibrant, Ring Rd, opposite to Apple Hospital, Udhana Darwaja, Khatodra Wadi, Surat, Gujarat 395002</p>
+      <p style="color:#9ca3af;font-size:12px;text-align:center;margin:10px 0 0 0">
+        <a href="https://tenacioustechies.com" target="_blank" contenteditable="false" style="color:#3b82f6;text-decoration:none;font-weight:500">copyright @ Tenacious Techies</a>
       </p>
     </div>
   </div>
