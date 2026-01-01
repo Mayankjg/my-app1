@@ -19,6 +19,35 @@ export default function CustomMessage() {
   const [sourceCode, setSourceCode] = useState('');
   const [quillLoaded, setQuillLoaded] = useState(false);
   const [templates, setTemplates] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  // Load products from localStorage
+  useEffect(() => {
+    const loadProducts = () => {
+      const saved = JSON.parse(localStorage.getItem("products") || "[]");
+      setProducts(saved);
+    };
+
+    // Load initially
+    loadProducts();
+
+    // Listen for storage changes (when products are updated in Products page)
+    const handleStorageChange = (e) => {
+      if (e.key === 'products') {
+        loadProducts();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also check for changes periodically (for same-tab updates)
+    const interval = setInterval(loadProducts, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const savedTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
@@ -258,10 +287,8 @@ export default function CustomMessage() {
       templateName: selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.name : ''
     };
     
-
     localStorage.setItem('selectedTemplateData', JSON.stringify(templateData));
     
-
     router.push('/newsletter/SendMail/SendSingleMail');
   };
 
@@ -289,6 +316,7 @@ export default function CustomMessage() {
       `}</style>
 
       <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+        {/* Product Selection */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label htmlFor="product-select-custom" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
             Select Product
@@ -301,9 +329,11 @@ export default function CustomMessage() {
               className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-gray-700"
             >
               <option value="">Select Products</option>
-              <option value="Galaxy S1">Galaxy S1</option>
-              <option value="Motorola">Motorola</option>
-              <option value="Iphone 15">Iphone 15</option>
+              {products.map((product) => (
+                <option key={product.id} value={product.name}>
+                  {product.name}
+                </option>
+              ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -313,6 +343,7 @@ export default function CustomMessage() {
           </div>
         </div>
 
+        {/* Email Selection */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label htmlFor="email-select-custom" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
             From Email
@@ -344,6 +375,7 @@ export default function CustomMessage() {
           </div>
         </div>
 
+        {/* Template Selection */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label htmlFor="template-select" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
             Reply with
@@ -377,6 +409,7 @@ export default function CustomMessage() {
           </div>
         </div>
 
+        {/* Subject */}
         <div className="mb-5">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4">
             <label htmlFor="subject-input" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
@@ -393,6 +426,7 @@ export default function CustomMessage() {
           </div>
         </div>
 
+        {/* Message Editor */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] pt-2">
             Message Editor
@@ -462,6 +496,7 @@ export default function CustomMessage() {
           </div>
         </div>
 
+        {/* Send Buttons */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <div className="sm:min-w-[120px]"></div>
           <div className="flex-1 w-full">

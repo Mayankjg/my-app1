@@ -8,7 +8,7 @@ export default function ManageItemPage() {
   const router = useRouter();
   
   useEffect(() => {
-    router.push('/manageitem/categories');
+    router.push('/manageitem/products');
   }, [router]);
 
   return null;

@@ -15,12 +15,6 @@ export default function ProductsPage() {
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("products") || "[]");
     if (saved.length === 0) {
-      const defaultProducts = [
-        { id: 1, name: "Bandhani" },
-        { id: 2, name: "Galaxy S1" },
-        { id: 3, name: "Galaxy S2" },
-        { id: 4, name: "Lenovo Ideapad" },
-      ];
       setProducts(defaultProducts);
       localStorage.setItem("products", JSON.stringify(defaultProducts));
     } else {
