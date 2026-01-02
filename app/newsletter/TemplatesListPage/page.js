@@ -74,11 +74,8 @@ export default function TemplatesListPage() {
     previewWindow.document.close();
   };
 
-  // નવો handleEdit function જે template data સાથે navigate કરે
   const handleEdit = (template) => {
-    // Template data ને localStorage માં temporary store કરો
     localStorage.setItem("editingTemplate", JSON.stringify(template));
-    // Edit page પર navigate કરો
     router.push(`/newsletter/TemplatesListPage/AddCustomTemplate?edit=${template.id}`);
   };
 
