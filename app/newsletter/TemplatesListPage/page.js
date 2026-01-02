@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function TemplatesListPage() {
@@ -74,6 +74,14 @@ export default function TemplatesListPage() {
     previewWindow.document.close();
   };
 
+  // નવો handleEdit function જે template data સાથે navigate કરે
+  const handleEdit = (template) => {
+    // Template data ને localStorage માં temporary store કરો
+    localStorage.setItem("editingTemplate", JSON.stringify(template));
+    // Edit page પર navigate કરો
+    router.push(`/newsletter/TemplatesListPage/AddCustomTemplate?edit=${template.id}`);
+  };
+
   const ActionButton = ({ onClick, className, children }) => (
     <button onClick={onClick} className={`w-full sm:w-auto px-5 py-2.5 rounded transition-colors text-base ${className}`}>
       {children}
@@ -124,7 +132,7 @@ export default function TemplatesListPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            className="w-full sm:w-[200px] text-black h-10 sm:h-9 border border-gray-300 rounded-[5px] px-5 py-2 text-base sm:text-[18px] focus:outline-none focus:ring-2 focus:ring-[#00a7cf]"
+            className="w-full sm:w-[200px] text-black h-10 border border-gray-300 rounded-[5px] px-5 py-2 text-base sm:text-[18px] focus:outline-none focus:ring-2 focus:ring-[#00a7cf]"
           />
           <button 
             onClick={handleSearch}
@@ -187,7 +195,7 @@ export default function TemplatesListPage() {
                         <TableButton onClick={() => handleDelete(template.id)} color="red">Delete</TableButton>
                       </td>
                       <td className="py-3 px-4 text-center">
-                        <TableButton onClick={() => router.push(`/newsletter/TemplatesListPage/EditTemplate/${template.id}`)} color="yellow">
+                        <TableButton onClick={() => handleEdit(template)} color="yellow">
                           Edit
                         </TableButton>
                       </td>

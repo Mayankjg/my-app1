@@ -1,20 +1,23 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 export default function AddCustomTemplatePage() {
   const [templateName, setTemplateName] = useState("");
   const [visibility, setVisibility] = useState("admin");
-  const [savedTemplates, setSavedTemplates] = useState("");
   const [openMenu, setOpenMenu] = useState(null);
   const [showSourceCode, setShowSourceCode] = useState(false);
   const [sourceCode, setSourceCode] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingTemplateId, setEditingTemplateId] = useState(null);
   const quillRef = useRef(null);
   const editorContainerRef = useRef(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // Quill Editor Initialize કરો
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
@@ -43,6 +46,9 @@ export default function AddCustomTemplatePage() {
             ]
           }
         });
+
+        // Quill load થયા પછી edit mode check કરો
+        loadEditData();
       }
     };
     document.body.appendChild(script);
@@ -53,10 +59,57 @@ export default function AddCustomTemplatePage() {
     };
   }, []); 
 
+  // Edit Mode માટે data load કરો
+  const loadEditData = () => {
+    const editId = searchParams.get("edit");
+    
+    if (editId) {
+      setIsEditMode(true);
+      setEditingTemplateId(editId);
+      
+      // localStorage માંથી template data લાવો
+      const editingTemplate = JSON.parse(localStorage.getItem("editingTemplate") || "{}");
+      
+      if (editingTemplate.id === editId) {
+        // Template name set કરો
+        setTemplateName(editingTemplate.name || "");
+        
+        // Visibility set કરો
+        if (editingTemplate.visibility) {
+          setVisibility(editingTemplate.visibility);
+        }
+        
+        // Quill editor માં content load કરો
+        if (quillRef.current && editingTemplate.content) {
+          // HTML content ને Quill editor માં set કરો
+          quillRef.current.root.innerHTML = editingTemplate.content;
+        }
+      } else {
+        // Fallback: બધા templates માંથી શોધો
+        const allTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
+        const templateToEdit = allTemplates.find(t => t.id === editId);
+        
+        if (templateToEdit) {
+          setTemplateName(templateToEdit.name || "");
+          
+          if (templateToEdit.visibility) {
+            setVisibility(templateToEdit.visibility);
+          }
+          
+          if (quillRef.current && templateToEdit.content) {
+            quillRef.current.root.innerHTML = templateToEdit.content;
+          }
+        }
+      }
+    }
+  };
+
+  // જ્યારે Quill ready થાય ત્યારે edit data load કરો
   useEffect(() => {
-    const existingTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
-    setSavedTemplates(existingTemplates);
-  }, []);
+    if (quillRef.current) {
+      loadEditData();
+    }
+  }, [searchParams]);
 
   const handleMenuClick = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
@@ -223,27 +276,51 @@ export default function AddCustomTemplatePage() {
       return;
     }
 
-    const template = {
-      id: crypto.randomUUID(),
-      name: templateName.trim(),
-      content: editorContent,
-      visibility: visibility,
-      createdAt: new Date().toISOString(),
-      isCustom: true
-    };
-
     const existingTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
-    const updatedTemplates = [template, ...existingTemplates];
-    localStorage.setItem("emailTemplates", JSON.stringify(updatedTemplates));
-    setSavedTemplates(updatedTemplates);
 
-    alert('Template saved successfully !');
+    if (isEditMode && editingTemplateId) {
+      // Edit Mode: Existing template ને update કરો
+      const updatedTemplates = existingTemplates.map(template => 
+        template.id === editingTemplateId
+          ? { 
+              ...template, 
+              name: templateName.trim(),
+              content: editorContent,
+              visibility: visibility,
+              updatedAt: new Date().toISOString()
+            }
+          : template
+      );
+      
+      localStorage.setItem("emailTemplates", JSON.stringify(updatedTemplates));
+      alert('Template updated successfully!');
+    } else {
+      // Add Mode: નવું template create કરો
+      const template = {
+        id: crypto.randomUUID(),
+        name: templateName.trim(),
+        content: editorContent,
+        visibility: visibility,
+        createdAt: new Date().toISOString(),
+        isCustom: true
+      };
 
-    setTemplateName('');
-    setVisibility('admin');
-    if (quillRef.current) {
-      quillRef.current.setContents([]);
+      const updatedTemplates = [template, ...existingTemplates];
+      localStorage.setItem("emailTemplates", JSON.stringify(updatedTemplates));
+      alert('Template saved successfully!');
     }
+
+    // Temporary editing data clear કરો
+    localStorage.removeItem("editingTemplate");
+    
+    // Templates list page પર પાછા જાઓ
+    router.push("/newsletter/TemplatesListPage");
+  };
+
+  const handleCancel = () => {
+    // Temporary editing data clear કરો
+    localStorage.removeItem("editingTemplate");
+    router.push("/newsletter/TemplatesListPage");
   };
 
   const MenuButton = ({ label, items }) => (
@@ -328,7 +405,11 @@ export default function AddCustomTemplatePage() {
           <div className="bg-white w-full px-4 sm:px-6 py-4 border-b border-gray-300">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <h1 className="text-xl sm:text-2xl font-normal text-gray-700">
-                Add Custom <strong>Template</strong>
+                {isEditMode ? (
+                  <>Edit Custom <strong>Template</strong></>
+                ) : (
+                  <>Add Custom <strong>Template</strong></>
+                )}
               </h1>
               <button
                 onClick={() => router.push("/newsletter/TemplatesListPage")}
@@ -481,11 +562,11 @@ export default function AddCustomTemplatePage() {
                 onClick={handleSaveCustomTemplate}
                 className="w-full sm:w-auto bg-cyan-500 text-white px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base hover:bg-cyan-600 active:bg-cyan-700 font-medium transition-colors shadow-sm"
               >
-                Save Template
+                {isEditMode ? 'Update Template' : 'Save Template'}
               </button>
             
               <button
-                onClick={() => router.push("/newsletter/TemplatesListPage")}
+                onClick={handleCancel}
                 className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 active:bg-gray-500 text-gray-700 px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base font-medium transition-colors shadow-sm"
               >
                 Cancel
