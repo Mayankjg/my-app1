@@ -21,17 +21,14 @@ export default function CustomMessage() {
   const [templates, setTemplates] = useState([]);
   const [products, setProducts] = useState([]);
 
-  // Load products from localStorage
   useEffect(() => {
     const loadProducts = () => {
       const saved = JSON.parse(localStorage.getItem("products") || "[]");
       setProducts(saved);
     };
 
-    // Load initially
     loadProducts();
 
-    // Listen for storage changes (when products are updated in Products page)
     const handleStorageChange = (e) => {
       if (e.key === 'products') {
         loadProducts();
@@ -40,7 +37,6 @@ export default function CustomMessage() {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Also check for changes periodically (for same-tab updates)
     const interval = setInterval(loadProducts, 1000);
 
     return () => {
@@ -316,7 +312,6 @@ export default function CustomMessage() {
       `}</style>
 
       <div className="p-4 sm:p-6 max-w-7xl mx-auto">
-        {/* Product Selection */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label htmlFor="product-select-custom" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
             Select Product
@@ -343,7 +338,6 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* Email Selection */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label htmlFor="email-select-custom" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
             From Email
@@ -358,7 +352,7 @@ export default function CustomMessage() {
               >
                 <option value="">Select Email</option>
                 <option value="mayank@gmail.com">mayank@gmail.com</option>
-                <option value="magan@gmail.com">magan@gmail.com</option>
+                {/* <option value="magan@gmail.com">magan@gmail.com</option> */}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -375,7 +369,6 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* Template Selection */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label htmlFor="template-select" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
             Reply with
@@ -409,7 +402,6 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* Subject */}
         <div className="mb-5">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4">
             <label htmlFor="subject-input" className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">
@@ -426,7 +418,6 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* Message Editor */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
           <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] pt-2">
             Message Editor
@@ -496,7 +487,6 @@ export default function CustomMessage() {
           </div>
         </div>
 
-        {/* Send Buttons */}
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <div className="sm:min-w-[120px]"></div>
           <div className="flex-1 w-full">
