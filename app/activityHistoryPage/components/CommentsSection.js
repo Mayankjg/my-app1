@@ -1,18 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Trash2 } from "lucide-react";
 
 export default function CommentsSection() {
-  const [comments, setComments] = useState([
-    {
-      id: 1,    
-      text: "Need to have a followup call. - By Test",
-      date: "28-Oct-25 10:29",
-    },
-  ]);
-
+  const [comments, setComments] = useState([]);
   const [inputComment, setInputComment] = useState("");
+
+  // Load comments from localStorage on mount
+  useEffect(() => {
+    const savedComments = localStorage.getItem("comments");
+    if (savedComments) {
+      setComments(JSON.parse(savedComments));
+    }
+  }, []);
+
+  // Save comments to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("comments", JSON.stringify(comments));
+  }, [comments]);
 
   const addComment = () => {
     if (!inputComment.trim()) return;
