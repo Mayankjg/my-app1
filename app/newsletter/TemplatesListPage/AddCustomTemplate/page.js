@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
@@ -17,7 +17,6 @@ export default function AddCustomTemplatePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Quill Editor Initialize કરો
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
@@ -47,7 +46,6 @@ export default function AddCustomTemplatePage() {
           }
         });
 
-        // Quill load થયા પછી edit mode check કરો
         loadEditData();
       }
     };
@@ -59,7 +57,6 @@ export default function AddCustomTemplatePage() {
     };
   }, []); 
 
-  // Edit Mode માટે data load કરો
   const loadEditData = () => {
     const editId = searchParams.get("edit");
     
@@ -67,25 +64,19 @@ export default function AddCustomTemplatePage() {
       setIsEditMode(true);
       setEditingTemplateId(editId);
       
-      // localStorage માંથી template data લાવો
       const editingTemplate = JSON.parse(localStorage.getItem("editingTemplate") || "{}");
       
       if (editingTemplate.id === editId) {
-        // Template name set કરો
         setTemplateName(editingTemplate.name || "");
-        
-        // Visibility set કરો
+
         if (editingTemplate.visibility) {
           setVisibility(editingTemplate.visibility);
         }
         
-        // Quill editor માં content load કરો
         if (quillRef.current && editingTemplate.content) {
-          // HTML content ને Quill editor માં set કરો
           quillRef.current.root.innerHTML = editingTemplate.content;
         }
       } else {
-        // Fallback: બધા templates માંથી શોધો
         const allTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
         const templateToEdit = allTemplates.find(t => t.id === editId);
         
@@ -104,7 +95,6 @@ export default function AddCustomTemplatePage() {
     }
   };
 
-  // જ્યારે Quill ready થાય ત્યારે edit data load કરો
   useEffect(() => {
     if (quillRef.current) {
       loadEditData();
@@ -279,7 +269,6 @@ export default function AddCustomTemplatePage() {
     const existingTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
 
     if (isEditMode && editingTemplateId) {
-      // Edit Mode: Existing template ને update કરો
       const updatedTemplates = existingTemplates.map(template => 
         template.id === editingTemplateId
           ? { 
@@ -295,7 +284,6 @@ export default function AddCustomTemplatePage() {
       localStorage.setItem("emailTemplates", JSON.stringify(updatedTemplates));
       alert('Template updated successfully!');
     } else {
-      // Add Mode: નવું template create કરો
       const template = {
         id: crypto.randomUUID(),
         name: templateName.trim(),
@@ -310,15 +298,12 @@ export default function AddCustomTemplatePage() {
       alert('Template saved successfully!');
     }
 
-    // Temporary editing data clear કરો
     localStorage.removeItem("editingTemplate");
     
-    // Templates list page પર પાછા જાઓ
     router.push("/newsletter/TemplatesListPage");
   };
 
   const handleCancel = () => {
-    // Temporary editing data clear કરો
     localStorage.removeItem("editingTemplate");
     router.push("/newsletter/TemplatesListPage");
   };
