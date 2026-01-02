@@ -295,8 +295,8 @@ export default function CustomMessage() {
   return (
     <>
       <style>{`
-        .ql-container{font-family:inherit;border:none!important;height:100%!important}
-        .ql-editor{color:black!important;outline:none!important;overflow:visible!important;height:auto!important}
+        .ql-container{font-family:inherit;border:none!important;height:100px!important;overflow-y:auto!important}
+        .ql-editor{color:black!important;outline:none!important;overflow-y:auto!important;height:100%!important;max-height:400px!important}
         .ql-editor:focus{outline:none!important;border:none!important}
         .ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,
         .ql-editor h4,.ql-editor h5,.ql-editor h6,
@@ -306,11 +306,11 @@ export default function CustomMessage() {
         .ql-tooltip{left:auto!important;right:0!important;transform:none!important}
         .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
         .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
-        .resizable-editor{resize:vertical;overflow:auto;min-height:200px;max-height:500px}
-        .resizable-editor::-webkit-scrollbar{width:8px}
-        .resizable-editor::-webkit-scrollbar-track{background:#f1f1f1}
-        .resizable-editor::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
-        .resizable-editor::-webkit-scrollbar-thumb:hover{background:#555}
+        .resizable-editor{overflow:hidden!important}
+        .ql-container::-webkit-scrollbar,.ql-editor::-webkit-scrollbar{width:8px}
+        .ql-container::-webkit-scrollbar-track,.ql-editor::-webkit-scrollbar-track{background:#f1f1f1}
+        .ql-container::-webkit-scrollbar-thumb,.ql-editor::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
+        .ql-container::-webkit-scrollbar-thumb:hover,.ql-editor::-webkit-scrollbar-thumb:hover{background:#555}
         .ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:8px!important}
         .ql-toolbar.ql-snow .ql-formats{margin-right:15px!important;margin-bottom:5px!important}
       `}</style>
