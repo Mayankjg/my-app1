@@ -253,7 +253,36 @@ export default function CustomMessage() {
   };
 
   const handleSendSingleMail = () => {
+    // Validation
+    if (!selectedProduct) {
+      alert('Please select a product');
+      return;
+    }
+    
+    if (!selectedEmail) {
+      alert('Please select an email');
+      return;
+    }
+    
+    if (!selectedTemplate) {
+      alert('Please select a template');
+      return;
+    }
+    
+    if (!subject.trim()) {
+      alert('Please enter a subject');
+      return;
+    }
+    
     const currentContent = showSourceCode ? sourceCode : (quillRef.current?.root.innerHTML || '');
+    const plainText = currentContent.replace(/<[^>]*>/g, '').trim();
+    
+    if (!plainText) {
+      alert('Please write a message');
+      return;
+    }
+    
+    // All validations passed, proceed
     const templateData = {
       content: currentContent,
       subject: subject,
@@ -265,7 +294,7 @@ export default function CustomMessage() {
     localStorage.setItem('selectedTemplateData', JSON.stringify(templateData));
     router.push('/newsletter/SendMail/SendSingleMail');
   };
-
+  
   return (<>
     <style>{
       `.ql-container{font-family:inherit;border:none!important;height:100px!important;overflow-y:auto!important}

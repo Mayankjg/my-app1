@@ -70,7 +70,7 @@ export default function SendSingleMail() {
       return;
     }
 
-    alert(`Sending mail to ${selectedContacts.length} contact(s)\n\nSubject: ${selectedTemplate.subject || '(no subject)'}\nFrom: ${selectedTemplate.selectedEmail || '(no email selected)'}`);
+    alert(`Sending mail to ${selectedContacts.length} contact`);
   };
 
   const handlePreview = () => {
