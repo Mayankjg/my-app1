@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Link, Image, Table, Code, Palette, Type, Undo, Redo } from 'lucide-react';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
 export default function Template() {
+  const router = useRouter();
   const iframeRef = useRef(null);
   const [state, setState] = useState({
     selectedProduct: '', selectedEmail: '', subject: '', selectedTemplate: null,
@@ -323,12 +325,55 @@ export default function Template() {
     </button>
   );
 
-  const validateSend = () => {
-    if (!state.selectedProduct) return alert('Please select a product');
-    if (!state.selectedEmail) return alert('Please select an email');
-    if (!state.subject) return alert('Please enter a subject');
-    if (!state.selectedTemplate) return alert('Please select a template');
-    return true;
+  const handleSendSingleMail = () => {
+    // Validation
+    if (!state.selectedProduct) {
+      alert('Please select a product');
+      return;
+    }
+    
+    if (!state.selectedEmail) {
+      alert('Please select an email');
+      return;
+    }
+    
+    if (!state.selectedTemplate) {
+      alert('Please select a template');
+      return;
+    }
+    
+    if (!state.subject.trim()) {
+      alert('Please enter a subject');
+      return;
+    }
+    
+    // Get the current content from iframe or source code
+    let currentContent = '';
+    if (state.showSourceCode) {
+      currentContent = state.htmlContent;
+    } else if (iframeRef.current) {
+      currentContent = iframeRef.current.contentDocument.documentElement.outerHTML;
+    }
+    
+    const plainText = currentContent.replace(/<[^>]*>/g, '').trim();
+    
+    if (!plainText) {
+      alert('Please write a message');
+      return;
+    }
+    
+    // All validations passed, save data and navigate
+    const templateData = {
+      content: currentContent,
+      subject: state.subject,
+      selectedProduct: state.selectedProduct,
+      selectedEmail: state.selectedEmail,
+      templateId: state.selectedTemplate.id,
+      templateName: state.selectedTemplate.name
+    };
+    
+    localStorage.setItem('selectedTemplateData', JSON.stringify(templateData));
+    router.push('/newsletter/SendMail/SendSingleMail');
   };
 
   return (
@@ -435,290 +480,296 @@ export default function Template() {
                       <th className="border p-2">SR. NO.</th>
                       <th className="border p-2">EMAIL ADDRESS</th>
                       <th className="border p-2 text-center">EDIT</th>
-                      <th className="border p-2 text-center">DELETE</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {emails.length === 0 ? (
-                      <tr>
-                        <td colSpan="4" className="border p-4 text-center text-gray-500">
-                          No emails found.
-                        </td>
-                      </tr>
-                    ) : (
-                      emails.map((emailObj, index) => (
-                        <tr key={emailObj.id} className="hover:bg-gray-50 text-gray-700">
-                          <td className="border p-2">{index + 1}</td>
-                          <td className="border p-2">
-                            {editingEmailId === emailObj.id ? (
-                              <input 
-                                type="email" 
-                                className="border px-2 py-1 w-full rounded" 
-                                value={editedEmail} 
-                                onChange={(e) => setEditedEmail(e.target.value)} 
-                              />
-                            ) : (
-                              emailObj.email
-                            )}
-                          </td>
-                          <td className="border p-2 text-center">
-                            {editingEmailId === emailObj.id ? (
-                              <>
-                                <button 
-                                  className="text-blue-600 font-semibold mr-2" 
-                                  onClick={() => handleUpdateEmail(emailObj.id)}>
-                                  Update
-                                </button>
-                                <button 
-                                  className="text-red-600 font-semibold" 
-                                  onClick={() => {
-                                    setEditingEmailId(null);
-                                    setEditedEmail('');
-                                  }}>
-                                  Cancel
-                                </button>
-                              </>
-                            ) : (
-                              <button 
-                                className="text-gray-600 hover:text-blue-600" 
-                                onClick={() => {
-                                  setEditingEmailId(emailObj.id);
-                                  setEditedEmail(emailObj.email);
-                                }}>
-                                <FaPen />
-                              </button>
-                            )}
-                          </td>
-                          <td className="border p-2 text-center">
+                  <th className="border p-2 text-center">DELETE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {emails.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="border p-4 text-center text-gray-500">
+                      No emails found.
+                    </td>
+                  </tr>
+                ) : (
+                  emails.map((emailObj, index) => (
+                    <tr key={emailObj.id} className="hover:bg-gray-50 text-gray-700">
+                      <td className="border p-2">{index + 1}</td>
+                      <td className="border p-2">
+                        {editingEmailId === emailObj.id ? (
+                          <input 
+                            type="email" 
+                            className="border px-2 py-1 w-full rounded" 
+                            value={editedEmail} 
+                            onChange={(e) => setEditedEmail(e.target.value)} 
+                          />
+                        ) : (
+                          emailObj.email
+                        )}
+                      </td>
+                      <td className="border p-2 text-center">
+                        {editingEmailId === emailObj.id ? (
+                          <>
                             <button 
-                              onClick={() => handleDeleteSingleEmail(emailObj.id)} 
-                              className="text-red-600 hover:text-red-700">
-                              <FaTrash />
+                              className="text-blue-600 font-semibold mr-2" 
+                              onClick={() => handleUpdateEmail(emailObj.id)}>
+                              Update
                             </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="px-6 py-4 border-t flex justify-end">
-              <button 
-                onClick={() => setShowManageEmails(false)} 
-                className="px-5 py-2 text-black rounded bg-gray-200 hover:bg-gray-300">
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-        <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
-        <input type="text" value={state.subject} onChange={(e) => setState(prev => ({ ...prev, subject: e.target.value }))} placeholder="Enter email subject"
-          className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 hover:bg-gray-50 text-sm" />
-      </div>
-
-      {state.selectedProduct && (
-        <div className="mb-5">
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-            <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">Select Template</label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
-              {templates.map((t) => (
-                <div key={t.id} className="flex flex-col items-center w-full">
-                  <div onClick={() => setState(prev => ({ ...prev, selectedTemplate: t }))} 
-                    className={`cursor-pointer transition-all rounded-lg overflow-hidden w-full ${state.selectedTemplate?.id === t.id ? 'ring-2 ring-gray-500 shadow-xl scale-105' : 'ring-2 ring-gray-200 hover:shadow-lg hover:scale-105'}`}
-                    style={{ maxWidth: '250px', aspectRatio: '5/3.6', border: '8px solid #f1f0f0ff', borderRadius: '12px', margin: '0 auto' }}>
-                    <div className="bg-white h-full w-full">
-                      <div className="relative h-full p-3 sm:p-4 flex flex-col justify-between" 
-                        style={{ background: `linear-gradient(135deg,${t.colors[0]} 0%,${t.colors[1]} 50%,${t.colors[2]} 100%)` }}>
-                        <div>
-                          <h3 className="text-xs sm:text-sm font-bold text-gray-800 mb-1 sm:mb-2 line-clamp-2">{t.content.title}</h3>
-                          <p className="text-[10px] sm:text-xs text-gray-700 line-clamp-3">{t.content.subtitle}</p>
-                        </div>
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-2 sm:p-3">
-                          <p className="text-white text-[10px] sm:text-xs font-bold text-center">{t.name}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <label className="mt-3 sm:mt-5 flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={state.selectedTemplate?.id === t.id}
-                      onChange={() => setState(prev => ({ ...prev, selectedTemplate: t }))}
-                      className="w-4 h-4 bg-gray-100 border-gray-300 rounded-full focus:ring-2 cursor-pointer appearance-none border-2"
-                      style={{
-                        backgroundColor: state.selectedTemplate?.id === t.id ? '#3be0f6ff' : '#f3f4f6',
-                        borderColor: state.selectedTemplate?.id === t.id ? '#3be0f6ff' : '#d1d5db',
-                        boxShadow: state.selectedTemplate?.id === t.id ? '0 0 0 2px white, 0 0 0 3px #3be0f6ff' : 'none'
-                      }} />
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {state.selectedTemplate && (
-        <div className="mb-5 mt-8">
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-            <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">Message Editor</label>
-            <div className="w-full editor-container text-black">
-              {state.showSourceCode ? (
-                <div>
-                  <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded flex items-center justify-between">
-                    <span>🔧 Source Code Mode</span>
-                    <button onClick={() => {
-                      if (iframeRef.current) {
-                        const doc = iframeRef.current.contentDocument;
-                        doc.open();
-                        doc.write(state.htmlContent);
-                        doc.close();
-                        setupKeyboardShortcuts(doc);
-                      }
-                      setState(prev => ({ ...prev, showSourceCode: false }));
-                    }} className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
-                  </div>
-                  <textarea value={state.htmlContent} onChange={(e) => setState(prev => ({ ...prev, htmlContent: e.target.value }))} 
-                    className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" 
-                    placeholder="HTML source code..." />
-                </div>
-              ) : (
-                <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
-                  <div className="bg-gray-50 border-b border-gray-300 px-2 py-1">
-                    <div className="flex items-center gap-0">
-                      <MenuButton label="File" items={[
-                        { label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleAction('file', 'new') }, 
-                        { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleAction('file', 'print') }
-                      ]} />
-                      <MenuButton label="Edit" items={[
-                        { label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleAction('edit', 'undo') }, 
-                        { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleAction('edit', 'redo') }, 
-                        'divider',
-                        { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleAction('edit', 'cut') }, 
-                        { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleAction('edit', 'copy') }, 
-                        { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleAction('edit', 'paste') },
-                        'divider', 
-                        { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleAction('edit', 'selectAll') }
-                      ]} />
-                      <MenuButton label="Insert" items={[
-                        { label: 'Insert image', onClick: () => handleAction('insert', 'image') }, 
-                        { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleAction('insert', 'link') },
-                        { label: 'Insert table', onClick: () => handleAction('insert', 'table') }, 
-                        { label: 'Horizontal line', onClick: () => handleAction('insert', 'hr') }
-                      ]} />
-                      <MenuButton label="View" items={[
-                        { label: 'Fullscreen', shortcut: 'F11', onClick: () => handleAction('view', 'fullscreen') }, 
-                        { label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }
-                      ]} />
-                      <MenuButton label="Format" items={[
-                        { label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleAction('format', 'bold') }, 
-                        { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleAction('format', 'italic') }, 
-                        { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleAction('format', 'underline') },
-                        { label: 'Strikethrough', onClick: () => handleAction('format', 'strike') }
-                      ]} />
-                      <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleAction('insert', 'table') }]} />
-                      <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }]} />
-                    </div>
-                  </div>
-
-                  <div className="bg-white border-b border-gray-300 p-2">
-                    <div className="flex flex-wrap items-center gap-1">
-                      <select onChange={(e) => execCommand('formatBlock', e.target.value)} className="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white hover:bg-gray-50">
-                        <option value="">Normal</option>
-                        <option value="h1">Heading 1</option>
-                        <option value="h2">Heading 2</option>
-                        <option value="h3">Heading 3</option>
-                        <option value="p">Paragraph</option>
-                      </select>
-                      <select onChange={(e) => execCommand('fontSize', e.target.value)} className="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white hover:bg-gray-50">
-                        <option value="">Size</option>
-                        <option value="1">Small</option>
-                        <option value="3">Normal</option>
-                        <option value="5">Large</option>
-                        <option value="7">Huge</option>
-                      </select>
-                      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                      <ToolbarButton onClick={() => execCommand('undo')} icon={Undo} title="Undo (Ctrl+Z)" />
-                      <ToolbarButton onClick={() => execCommand('redo')} icon={Redo} title="Redo (Ctrl+Y)" />
-                      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                      <ToolbarButton onClick={() => execCommand('bold')} icon={Bold} title="Bold (Ctrl+B)" />
-                      <ToolbarButton onClick={() => execCommand('italic')} icon={Italic} title="Italic (Ctrl+I)" />
-                      <ToolbarButton onClick={() => execCommand('underline')} icon={Underline} title="Underline (Ctrl+U)" />
-                      <ToolbarButton onClick={() => execCommand('strikeThrough')} icon={Strikethrough} title="Strikethrough" />
-                      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                      <div className="relative">
-                        <button onClick={() => setState(prev => ({ ...prev, colorPickerType: 'text', showColorPicker: !prev.showColorPicker }))}
-                          className="p-2 hover:bg-gray-200 rounded transition-colors" title="Text Color">
-                          <Type size={18} className="text-gray-700" />
-                        </button>
-                        {state.showColorPicker && state.colorPickerType === 'text' && (
-                          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 p-2 rounded" style={{ width: '168px' }}>
-                            <div className="grid grid-cols-8 gap-1">
-                              {colors.map(color => (
-                                <button key={color} onClick={() => { execCommand('foreColor', color); setState(prev => ({ ...prev, showColorPicker: false })); }}
-                                  className="w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform"
-                                  style={{ backgroundColor: color }} />
-                              ))}
-                            </div>
-                          </div>
+                            <button 
+                              className="text-red-600 font-semibold" 
+                              onClick={() => {
+                                setEditingEmailId(null);
+                                setEditedEmail('');
+                              }}>
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <button 
+                            className="text-gray-600 hover:text-blue-600" 
+                            onClick={() => {
+                              setEditingEmailId(emailObj.id);
+                              setEditedEmail(emailObj.email);
+                            }}>
+                            <FaPen />
+                          </button>
                         )}
-                      </div>
-                      <div className="relative">
-                        <button onClick={() => setState(prev => ({ ...prev, colorPickerType: 'background', showColorPicker: !prev.showColorPicker }))}
-                          className="p-2 hover:bg-gray-200 rounded transition-colors" title="Background Color">
-                          <Palette size={18} className="text-gray-700" />
+                      </td>
+                      <td className="border p-2 text-center">
+                        <button 
+                          onClick={() => handleDeleteSingleEmail(emailObj.id)} 
+                          className="text-red-600 hover:text-red-700">
+                          <FaTrash />
                         </button>
-                        {state.showColorPicker && state.colorPickerType === 'background' && (
-                          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 p-2 rounded" style={{ width: '168px' }}>
-                            <div className="grid grid-cols-8 gap-1">
-                              {colors.map(color => (
-                                <button key={color} onClick={() => { execCommand('backColor', color); setState(prev => ({ ...prev, showColorPicker: false })); }}
-                                  className="w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform"
-                                  style={{ backgroundColor: color }} />
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                      <ToolbarButton onClick={() => execCommand('justifyLeft')} icon={AlignLeft} title="Align Left" />
-                      <ToolbarButton onClick={() => execCommand('justifyCenter')} icon={AlignCenter} title="Align Center" />
-                      <ToolbarButton onClick={() => execCommand('justifyRight')} icon={AlignRight} title="Align Right" />
-                      <ToolbarButton onClick={() => execCommand('justifyFull')} icon={AlignJustify} title="Justify" />
-                      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                      <ToolbarButton onClick={() => execCommand('insertUnorderedList')} icon={List} title="Bullet List" />
-                      <ToolbarButton onClick={() => execCommand('insertOrderedList')} icon={ListOrdered} title="Numbered List" />
-                      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                      <ToolbarButton onClick={() => handleAction('insert', 'link')} icon={Link} title="Insert Link" />
-                      <ToolbarButton onClick={() => handleAction('insert', 'image')} icon={Image} title="Insert Image" />
-                      <ToolbarButton onClick={() => handleAction('insert', 'table')} icon={Table} title="Insert Table" />
-                      <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                      <ToolbarButton onClick={() => execCommand('removeFormat')} icon={Code} title="Clear Formatting" />
-                    </div>
-                  </div>
-                  
-                  <iframe ref={iframeRef} className="w-full border-0" style={{ minHeight: '500px', background: '#fff' }}
-                    title="Email Template Editor" />
-                </div>
-              )}
-            </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
-      )}
-
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-        <div className="sm:min-w-[120px]"></div>
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:flex-1">
-          <button onClick={() => validateSend() && alert('Single mail sent!')}
-            className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Single Mail</button>
-          <button onClick={() => validateSend() && alert('Entire list contacted!')}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Entire List</button>
-          <button onClick={() => validateSend() && alert('Group contact notified!')}
-            className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Group Contact</button>
+        <div className="px-6 py-4 border-t flex justify-end">
+          <button 
+            onClick={() => setShowManageEmails(false)} 
+            className="px-5 py-2 text-black rounded bg-gray-200 hover:bg-gray-300">
+            Close
+          </button>
         </div>
       </div>
     </div>
-  );
+  )}
+
+  <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+    <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
+    <input type="text" value={state.subject} onChange={(e) => setState(prev => ({ ...prev, subject: e.target.value }))} placeholder="Enter email subject"
+      className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 hover:bg-gray-50 text-sm" />
+  </div>
+
+  {state.selectedProduct && (
+    <div className="mb-5">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">Select Template</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
+          {templates.map((t) => (
+            <div key={t.id} className="flex flex-col items-center w-full">
+              <div onClick={() => setState(prev => ({ ...prev, selectedTemplate: t }))} 
+                className={`cursor-pointer transition-all rounded-lg overflow-hidden w-full ${state.selectedTemplate?.id === t.id ? 'ring-2 ring-gray-500 shadow-xl scale-105' : 'ring-2 ring-gray-200 hover:shadow-lg hover:scale-105'}`}
+                style={{ maxWidth: '250px', aspectRatio: '5/3.6', border: '8px solid #f1f0f0ff', borderRadius: '12px', margin: '0 auto' }}>
+                <div className="bg-white h-full w-full">
+                  <div className="relative h-full p-3 sm:p-4 flex flex-col justify-between" 
+                    style={{ background: `linear-gradient(135deg,${t.colors[0]} 0%,${t.colors[1]} 50%,${t.colors[2]} 100%)` }}>
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-bold text-gray-800 mb-1 sm:mb-2 line-clamp-2">{t.content.title}</h3>
+                      <p className="text-[10px] sm:text-xs text-gray-700 line-clamp-3">{t.content.subtitle}</p>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-2 sm:p-3">
+                      <p className="text-white text-[10px] sm:text-xs font-bold text-center">{t.name}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <label className="mt-3 sm:mt-5 flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={state.selectedTemplate?.id === t.id}
+                  onChange={() => setState(prev => ({ ...prev, selectedTemplate: t }))}
+                  className="w-4 h-4 bg-gray-100 border-gray-300 rounded-full focus:ring-2 cursor-pointer appearance-none border-2"
+                  style={{
+                    backgroundColor: state.selectedTemplate?.id === t.id ? '#3be0f6ff' : '#f3f4f6',
+                    borderColor: state.selectedTemplate?.id === t.id ? '#3be0f6ff' : '#d1d5db',
+                    boxShadow: state.selectedTemplate?.id === t.id ? '0 0 0 2px white, 0 0 0 3px #3be0f6ff' : 'none'
+                  }} />
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
+  {state.selectedTemplate && (
+    <div className="mb-5 mt-8">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px] sm:pt-2">Message Editor</label>
+        <div className="w-full editor-container text-black">
+          {state.showSourceCode ? (
+            <div>
+              <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded flex items-center justify-between">
+                <span>🔧 Source Code Mode</span>
+                <button onClick={() => {
+                  if (iframeRef.current) {
+                    const doc = iframeRef.current.contentDocument;
+                    doc.open();
+                    doc.write(state.htmlContent);
+                    doc.close();
+                    setupKeyboardShortcuts(doc);
+                  }
+                  setState(prev => ({ ...prev, showSourceCode: false }));
+                }} className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
+              </div>
+              <textarea value={state.htmlContent} onChange={(e) => setState(prev => ({ ...prev, htmlContent: e.target.value }))} 
+                className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" 
+                placeholder="HTML source code..." />
+            </div>
+          ) : (
+            <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+              <div className="bg-gray-50 border-b border-gray-300 px-2 py-1">
+                <div className="flex items-center gap-0">
+                  <MenuButton label="File" items={[
+                    { label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleAction('file', 'new') }, 
+                    { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleAction('file', 'print') }
+                  ]} />
+                  <MenuButton label="Edit" items={[
+                    { label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleAction('edit', 'undo') }, 
+                    { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleAction('edit', 'redo') }, 
+                    'divider',
+                    { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleAction('edit', 'cut') }, 
+                    { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleAction('edit', 'copy') }, 
+                    { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleAction('edit', 'paste') },
+                    'divider', 
+                    { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleAction('edit', 'selectAll') }
+                  ]} />
+                  <MenuButton label="Insert" items={[
+                    { label: 'Insert image', onClick: () => handleAction('insert', 'image') }, 
+                    { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleAction('insert', 'link') },
+                    { label: 'Insert table', onClick: () => handleAction('insert', 'table') }, 
+                    { label: 'Horizontal line', onClick: () => handleAction('insert', 'hr') }
+                  ]} />
+                  <MenuButton label="View" items={[
+                    { label: 'Fullscreen', shortcut: 'F11', onClick: () => handleAction('view', 'fullscreen') }, 
+                    { label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }
+                  ]} />
+                  <MenuButton label="Format" items={[
+                    { label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleAction('format', 'bold') }, 
+                    { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleAction('format', 'italic') }, 
+                    { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleAction('format', 'underline') },
+                    { label: 'Strikethrough', onClick: () => handleAction('format', 'strike') }
+                  ]} />
+                  <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleAction('insert', 'table') }]} />
+                  <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }]} />
+                </div>
+              </div>
+
+              <div className="bg-white border-b border-gray-300 p-2">
+                <div className="flex flex-wrap items-center gap-1">
+                  <select onChange={(e) => execCommand('formatBlock', e.target.value)} className="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white hover:bg-gray-50">
+                    <option value="">Normal</option>
+                    <option value="h1">Heading 1</option>
+                    <option value="h2">Heading 2</option>
+                    <option value="h3">Heading 3</option>
+                    <option value="p">Paragraph</option>
+                  </select>
+                  <select onChange={(e) => execCommand('fontSize', e.target.value)} className="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white hover:bg-gray-50">
+                    <option value="">Size</option>
+                    <option value="1">Small</option>
+                    <option value="3">Normal</option>
+                    <option value="5">Large</option>
+                    <option value="7">Huge</option>
+                  </select>
+                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                  <ToolbarButton onClick={() => execCommand('undo')} icon={Undo} title="Undo (Ctrl+Z)" />
+                  <ToolbarButton onClick={() => execCommand('redo')} icon={Redo} title="Redo (Ctrl+Y)" />
+                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                  <ToolbarButton onClick={() => execCommand('bold')} icon={Bold} title="Bold (Ctrl+B)" />
+                  <ToolbarButton onClick={() => execCommand('italic')} icon={Italic} title="Italic (Ctrl+I)" />
+                  <ToolbarButton onClick={() => execCommand('underline')} icon={Underline} title="Underline (Ctrl+U)" />
+                  <ToolbarButton onClick={() => execCommand('strikeThrough')} icon={Strikethrough} title="Strikethrough" />
+                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                  <div className="relative">
+                    <button onClick={() => setState(prev => ({ ...prev, colorPickerType: 'text', showColorPicker: !prev.showColorPicker }))}
+                      className="p-2 hover:bg-gray-200 rounded transition-colors" title="Text Color">
+                      <Type size={18} className="text-gray-700" />
+                    </button>
+                    {state.showColorPicker && state.colorPickerType === 'text' && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 p-2 rounded" style={{ width: '168px' }}>
+                        <div className="grid grid-cols-8 gap-1">
+                          {colors.map(color => (
+                            <button key={color} onClick={() => { execCommand('foreColor', color); setState(prev => ({ ...prev, showColorPicker: false })); }}
+                              className="w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform"
+                              style={{ backgroundColor: color }} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <button onClick={() => setState(prev => ({ ...prev, colorPickerType: 'background', showColorPicker: !prev.showColorPicker }))}
+                      className="p-2 hover:bg-gray-200 rounded transition-colors" title="Background Color">
+                      <Palette size={18} className="text-gray-700" />
+                    </button>
+                    {state.showColorPicker && state.colorPickerType === 'background' && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 p-2 rounded" style={{ width: '168px' }}>
+                        <div className="grid grid-cols-8 gap-1">
+                          {colors.map(color => (
+                            <button key={color} onClick={() => { execCommand('backColor', color); setState(prev => ({ ...prev, showColorPicker: false })); }}
+                              className="w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform"
+                              style={{ backgroundColor: color }} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                  <ToolbarButton onClick={() => execCommand('justifyLeft')} icon={AlignLeft} title="Align Left" />
+                  <ToolbarButton onClick={() => execCommand('justifyCenter')} icon={AlignCenter} title="Align Center" />
+                  <ToolbarButton onClick={() => execCommand('justifyRight')} icon={AlignRight} title="Align Right" />
+                  <ToolbarButton onClick={() => execCommand('justifyFull')} icon={AlignJustify} title="Justify" />
+                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                  <ToolbarButton onClick={() => execCommand('insertUnorderedList')} icon={List} title="Bullet List" />
+                  <ToolbarButton onClick={() => execCommand('insertOrderedList')} icon={ListOrdered} title="Numbered List" />
+                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                  <ToolbarButton onClick={() => handleAction('insert', 'link')} icon={Link} title="Insert Link" />
+                  <ToolbarButton onClick={() => handleAction('insert', 'image')} icon={Image} title="Insert Image" />
+                  <ToolbarButton onClick={() => handleAction('insert', 'table')} icon={Table} title="Insert Table" />
+                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                  <ToolbarButton onClick={() => execCommand('removeFormat')} icon={Code} title="Clear Formatting" />
+                </div>
+              </div>
+              
+              <iframe ref={iframeRef} className="w-full border-0" style={{ minHeight: '500px', background: '#fff' }}
+                title="Email Template Editor" />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+    <div className="sm:min-w-[120px]"></div>
+    <div className="flex flex-col sm:flex-row gap-4 w-full sm:flex-1">
+      <button onClick={handleSendSingleMail}
+        className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">
+        Send Single Mail
+      </button>
+      <button onClick={() => alert('Entire list contacted!')}
+        className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">
+        Send Entire List
+      </button>
+      <button onClick={() => alert('Group contact notified!')}
+        className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">
+        Send Group Contact
+      </button>
+    </div>
+  </div>
+</div>
+);
 }
