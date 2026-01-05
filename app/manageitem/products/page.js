@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaPen, FaTrash } from "react-icons/fa";
 
 export default function ProductsPage() {
@@ -13,12 +13,17 @@ export default function ProductsPage() {
   const [editedName, setEditedName] = useState("");
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("products") || "[]");
-    if (saved.length === 0) {
-      setProducts(defaultProducts);
-      localStorage.setItem("products", JSON.stringify(defaultProducts));
-    } else {
-      setProducts(saved);
+    try {
+      const saved = localStorage.getItem("products");
+      if (saved && saved !== "undefined") {
+        setProducts(JSON.parse(saved));
+      } else {
+        setProducts([]);
+      }
+    } catch (error) {
+      console.error("Error loading products:", error);
+      setProducts([]);
+      localStorage.removeItem("products"); 
     }
   }, []);
 
@@ -185,79 +190,87 @@ export default function ProductsPage() {
           </thead>
 
           <tbody>
-            {filtered.map((p, index) => (
-              <tr key={p.id} className="text-center hover:bg-gray-50 transition">
-                <td className="border px-3 py-2">
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(p.id)}
-                    onChange={() => handleSelectRow(p.id)}
-                  />
-                </td>
-
-                <td className="border px-3 py-2">{index + 1}</td>
-
-                <td className="border px-3 py-2 text-left">
-                  {editingId === p.id ? (
-                    <input
-                      value={editedName}
-                      onChange={(e) => setEditedName(e.target.value)}
-                      className="border px-2 py-1 rounded w-full"
-                    />
-                  ) : (
-                    p.name
-                  )}
-                </td>
-
-                <td className="border px-3 py-2">
-                  {editingId === p.id ? (
-                    <>
-                      <button
-                        className="text-blue-600 font-semibold mr-2"
-                        onClick={() => handleUpdate(p.id)}
-                      >
-                        Update
-                      </button>
-
-                      <button
-                        className="text-red-600 font-semibold"
-                        onClick={() => {
-                          setEditingId(null);
-                          setEditedName("");
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      className="text-gray-600 hover:text-blue-600"
-                      onClick={() => {
-                        setEditingId(p.id);
-                        setEditedName(p.name);
-                      }}
-                    >
-                      <FaPen />
-                    </button>
-                  )}
-                </td>
-
-                <td className="border px-3 py-2">
-                  <button
-                    className="text-red-600 hover:text-red-700"
-                    onClick={() => handleDelete(p.id)}
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-
-                <td className="border px-3 py-2">
-                  <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded">
-                    View Leads
-                  </button>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="border px-3 py-5 text-center text-gray-500">
+                  No products found.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filtered.map((p, index) => (
+                <tr key={p.id} className="text-center hover:bg-gray-50 transition">
+                  <td className="border px-3 py-2">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(p.id)}
+                      onChange={() => handleSelectRow(p.id)}
+                    />
+                  </td>
+
+                  <td className="border px-3 py-2">{index + 1}</td>
+
+                  <td className="border px-3 py-2 text-left">
+                    {editingId === p.id ? (
+                      <input
+                        value={editedName}
+                        onChange={(e) => setEditedName(e.target.value)}
+                        className="border px-2 py-1 rounded w-full"
+                      />
+                    ) : (
+                      p.name
+                    )}
+                  </td>
+
+                  <td className="border px-3 py-2">
+                    {editingId === p.id ? (
+                      <>
+                        <button
+                          className="text-blue-600 font-semibold mr-2"
+                          onClick={() => handleUpdate(p.id)}
+                        >
+                          Update
+                        </button>
+
+                        <button
+                          className="text-red-600 font-semibold"
+                          onClick={() => {
+                            setEditingId(null);
+                            setEditedName("");
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        className="text-gray-600 hover:text-blue-600"
+                        onClick={() => {
+                          setEditingId(p.id);
+                          setEditedName(p.name);
+                        }}
+                      >
+                        <FaPen />
+                      </button>
+                    )}
+                  </td>
+
+                  <td className="border px-3 py-2">
+                    <button
+                      className="text-red-600 hover:text-red-700"
+                      onClick={() => handleDelete(p.id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+
+                  <td className="border px-3 py-2">
+                    <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded">
+                      View Leads
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
 
