@@ -144,10 +144,13 @@ export default function Template() {
     const doc = iframeRef.current?.contentDocument;
     if (!doc && type !== 'file') return;
     const actions = {
+
       file: {
         new: () => window.confirm('Create new document? Unsaved changes will be lost.') && setState(prev => ({ ...prev, selectedTemplate: null, htmlContent: '' })),
         print: () => iframeRef.current?.contentWindow.print()
       },
+
+
       edit: {
         undo: () => doc.execCommand('undo'),
         redo: () => doc.execCommand('redo'),
@@ -162,6 +165,8 @@ export default function Template() {
           selection.addRange(range);
         }
       },
+
+
       insert: {
         image: () => { const url = window.prompt('Enter image URL:'); url && doc.execCommand('insertImage', false, url); },
         link: () => { const url = window.prompt('Enter URL:'); url && doc.execCommand('createLink', false, url); },
@@ -171,40 +176,71 @@ export default function Template() {
           }
         }, hr: () => doc.execCommand('insertHorizontalRule')
       },
+
+
       view: {
-        sourceCode: () => { if (!state.showSourceCode && iframeRef.current) { setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true })); } else { setState(prev => ({ ...prev, showSourceCode: false })); } }, fullscreen: () => { const container = document.querySelector('.editor-container'); if (!document.fullscreenElement) { container?.requestFullscreen().catch(e => console.log(e)); } else { document.exitFullscreen(); } }
+        sourceCode: () => {
+          if (!state.showSourceCode && iframeRef.current) { setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true })); }
+          else { setState(prev => ({ ...prev, showSourceCode: false })); }
+        }, fullscreen: () => { const container = document.querySelector('.editor-container'); if (!document.fullscreenElement) { container?.requestFullscreen().catch(e => console.log(e)); } else { document.exitFullscreen(); } }
       },
-      format: { bold: () => doc.execCommand('bold'), italic: () => doc.execCommand('italic'), underline: () => doc.execCommand('underline'), strike: () => doc.execCommand('strikeThrough') }
+
+
+      format: {
+        bold: () => doc.execCommand('bold'),
+        italic: () => doc.execCommand('italic'),
+        underline: () => doc.execCommand('underline'),
+        strike: () => doc.execCommand('strikeThrough')
+      }
     };
+
     actions[type]?.[action]?.();
     setState(prev => ({ ...prev, openMenu: null }));
   };
 
   const MenuButton = ({ label, items }) => (
     <div className="relative inline-block">
-      <button onClick={() => setState(prev => ({ ...prev, openMenu: prev.openMenu === label.toLowerCase() ? null : label.toLowerCase() }))} className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors rounded">{label}</button>
+      <button onClick={() => setState(prev => (
+        { ...prev, openMenu: prev.openMenu === label.toLowerCase() ? null : label.toLowerCase() }))}
+        className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors rounded">{label}</button>
       {state.openMenu === label.toLowerCase() && items && (
         <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 min-w-[200px] rounded">
           {items.map((item, i) => item === 'divider' ?
             <div key={i} className="border-t border-gray-200 my-1"></div> : <button key={i} onClick={item.onClick}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"><span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}</button>)}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"><span>{item.label}</span>
+              {item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}</button>)}
         </div>
       )}
     </div>
   );
 
   const ToolbarButton = ({ onClick, icon: Icon, title }) => (
-    <button onClick={onClick} title={title} className="p-2 hover:bg-gray-200 rounded transition-colors"><Icon size={18} className="text-gray-700" /></button>
+    <button onClick={onClick} title={title}
+      className="p-2 hover:bg-gray-200 rounded transition-colors"><Icon size={18}
+        className="text-gray-700" /></button>
   );
 
   const handleSendSingleMail = () => {
-    if (!state.selectedProduct) return alert('Please select a product');
-    if (!state.selectedEmail) return alert('Please select an email');
-    if (!state.selectedTemplate) return alert('Please select a template');
-    if (!state.subject.trim()) return alert('Please enter a subject');
+    if (!state.selectedProduct)
+      return alert('Please select a product');
+    if (!state.selectedEmail)
+      return alert('Please select an email');
+    if (!state.selectedTemplate)
+      return alert('Please select a template');
+    if (!state.subject.trim())
+      return alert('Please enter a subject');
     let currentContent = state.showSourceCode ? state.htmlContent : iframeRef.current?.contentDocument.documentElement.outerHTML;
-    if (!currentContent.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
-    localStorage.setItem('selectedTemplateData', JSON.stringify({ content: currentContent, subject: state.subject, selectedProduct: state.selectedProduct, selectedEmail: state.selectedEmail, templateId: state.selectedTemplate.id, templateName: state.selectedTemplate.name }));
+    if (!currentContent.replace(/<[^>]*>/g, '').trim())
+      return alert('Please write a message');
+
+    localStorage.setItem('selectedTemplateData', JSON.stringify({
+      content: currentContent,
+      subject: state.subject,
+      selectedProduct: state.selectedProduct,
+      selectedEmail: state.selectedEmail,
+      templateId: state.selectedTemplate.id,
+      templateName: state.selectedTemplate.name
+    }));
     router.push('/newsletter/SendMail/SendSingleMail');
   };
 
@@ -213,11 +249,13 @@ export default function Template() {
       <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Select Product</label>
         <div className="relative w-full sm:max-w-md sm:flex-1">
-          <select value={state.selectedProduct} onChange={(e) => setState(prev => ({ ...prev, selectedProduct: e.target.value }))} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
+          <select value={state.selectedProduct} onChange={(e) => setState(prev => ({ ...prev, selectedProduct: e.target.value }))}
+            className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
             <option value="">Select Products</option>
             {products.map((product) => <option key={product.id} value={product.name}>{product.name}</option>)}
           </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"><svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg></div>
         </div>
       </div>
 
@@ -225,7 +263,8 @@ export default function Template() {
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">From Email</label>
         <div className="flex items-center gap-2 flex-1 w-full">
           <div className="relative w-full sm:max-w-md">
-            <select value={state.selectedEmail} onChange={(e) => setState(prev => ({ ...prev, selectedEmail: e.target.value }))} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
+            <select value={state.selectedEmail} onChange={(e) => setState(prev => ({ ...prev, selectedEmail: e.target.value }))}
+              className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
               <option value="">Select Email</option>
               {emails.map((emailObj) => <option key={emailObj.id} value={emailObj.email}>{emailObj.email}</option>)}
             </select>
@@ -239,9 +278,14 @@ export default function Template() {
       {showAddEmailForm && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white w-[90%] md:w-[430px] rounded-lg shadow-[0_0_25px_rgba(0,0,0,0.3)]">
-            <div className="border-b px-6 py-3"><h2 className="text-xl font-semibold text-gray-800">Add New Email</h2></div>
-            <div className="px-6 py-4"><label className="block mb-2 text-sm text-gray-700">Email Address</label><input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black" placeholder="Enter email address" /></div>
-            <div className="px-6 py-4 flex justify-end gap-3 border-t"><button onClick={handleAddEmail} className="px-5 py-2 rounded bg-sky-600 hover:bg-sky-700 text-white">Save</button><button onClick={() => { setShowAddEmailForm(false); setNewEmail(''); }} className="px-5 py-2 text-black rounded bg-gray-300 hover:bg-gray-400">Cancel</button></div>
+            <div className="border-b px-6 py-3">
+              <h2 className="text-xl font-semibold text-gray-800">Add New Email</h2></div>
+            <div className="px-6 py-4">
+              <label className="block mb-2 text-sm text-gray-700">Email Address</label>
+              <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
+                className="w-full border border-gray-300 px-3 py-2 rounded text-black" placeholder="Enter email address" /></div>
+            <div className="px-6 py-4 flex justify-end gap-3 border-t"><button onClick={handleAddEmail}
+              className="px-5 py-2 rounded bg-sky-600 hover:bg-sky-700 text-white">Save</button><button onClick={() => { setShowAddEmailForm(false); setNewEmail(''); }} className="px-5 py-2 text-black rounded bg-gray-300 hover:bg-gray-400">Cancel</button></div>
           </div>
         </div>
       )}
@@ -249,20 +293,37 @@ export default function Template() {
       {showManageEmails && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
           <div className="bg-white w-full max-w-2xl rounded-sm shadow-[0_0_25px_rgba(0,0,0,0.3)] max-h-[80vh] overflow-hidden flex flex-col">
-            <div className="border-b px-6 py-3 flex justify-between items-center"><h2 className="text-xl font-semibold text-gray-800">Manage Emails</h2><button onClick={() => setShowManageEmails(false)} className="text-gray-500 hover:text-gray-700 text-2xl">×</button></div>
+            <div className="border-b px-6 py-3 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-800">Manage Emails</h2>
+              <button onClick={() => setShowManageEmails(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl">×</button></div>
             <div className="flex-1 overflow-auto p-6">
               <div className="overflow-x-auto border border-gray-600">
                 <table className="w-full border-collapse text-sm">
-                  <thead className="bg-gray-100 text-gray-800 font-semibold"><tr><th className="border p-2">SR. NO.</th><th className="border p-2">EMAIL ADDRESS</th><th className="border p-2 text-center">EDIT</th><th className="border p-2 text-center">DELETE</th></tr></thead>
+                  <thead className="bg-gray-100 text-gray-800 font-semibold"><tr>
+                    <th className="border p-2">SR. NO.</th>
+                    <th className="border p-2">EMAIL ADDRESS</th>
+                    <th className="border p-2 text-center">EDIT</th>
+                    <th className="border p-2 text-center">DELETE</th>
+                  </tr></thead>
+
                   <tbody>
-                    {emails.length === 0 ? <tr><td colSpan="4" className="border p-4 text-center text-gray-500">No emails found.</td></tr> : emails.map((emailObj, index) => (
-                      <tr key={emailObj.id} className="hover:bg-gray-50 text-gray-700">
-                        <td className="border p-2">{index + 1}</td>
-                        <td className="border p-2">{editingEmailId === emailObj.id ? <input type="email" className="border px-2 py-1 w-full rounded" value={editedEmail} onChange={(e) => setEditedEmail(e.target.value)} /> : emailObj.email}</td>
-                        <td className="border p-2 text-center">{editingEmailId === emailObj.id ? <><button className="text-blue-600 font-semibold mr-2" onClick={() => handleUpdateEmail(emailObj.id)}>Update</button><button className="text-red-600 font-semibold" onClick={() => { setEditingEmailId(null); setEditedEmail(''); }}>Cancel</button></> : <button className="text-gray-600 hover:text-blue-600" onClick={() => { setEditingEmailId(emailObj.id); setEditedEmail(emailObj.email); }}><FaPen /></button>}</td>
-                        <td className="border p-2 text-center"><button onClick={() => handleDeleteSingleEmail(emailObj.id)} className="text-red-600 hover:text-red-700"><FaTrash /></button></td>
-                      </tr>
-                    ))}
+                    {emails.length === 0 ? <tr><td colSpan="4"
+                      className="border p-4 text-center text-gray-500">No emails found.</td></tr> : emails.map((emailObj, index) => (
+                        <tr key={emailObj.id} className="hover:bg-gray-50 text-gray-700">
+                          <td className="border p-2">{index + 1}</td>
+                          <td className="border p-2">{editingEmailId === emailObj.id ? <input type="email"
+                            className="border px-2 py-1 w-full rounded" value={editedEmail} onChange={(e) => setEditedEmail(e.target.value)}
+                          /> : emailObj.email}
+                          </td>
+                          <td className="border p-2 text-center">{editingEmailId === emailObj.id ? <>
+                            <button className="text-blue-600 font-semibold mr-2" onClick={() => handleUpdateEmail(emailObj.id)}>Update</button>
+                            <button className="text-red-600 font-semibold" onClick={() => { setEditingEmailId(null); setEditedEmail(''); }}>Cancel</button>
+                          </> :
+                            <button className="text-gray-600 hover:text-blue-600" onClick={() => { setEditingEmailId(emailObj.id); setEditedEmail(emailObj.email); }}><FaPen /></button>}</td>
+                          <td className="border p-2 text-center"><button onClick={() => handleDeleteSingleEmail(emailObj.id)} className="text-red-600 hover:text-red-700"><FaTrash /></button></td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -311,7 +372,14 @@ export default function Template() {
                 <div>
                   <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded flex items-center justify-between">
                     <span>🔧 Source Code Mode</span>
-                    <button onClick={() => { if (iframeRef.current) { const doc = iframeRef.current.contentDocument; doc.open(); doc.write(state.htmlContent); doc.close(); } setState(prev => ({ ...prev, showSourceCode: false })); }} className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
+                    <button onClick={() => {
+                      if (iframeRef.current) {
+                        const doc = iframeRef.current.contentDocument; doc.open();
+                        doc.write(state.htmlContent); doc.close();
+                      }
+                      setState(prev => ({ ...prev, showSourceCode: false }));
+                    }}
+                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
                   </div>
                   <textarea value={state.htmlContent} onChange={(e) => setState(prev => ({ ...prev, htmlContent: e.target.value }))} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." />
                 </div>
