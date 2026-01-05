@@ -144,10 +144,36 @@ export default function Template() {
     const doc = iframeRef.current?.contentDocument;
     if (!doc && type !== 'file') return;
     const actions = {
-      file: { new: () => window.confirm('Create new document? Unsaved changes will be lost.') && setState(prev => ({ ...prev, selectedTemplate: null, htmlContent: '' })), print: () => iframeRef.current?.contentWindow.print() },
-      edit: { undo: () => doc.execCommand('undo'), redo: () => doc.execCommand('redo'), cut: () => doc.execCommand('cut'), copy: () => doc.execCommand('copy'), paste: () => doc.execCommand('paste'), selectAll: () => { const selection = doc.getSelection(); const range = doc.createRange(); range.selectNodeContents(doc.body); selection.removeAllRanges(); selection.addRange(range); } },
-      insert: { image: () => { const url = window.prompt('Enter image URL:'); url && doc.execCommand('insertImage', false, url); }, link: () => { const url = window.prompt('Enter URL:'); url && doc.execCommand('createLink', false, url); }, table: () => { const r = window.prompt('Rows:', '3'); const c = window.prompt('Columns:', '3'); if (r && c) { let tbl = '<table border="1" style="border-collapse:collapse;width:100%;margin:10px 0">'; for (let i = 0; i < parseInt(r); i++) { tbl += '<tr>'; for (let j = 0; j < parseInt(c); j++) tbl += '<td style="border:1px solid #ddd;padding:8px" contenteditable="true">Cell</td>'; tbl += '</tr>'; } tbl += '</table>'; doc.execCommand('insertHTML', false, tbl); } }, hr: () => doc.execCommand('insertHorizontalRule') },
-      view: { sourceCode: () => { if (!state.showSourceCode && iframeRef.current) { setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true })); } else { setState(prev => ({ ...prev, showSourceCode: false })); } }, fullscreen: () => { const container = document.querySelector('.editor-container'); if (!document.fullscreenElement) { container?.requestFullscreen().catch(e => console.log(e)); } else { document.exitFullscreen(); } } },
+      file: {
+        new: () => window.confirm('Create new document? Unsaved changes will be lost.') && setState(prev => ({ ...prev, selectedTemplate: null, htmlContent: '' })),
+        print: () => iframeRef.current?.contentWindow.print()
+      },
+      edit: {
+        undo: () => doc.execCommand('undo'),
+        redo: () => doc.execCommand('redo'),
+        cut: () => doc.execCommand('cut'),
+        copy: () => doc.execCommand('copy'),
+        paste: () => doc.execCommand('paste'),
+        selectAll: () => {
+          const selection = doc.getSelection();
+          const range = doc.createRange();
+          range.selectNodeContents(doc.body);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      },
+      insert: {
+        image: () => { const url = window.prompt('Enter image URL:'); url && doc.execCommand('insertImage', false, url); },
+        link: () => { const url = window.prompt('Enter URL:'); url && doc.execCommand('createLink', false, url); },
+        table: () => {
+          const r = window.prompt('Rows:', '3'); const c = window.prompt('Columns:', '3'); if (r && c) {
+            let tbl = '<table border="1" style="border-collapse:collapse;width:100%;margin:10px 0">'; for (let i = 0; i < parseInt(r); i++) { tbl += '<tr>'; for (let j = 0; j < parseInt(c); j++) tbl += '<td style="border:1px solid #ddd;padding:8px" contenteditable="true">Cell</td>'; tbl += '</tr>'; } tbl += '</table>'; doc.execCommand('insertHTML', false, tbl);
+          }
+        }, hr: () => doc.execCommand('insertHorizontalRule')
+      },
+      view: {
+        sourceCode: () => { if (!state.showSourceCode && iframeRef.current) { setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true })); } else { setState(prev => ({ ...prev, showSourceCode: false })); } }, fullscreen: () => { const container = document.querySelector('.editor-container'); if (!document.fullscreenElement) { container?.requestFullscreen().catch(e => console.log(e)); } else { document.exitFullscreen(); } }
+      },
       format: { bold: () => doc.execCommand('bold'), italic: () => doc.execCommand('italic'), underline: () => doc.execCommand('underline'), strike: () => doc.execCommand('strikeThrough') }
     };
     actions[type]?.[action]?.();
@@ -159,7 +185,9 @@ export default function Template() {
       <button onClick={() => setState(prev => ({ ...prev, openMenu: prev.openMenu === label.toLowerCase() ? null : label.toLowerCase() }))} className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors rounded">{label}</button>
       {state.openMenu === label.toLowerCase() && items && (
         <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 min-w-[200px] rounded">
-          {items.map((item, i) => item === 'divider' ? <div key={i} className="border-t border-gray-200 my-1"></div> : <button key={i} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"><span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}</button>)}
+          {items.map((item, i) => item === 'divider' ?
+            <div key={i} className="border-t border-gray-200 my-1"></div> : <button key={i} onClick={item.onClick}
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"><span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}</button>)}
         </div>
       )}
     </div>
