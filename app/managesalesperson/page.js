@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, Phone, Briefcase, Trash2, Key } from "lucide-react";
 
 const NewPasswordModal = ({ salespersonId, onClose, onPasswordChange }) => {

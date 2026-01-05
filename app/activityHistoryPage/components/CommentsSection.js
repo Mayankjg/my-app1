@@ -7,7 +7,6 @@ export default function CommentsSection() {
   const [comments, setComments] = useState([]);
   const [inputComment, setInputComment] = useState("");
 
-  // Load comments from localStorage on mount
   useEffect(() => {
     const savedComments = localStorage.getItem("comments");
     if (savedComments) {
@@ -15,7 +14,6 @@ export default function CommentsSection() {
     }
   }, []);
 
-  // Save comments to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("comments", JSON.stringify(comments));
   }, [comments]);

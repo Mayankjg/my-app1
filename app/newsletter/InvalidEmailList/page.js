@@ -1,7 +1,5 @@
 "use client";
 
-import react from "react";
-
 export default function InvalidEmailList() {
     return (
         <div className="w-full min-h-screen bg-[#e5e7eb] py-10">
