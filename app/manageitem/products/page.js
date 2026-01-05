@@ -138,6 +138,12 @@ export default function ProductsPage() {
                 />
 
                 <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-3">
+                <button
+                    className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto transition order-1 sm:order-2"
+                    onClick={handleAddProduct}
+                  >
+                    Save
+                  </button>
                   <button
                     className="bg-gray-300 hover:bg-gray-400 px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto transition order-2 sm:order-1"
                     onClick={() => {
@@ -146,13 +152,6 @@ export default function ProductsPage() {
                     }}
                   >
                     Cancel
-                  </button>
-
-                  <button
-                    className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto transition order-1 sm:order-2"
-                    onClick={handleAddProduct}
-                  >
-                    Save
                   </button>
                 </div>
               </div>
@@ -169,11 +168,11 @@ export default function ProductsPage() {
             />
           </div>
 
-          {filtered.length > 0 && (
+          {/* {filtered.length > 0 && (
             <div className="mb-4 text-sm text-gray-600">
               {filtered.length} {filtered.length === 1 ? "Product" : "Products"}
             </div>
-          )}
+          )} */}
 
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full border-collapse text-gray-700">

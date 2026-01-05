@@ -9,6 +9,9 @@ export default function ManageItemPage() {
   
   useEffect(() => {
     router.push('/manageitem/products');
+    // router.push('/manageitem/categories');
+    // router.push('/manageitem/lead-source');
+    // router.push('/manageitem/lead-status');
   }, [router]);
 
   return null;
