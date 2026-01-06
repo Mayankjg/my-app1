@@ -545,14 +545,14 @@ export default function AddCustomTemplatePage() {
             <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
               <button
                 onClick={handleSaveCustomTemplate}
-                className="w-full sm:w-auto bg-cyan-500 text-white px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base hover:bg-cyan-600 active:bg-cyan-700 font-medium transition-colors shadow-sm"
+                className="w-full sm:w-auto bg-cyan-500 text-white px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base hover:bg-cyan-600 active:bg-cyan-700 font-medium transition-colors"
               >
                 {isEditMode ? 'Update Template' : 'Save Template'}
               </button>
             
               <button
                 onClick={handleCancel}
-                className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 active:bg-gray-500 text-gray-700 px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base font-medium transition-colors shadow-sm"
+                className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 sm:px-8 py-2.5 rounded-md text-sm sm:text-base font-medium transition-colors"
               >
                 Cancel
               </button>
