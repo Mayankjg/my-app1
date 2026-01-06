@@ -38,35 +38,27 @@ export default function EmailSection() {
       if (window.Quill && !quillRef.current) {
         quillRef.current = new window.Quill('#editor', {
           theme: 'snow', placeholder: 'Write your message here...',
-          modules: {
-            toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
-            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
-          }
+          modules: { toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }], ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }], [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }], ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']] }
         });
       }
     };
+
     document.body.appendChild(script);
-    return () => { if (document.head.contains(link)) document.head.removeChild(link); if (document.body.contains(script)) document.body.removeChild(script); };
+    return () => {
+      if (document.head.contains(link)) document.head.removeChild(link);
+      if (document.body.contains(script)) document.body.removeChild(script);
+    };
   }, []);
 
   useEffect(() => {
-    const loadData = () => {
-      try {
-        const savedTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
-        setTemplates([defaultTemplate, ...savedTemplates.filter(t => t?.id && t?.name)]);
-        const savedLogs = JSON.parse(localStorage.getItem("emailLogs") || "[]");
-        setEmailLogs(savedLogs.filter(log => log?.id));
-
-        // Only load saved emails from localStorage (no default emails)
-        const savedEmails = JSON.parse(localStorage.getItem("fromEmails") || "[]");
-        if (savedEmails.length > 0) {
-          setFromEmails(savedEmails);
-        }
-      } catch (error) { console.error("Error loading data:", error); }
-    };
-    loadData();
+    try {
+      const savedTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
+      setTemplates([defaultTemplate, ...savedTemplates.filter(t => t?.id && t?.name)]);
+      const savedLogs = JSON.parse(localStorage.getItem("emailLogs") || "[]");
+      setEmailLogs(savedLogs.filter(log => log?.id));
+      const savedEmails = JSON.parse(localStorage.getItem("fromEmails") || "[]");
+      if (savedEmails.length > 0) setFromEmails(savedEmails);
+    } catch (error) { console.error("Error loading data:", error); }
   }, []);
 
   const handleMenuClick = (menu) => setOpenMenu(openMenu === menu ? null : menu);
@@ -76,10 +68,7 @@ export default function EmailSection() {
     else if (action === 'print') {
       const content = quillRef.current?.root.innerHTML || '';
       const printWindow = window.open('', '_blank');
-      if (printWindow) {
-        printWindow.document.write(`<html><head><title>Print Email</title><style>body{font-family:Arial,sans-serif;padding:20px}</style></head><body><h2>From: ${from || '(no sender)'}</h2><h2>To: ${toEmail}</h2><h2>Subject: ${subject || '(no subject)'}</h2><hr/>${content}</body></html>`);
-        printWindow.document.close(); printWindow.print();
-      }
+      if (printWindow) { printWindow.document.write(`<html><head><title>Print Email</title><style>body{font-family:Arial,sans-serif;padding:20px}</style></head><body><h2>From: ${from || '(no sender)'}</h2><h2>To: ${toEmail}</h2><h2>Subject: ${subject || '(no subject)'}</h2><hr/>${content}</body></html>`); printWindow.document.close(); printWindow.print(); }
     }
     setOpenMenu(null);
   };
@@ -105,16 +94,25 @@ export default function EmailSection() {
       const url = window.prompt('Enter URL:');
       if (url) {
         if (range && range.length > 0) editor.formatText(range.index, range.length, 'link', url);
-        else { const text = window.prompt('Enter link text:'); if (text) editor.insertText(index, text, 'link', url); }
+        else {
+          const text = window.prompt('Enter link text:');
+          if (text) editor.insertText(index, text, 'link', url);
+        }
       }
-    } else if (action === 'video') { const videoUrl = window.prompt('Enter video URL (YouTube, Vimeo):'); if (videoUrl) editor.insertEmbed(index, 'video', videoUrl); }
+    }
+    else if (action === 'video') {
+      const videoUrl = window.prompt('Enter video URL (YouTube, Vimeo):');
+      if (videoUrl) editor.insertEmbed(index, 'video', videoUrl);
+    }
     else if (action === 'table') {
       const rows = window.prompt('Enter number of rows:', '3');
       const cols = window.prompt('Enter number of columns:', '3');
       if (rows && cols) {
         let tableHTML = '<table border="1" style="border-collapse:collapse;width:100%">';
-        for (let i = 0; i < parseInt(rows); i++) { tableHTML += '<tr>'; for (let j = 0; j < parseInt(cols); j++) tableHTML += '<td style="border:1px solid #ddd;padding:8px">&nbsp;</td>'; tableHTML += '</tr>'; }
-        tableHTML += '</table>'; editor.clipboard.dangerouslyPasteHTML(index, tableHTML);
+        for (let i = 0; i < parseInt(rows); i++) {
+          tableHTML += '<tr>';
+          for (let j = 0; j < parseInt(cols); j++) tableHTML += '<td style="border:1px solid #ddd;padding:8px">&nbsp;</td>'; tableHTML += '</tr>';
+        } tableHTML += '</table>'; editor.clipboard.dangerouslyPasteHTML(index, tableHTML);
       }
     } else if (action === 'hr') editor.insertText(index, '\n---\n');
     setOpenMenu(null);
@@ -139,29 +137,22 @@ export default function EmailSection() {
       <button onClick={() => handleMenuClick(label.toLowerCase())} className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 transition-colors">{label} <ChevronDown className="inline" size={12} /></button>
       {openMenu === label.toLowerCase() && items && (
         <div className="absolute top-full left-0 mt-0 bg-white border border-gray-300 shadow-lg z-50 min-w-[180px]">
-          {items.map((item, idx) => item === 'divider' ? <div key={idx} className="border-t border-gray-200 my-1"></div> :
-            <button key={idx} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
-              <span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}
-            </button>
-          )}
+          {items.map((item, idx) => item === 'divider' ? <div key={idx} className="border-t border-gray-200 my-1"></div> : <button key={idx} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"><span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}</button>)}
         </div>
       )}
     </div>
   );
 
-  const resetForm = () => { setFrom(""); setSubject(""); setToEmail("mpl1@gmail.com"); setSelectedTemplate(""); if (quillRef.current) quillRef.current.setContents([]); };
+  const resetForm = () => { setFrom(""); setSubject(""); setToEmail(""); setSelectedTemplate(""); if (quillRef.current) quillRef.current.setContents([]); };
+
   const openTemplateModal = () => { if (!quillRef.current) return; const html = quillRef.current.root.innerHTML.trim(); if (!html || html === "<p><br></p>") { alert("Message is empty!"); return; } setShowTemplateForm(true); };
 
   const saveTemplate = () => {
     if (!templateName.trim()) { alert("Please enter a template name!"); return; }
     if (!quillRef.current) return;
     const newTemplate = { id: crypto.randomUUID(), name: templateName.trim(), content: quillRef.current.root.innerHTML.trim(), isCustom: true, visibility: templateVisibility, createdAt: new Date().toISOString() };
-    try {
-      const existing = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
-      const updated = [newTemplate, ...existing.filter(t => t?.id)];
-      localStorage.setItem("emailTemplates", JSON.stringify(updated));
-      setTemplates([defaultTemplate, ...updated]); setTemplateName(""); setTemplateVisibility("admin"); setShowTemplateForm(false); alert("Template saved successfully!");
-    } catch (error) { console.error("Error saving template:", error); alert("Error saving template."); }
+    try { const existing = JSON.parse(localStorage.getItem("emailTemplates") || "[]"); const updated = [newTemplate, ...existing.filter(t => t?.id)]; localStorage.setItem("emailTemplates", JSON.stringify(updated)); setTemplates([defaultTemplate, ...updated]); setTemplateName(""); setTemplateVisibility("admin"); setShowTemplateForm(false); alert("Template saved successfully!"); }
+    catch (error) { console.error("Error saving template:", error); alert("Error saving template."); }
   };
 
   const deleteTemplate = (id, e) => {
@@ -174,47 +165,28 @@ export default function EmailSection() {
 
   const applyTemplate = (id) => { if (!id) { setSelectedTemplate(""); return; } setSelectedTemplate(id); const temp = templates.find(t => t.id === id); if (temp && quillRef.current) quillRef.current.root.innerHTML = temp.content; setShowTemplateDropdown(false); };
   const selectFromEmail = (email) => { setFrom(email); setShowFromDropdown(false); };
-
   const addNewEmail = () => {
     if (!newEmailField.trim()) { alert("Please enter an email address"); return; }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newEmailField)) { alert("Please enter a valid email address"); return; }
-    try {
-      const newEmailObj = { id: crypto.randomUUID(), email: newEmailField.trim() };
-      const updatedEmails = [...fromEmails, newEmailObj];
-      setFromEmails(updatedEmails);
-      localStorage.setItem("fromEmails", JSON.stringify(updatedEmails));
-      setFrom(newEmailField.trim());
-      alert("Email added successfully!");
-      setShowAddForm(false);
-      setNewEmailField("");
-      setNewDisplayName("");
-    } catch (error) { console.error("Error adding email:", error); alert("Error adding email."); }
+    try { const newEmailObj = { id: crypto.randomUUID(), email: newEmailField.trim() }; const updatedEmails = [...fromEmails, newEmailObj]; setFromEmails(updatedEmails); localStorage.setItem("fromEmails", JSON.stringify(updatedEmails)); setFrom(newEmailField.trim()); alert("Email added successfully!"); setShowAddForm(false); setNewEmailField(""); setNewDisplayName(""); }
+    catch (error) { console.error("Error adding email:", error); alert("Error adding email."); }
   };
 
   const deleteFromEmail = (emailId, e) => {
     e.stopPropagation();
     const emailObj = fromEmails.find(e => e.id === emailId);
-    if (emailObj && window.confirm(`Delete ${emailObj.email} from list?`)) {
-      const updatedEmails = fromEmails.filter(e => e.id !== emailId);
-      setFromEmails(updatedEmails);
-      localStorage.setItem("fromEmails", JSON.stringify(updatedEmails));
-      if (from === emailObj.email) setFrom("");
-    }
+    if (emailObj && window.confirm(`Delete ${emailObj.email} from list?`)) { const updatedEmails = fromEmails.filter(e => e.id !== emailId); setFromEmails(updatedEmails); localStorage.setItem("fromEmails", JSON.stringify(updatedEmails)); if (from === emailObj.email) setFrom(""); }
   };
 
   const sendEmail = () => {
     if (!quillRef.current) return;
     const messageText = quillRef.current.getText().trim();
     if (!messageText) { alert("Please write a message!"); return; }
-    const newEmail = {
-      id: crypto.randomUUID(), from: from || "(no sender)", to: toEmail, subject: subject || "(no subject)", message: quillRef.current.root.innerHTML, status: "Sent",
-      date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "2-digit", hour: "2-digit", minute: "2-digit" })
-    };
+    const newEmail = { id: crypto.randomUUID(), from: from || "(no sender)", to: toEmail, subject: subject || "(no subject)", message: quillRef.current.root.innerHTML, status: "Sent", date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "2-digit", hour: "2-digit", minute: "2-digit" }) };
     try { const updated = [newEmail, ...emailLogs]; setEmailLogs(updated); localStorage.setItem("emailLogs", JSON.stringify(updated)); resetForm(); alert("Email Sent Successfully!"); }
     catch (error) { console.error("Error sending email:", error); alert("Error sending email."); }
   };
-
   const deleteLog = (id) => { if (window.confirm("Delete this email?")) { try { const updated = emailLogs.filter(log => log.id !== id); setEmailLogs(updated); localStorage.setItem("emailLogs", JSON.stringify(updated)); } catch (error) { console.error("Error deleting log:", error); } } };
 
   return (
@@ -263,9 +235,7 @@ export default function EmailSection() {
           <div className="flex-1 w-full">
             <label className="block mb-2 text-gray-700 font-medium">From</label>
             <div className="relative">
-              <button onClick={() => setShowFromDropdown(!showFromDropdown)} className="border border-gray-300 w-full p-2.5 rounded-sm bg-white hover:bg-gray-100 text-left flex justify-between items-center">
-                <span className="text-gray-700">{from || "Select Email"}</span><span className="text-gray-400">▼</span>
-              </button>
+              <button onClick={() => setShowFromDropdown(!showFromDropdown)} className="border border-gray-300 w-full p-2.5 rounded-sm bg-white hover:bg-gray-100 text-left flex justify-between items-center"><span className="text-gray-700">{from || "Select Email"}</span><span className="text-gray-400">▼</span></button>
               {showFromDropdown && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-sm shadow-lg max-h-60 overflow-y-auto hide-scrollbar">
                   <div onClick={() => selectFromEmail("")} className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-500">Select Email</div>
@@ -282,17 +252,13 @@ export default function EmailSection() {
           <button onClick={() => setShowAddForm(true)} className="bg-gray-500 text-white px-5 py-2.5 rounded hover:bg-gray-700 font-medium whitespace-nowrap">Add More</button>
         </div>
 
-        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">To</label>
-          <textarea className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100 resize-y hide-scrollbar" value={toEmail} onChange={(e) => setToEmail(e.target.value)} rows={1} /></div>
-        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">Subject</label>
-          <input type="text" className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100" value={subject} placeholder="Enter subject" onChange={(e) => setSubject(e.target.value)} /></div>
+        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">To</label><textarea className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100 resize-y hide-scrollbar" value={toEmail} onChange={(e) => setToEmail(e.target.value)} rows={1} /></div>
+        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">Subject</label><input type="text" className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100" value={subject} placeholder="Enter subject" onChange={(e) => setSubject(e.target.value)} /></div>
 
         <div className="mb-4 relative">
           <label className="block mb-2 text-gray-700 font-medium">Reply with Template</label>
           <div className="relative">
-            <button onClick={() => setShowTemplateDropdown(!showTemplateDropdown)} className="border border-gray-300 w-full p-2.5 rounded-sm bg-white hover:bg-gray-100 text-left flex justify-between items-center">
-              <span className="text-gray-700">{selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.name || "Choose Template" : "Choose Template"}</span><span className="text-gray-400">▼</span>
-            </button>
+            <button onClick={() => setShowTemplateDropdown(!showTemplateDropdown)} className="border border-gray-300 w-full p-2.5 rounded-sm bg-white hover:bg-gray-100 text-left flex justify-between items-center"><span className="text-gray-700">{selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.name || "Choose Template" : "Choose Template"}</span><span className="text-gray-400">▼</span></button>
             {showTemplateDropdown && (
               <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-sm shadow-lg max-h-60 overflow-y-auto hide-scrollbar">
                 <div onClick={() => applyTemplate("")} className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700">Choose Template</div>
@@ -342,32 +308,20 @@ export default function EmailSection() {
 
       <div className="overflow-x-auto hidden md:block hide-scrollbar">
         <table className="w-full text-sm border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-[#e8eef2]">
-              <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">TO</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">STATUS</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">DATE</th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">ACTION</th>
-            </tr>
-          </thead>
+          <thead><tr className="bg-[#e8eef2]">
+            <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">TO</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">STATUS</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">DATE</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-700 uppercase text-xs tracking-wider border border-gray-300">ACTION</th>
+          </tr></thead>
           <tbody>
-            {emailLogs.length === 0 ? (
-              <tr>
-                <td colSpan="4" className="py-8 text-center text-red-500 font-medium border border-gray-300">No Records</td>
-              </tr>
-            ) : (
+            {emailLogs.length === 0 ? (<tr><td colSpan="4" className="py-8 text-center text-red-500 font-medium border border-gray-300">No Records</td></tr>) : (
               emailLogs.map(log => (
                 <tr key={log.id} className="bg-white hover:bg-gray-50">
                   <td className="px-4 py-4 text-gray-600 border border-gray-300">{log.to}</td>
-                  <td className="px-4 py-4 border border-gray-300">
-                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">{log.status}</span>
-                  </td>
+                  <td className="px-4 py-4 border border-gray-300"><span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">{log.status}</span></td>
                   <td className="px-4 py-4 text-[#00bcd4] font-medium border border-gray-300">{log.date}</td>
-                  <td className="px-4 py-4 border border-gray-300">
-                    <button onClick={() => deleteLog(log.id)} className="text-gray-500 hover:text-gray-700 transition">
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </td>
+                  <td className="px-4 py-4 border border-gray-300"><button onClick={() => deleteLog(log.id)} className="text-gray-500 hover:text-gray-700 transition"><Trash2 className="w-5 h-5" /></button></td>
                 </tr>
               ))
             )}
@@ -376,23 +330,13 @@ export default function EmailSection() {
       </div>
 
       <div className="md:hidden space-y-3">
-        {emailLogs.length === 0 ? (
-          <div className="py-8 text-center text-red-500 font-medium border border-gray-300 rounded">No Records</div>
-        ) : (
+        {emailLogs.length === 0 ? (<div className="py-8 text-center text-red-500 font-medium border border-gray-300 rounded">No Records</div>) : (
           emailLogs.map(log => (
             <div key={log.id} className="border border-gray-300 bg-white rounded-lg overflow-hidden">
-              <div className="border-b border-gray-200 p-4 text-sm text-gray-600">
-                <span className="font-medium text-gray-500">To: </span>{log.to}
-              </div>
-              <div className="border-b border-gray-200 p-4 text-sm">
-                <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs inline-block font-medium">{log.status}</span>
-              </div>
+              <div className="border-b border-gray-200 p-4 text-sm text-gray-600"><span className="font-medium text-gray-500">To: </span>{log.to}</div>
+              <div className="border-b border-gray-200 p-4 text-sm"><span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs inline-block font-medium">{log.status}</span></div>
               <div className="border-b border-gray-200 p-4 text-sm font-semibold text-[#00bcd4]">{log.date}</div>
-              <div className="p-4 flex justify-start">
-                <button className="text-gray-500 hover:text-gray-700" onClick={() => deleteLog(log.id)}>
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
+              <div className="p-4 flex justify-start"><button className="text-gray-500 hover:text-gray-700" onClick={() => deleteLog(log.id)}><Trash2 className="w-5 h-5" /></button></div>
             </div>
           ))
         )}
