@@ -101,6 +101,13 @@ export default function TemplatesListPage() {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
+        .preview-image {
+          width: 64px;
+          height: 64px;
+          object-fit: cover;
+          border-radius: 4px;
+          border: 1px solid #d1d5db;
+        }
       `}</style>
       <div className="bg-[#e5e9ec] p-0 sm:p-5 h-screen overflow-y-auto hide-scrollbar flex justify-center items-start font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
         <div className="bg-white w-full border max-w-[1400px]">
@@ -183,9 +190,17 @@ export default function TemplatesListPage() {
                         <td className="py-3 px-4 text-center text-sm text-gray-700">{template.product || "N/A"}</td>
                         <td className="py-3 px-4 text-center">
                           <div className="flex justify-center">
-                            <div className="w-16 h-16 bg-gray-200 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500">
-                              No Image
-                            </div>
+                            {template.previewImage ? (
+                              <img 
+                                src={template.previewImage} 
+                                alt={template.name}
+                                className="preview-image"
+                              />
+                            ) : (
+                              <div className="w-16 h-16 bg-gray-200 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500">
+                                No Image
+                              </div>
+                            )}
                           </div>
                         </td>
                         <td className="py-3 px-4 text-center">
@@ -244,9 +259,17 @@ export default function TemplatesListPage() {
                         <span className="text-gray-800">{template.product || "N/A"}</span>
                       </div>
                       <div className="flex justify-center py-2">
-                        <div className="w-20 h-20 bg-gray-200 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500">
-                          No Image
-                        </div>
+                        {template.previewImage ? (
+                          <img 
+                            src={template.previewImage} 
+                            alt={template.name}
+                            className="w-20 h-20 object-cover rounded border border-gray-300"
+                          />
+                        ) : (
+                          <div className="w-20 h-20 bg-gray-200 rounded border border-gray-300 flex items-center justify-center text-xs text-gray-500">
+                            No Image
+                          </div>
+                        )}
                       </div>
                     </div>
 

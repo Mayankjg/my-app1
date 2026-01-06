@@ -11,6 +11,7 @@ export default function AddTemplatePage() {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [templateFile, setTemplateFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [previewImageData, setPreviewImageData] = useState(null);
   const [htmlContent, setHtmlContent] = useState("");
   const [headingText, setHeadingText] = useState("");
   const [visibility, setVisibility] = useState("admin");
@@ -40,6 +41,32 @@ export default function AddTemplatePage() {
       };
       reader.readAsText(file);
     }
+  };
+
+  const handlePreviewImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Image size should be less than 2MB');
+      return;
+    }
+
+    setPreviewImage(file);
+
+    // Convert image to base64
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPreviewImageData(event.target.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const initializeQuill = () => {
@@ -122,7 +149,8 @@ export default function AddTemplatePage() {
         content: editorContent,
         product: selectedProduct,
         visibility: visibility,
-        isCustom: false, 
+        isCustom: false,
+        previewImage: previewImageData, // Save the base64 image data
         createdAt: new Date().toISOString()
       };
 
@@ -185,7 +213,22 @@ export default function AddTemplatePage() {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-3">Preview Images</label>
-                <input type="file" className="w-full text-sm text-gray-700 file:mr-4 file:py-0.5 file:px-4 file:rounded file:border border-gray-400 file:text-sm file:font-medium file:bg-gray-100 file:text-black hover:file:hover:bg-gray-300 file:cursor-pointer" accept="image/*" onChange={(e) => setPreviewImage(e.target.files[0])} />
+                <input 
+                  type="file" 
+                  className="w-full text-sm text-gray-700 file:mr-4 file:py-0.5 file:px-4 file:rounded file:border border-gray-400 file:text-sm file:font-medium file:bg-gray-100 file:text-black hover:file:hover:bg-gray-300 file:cursor-pointer" 
+                  accept="image/*" 
+                  onChange={handlePreviewImageChange} 
+                />
+                {previewImageData && (
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-600 mb-2">Selected preview image:</p>
+                    <img 
+                      src={previewImageData} 
+                      alt="Preview" 
+                      className="w-32 h-32 object-cover border border-gray-300 rounded"
+                    />
+                  </div>
+                )}
               </div>
               <div className="bg-red-50 border border-red-200 rounded-md px-4 py-2 mb-4">
                 <p className="text-sm text-red-600"><span className="font-semibold">Note:</span> Please Do not Include <span className="font-semibold">Background-image</span> Tag in Template.</p>
@@ -218,6 +261,16 @@ export default function AddTemplatePage() {
                   </label>
                 </div>
               </div>
+              {previewImageData && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Preview Image</label>
+                  <img 
+                    src={previewImageData} 
+                    alt="Preview" 
+                    className="w-32 h-32 object-cover border border-gray-300 rounded"
+                  />
+                </div>
+              )}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button onClick={handleSave} className="w-full sm:w-auto bg-[#0ea5e9] hover:bg-[#0284c7] text-white px-8 py-1.5 rounded-md text-base font-medium transition-colors">Save</button>
                 <button onClick={handleCancel} className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-700 px-8 py-1.5 rounded-md text-base font-medium transition-colors">Cancel</button>
