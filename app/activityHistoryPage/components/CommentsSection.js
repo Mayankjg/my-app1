@@ -14,10 +14,6 @@ export default function CommentsSection() {
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("comments", JSON.stringify(comments));
-  }, [comments]);
-
   const addComment = () => {
     if (!inputComment.trim()) return;
 
@@ -33,12 +29,16 @@ export default function CommentsSection() {
       }),
     };
 
-    setComments([newComment, ...comments]);
+    const updatedComments = [newComment, ...comments];
+    setComments(updatedComments);
+    localStorage.setItem("comments", JSON.stringify(updatedComments));
     setInputComment("");
   };
 
   const deleteComment = (id) => {
-    setComments(comments.filter((c) => c.id !== id));
+    const updatedComments = comments.filter((c) => c.id !== id);
+    setComments(updatedComments);
+    localStorage.setItem("comments", JSON.stringify(updatedComments));
   };
 
   return (
@@ -85,47 +85,61 @@ export default function CommentsSection() {
           </thead>
 
           <tbody>
-            {comments.map((c) => (
-              <tr key={c.id} className="bg-white">
-                <td className="px-4 py-4 text-gray-600 border border-gray-300">
-                  {c.text}
-                </td>
-                <td className="px-4 py-4 text-[#00bcd4] font-medium border border-gray-300">
-                  {c.date}
-                </td>
-                <td className="px-4 py-4 border border-gray-300">
-                  <button
-                    onClick={() => deleteComment(c.id)}
-                    className="text-gray-500 hover:text-gray-700 transition"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+            {comments.length === 0 ? (
+              <tr>
+                <td colSpan="3" className="py-8 text-center text-red-500 font-medium border border-gray-300">
+                  No Records
                 </td>
               </tr>
-            ))}
+            ) : (
+              comments.map((c) => (
+                <tr key={c.id} className="bg-white hover:bg-gray-50">
+                  <td className="px-4 py-4 text-gray-600 border border-gray-300">
+                    {c.text}
+                  </td>
+                  <td className="px-4 py-4 text-[#00bcd4] font-medium border border-gray-300">
+                    {c.date}
+                  </td>
+                  <td className="px-4 py-4 border border-gray-300">
+                    <button
+                      onClick={() => deleteComment(c.id)}
+                      className="text-gray-500 hover:text-gray-700 transition"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
       <div className="md:hidden space-y-3">
-        {comments.map((c) => (
-          <div key={c.id} className="border border-gray-300 bg-white rounded-lg overflow-hidden">
-            <div className="border-b border-gray-200 p-4 text-sm text-gray-600">
-              {c.text}
-            </div>
-            <div className="border-b border-gray-200 p-4 text-sm font-semibold text-[#00bcd4]">
-              {c.date}
-            </div>
-            <div className="p-4 flex justify-start">
-              <button
-                className="text-gray-500 hover:text-gray-700"
-                onClick={() => deleteComment(c.id)}
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
-            </div>
+        {comments.length === 0 ? (
+          <div className="py-8 text-center text-red-500 font-medium border border-gray-300 rounded">
+            No Records
           </div>
-        ))}
+        ) : (
+          comments.map((c) => (
+            <div key={c.id} className="border border-gray-300 bg-white rounded-lg overflow-hidden">
+              <div className="border-b border-gray-200 p-4 text-sm text-gray-600">
+                {c.text}
+              </div>
+              <div className="border-b border-gray-200 p-4 text-sm font-semibold text-[#00bcd4]">
+                {c.date}
+              </div>
+              <div className="p-4 flex justify-start">
+                <button
+                  className="text-gray-500 hover:text-gray-700"
+                  onClick={() => deleteComment(c.id)}
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </>
   );

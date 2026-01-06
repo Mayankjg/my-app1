@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Trash2, ChevronDown } from "lucide-react";
 
 const defaultTemplate = { id: "default-1", name: "Choose Template", content: "<p>Hello, this is a follow-up email.</p>", isCustom: false };
-  
+
 export default function EmailSection() {
   const quillRef = useRef(null);
   const editorContainerRef = useRef(null);
@@ -13,9 +13,9 @@ export default function EmailSection() {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [subject, setSubject] = useState("");
   const [from, setFrom] = useState("");
-  const [fromEmails, setFromEmails] = useState(["mayank@gmail.com", "magan@gmail.com"]);
+  const [fromEmails, setFromEmails] = useState([]);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
-  const [toEmail, setToEmail] = useState("mayank@gmail.com");
+  const [toEmail, setToEmail] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showTemplateForm, setShowTemplateForm] = useState(false);
   const [newEmailField, setNewEmailField] = useState("");
@@ -38,10 +38,12 @@ export default function EmailSection() {
       if (window.Quill && !quillRef.current) {
         quillRef.current = new window.Quill('#editor', {
           theme: 'snow', placeholder: 'Write your message here...',
-          modules: { toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }], 
+          modules: {
+            toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
             ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }], 
-            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']] }
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
+            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
+          }
         });
       }
     };
@@ -56,13 +58,15 @@ export default function EmailSection() {
         setTemplates([defaultTemplate, ...savedTemplates.filter(t => t?.id && t?.name)]);
         const savedLogs = JSON.parse(localStorage.getItem("emailLogs") || "[]");
         setEmailLogs(savedLogs.filter(log => log?.id));
+
+        // Only load saved emails from localStorage (no default emails)
         const savedEmails = JSON.parse(localStorage.getItem("fromEmails") || "[]");
-        if (savedEmails.length > 0) setFromEmails([...new Set([...fromEmails, ...savedEmails])]);
+        if (savedEmails.length > 0) {
+          setFromEmails(savedEmails);
+        }
       } catch (error) { console.error("Error loading data:", error); }
     };
     loadData();
-    const interval = setInterval(loadData, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   const handleMenuClick = (menu) => setOpenMenu(openMenu === menu ? null : menu);
@@ -99,8 +103,10 @@ export default function EmailSection() {
     if (action === 'image') { const imageUrl = window.prompt('Enter image URL:'); if (imageUrl) editor.insertEmbed(index, 'image', imageUrl); }
     else if (action === 'link') {
       const url = window.prompt('Enter URL:');
-      if (url) { if (range && range.length > 0) editor.formatText(range.index, range.length, 'link', url);
-        else { const text = window.prompt('Enter link text:'); if (text) editor.insertText(index, text, 'link', url); } }
+      if (url) {
+        if (range && range.length > 0) editor.formatText(range.index, range.length, 'link', url);
+        else { const text = window.prompt('Enter link text:'); if (text) editor.insertText(index, text, 'link', url); }
+      }
     } else if (action === 'video') { const videoUrl = window.prompt('Enter video URL (YouTube, Vimeo):'); if (videoUrl) editor.insertEmbed(index, 'video', videoUrl); }
     else if (action === 'table') {
       const rows = window.prompt('Enter number of rows:', '3');
@@ -133,7 +139,7 @@ export default function EmailSection() {
       <button onClick={() => handleMenuClick(label.toLowerCase())} className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 transition-colors">{label} <ChevronDown className="inline" size={12} /></button>
       {openMenu === label.toLowerCase() && items && (
         <div className="absolute top-full left-0 mt-0 bg-white border border-gray-300 shadow-lg z-50 min-w-[180px]">
-          {items.map((item, idx) => item === 'divider' ? <div key={idx} className="border-t border-gray-200 my-1"></div> : 
+          {items.map((item, idx) => item === 'divider' ? <div key={idx} className="border-t border-gray-200 my-1"></div> :
             <button key={idx} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
               <span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}
             </button>
@@ -145,7 +151,7 @@ export default function EmailSection() {
 
   const resetForm = () => { setFrom(""); setSubject(""); setToEmail("mpl1@gmail.com"); setSelectedTemplate(""); if (quillRef.current) quillRef.current.setContents([]); };
   const openTemplateModal = () => { if (!quillRef.current) return; const html = quillRef.current.root.innerHTML.trim(); if (!html || html === "<p><br></p>") { alert("Message is empty!"); return; } setShowTemplateForm(true); };
-  
+
   const saveTemplate = () => {
     if (!templateName.trim()) { alert("Please enter a template name!"); return; }
     if (!quillRef.current) return;
@@ -157,39 +163,43 @@ export default function EmailSection() {
       setTemplates([defaultTemplate, ...updated]); setTemplateName(""); setTemplateVisibility("admin"); setShowTemplateForm(false); alert("Template saved successfully!");
     } catch (error) { console.error("Error saving template:", error); alert("Error saving template."); }
   };
-  
+
   const deleteTemplate = (id, e) => {
     e.stopPropagation();
     if (window.confirm("Delete this template?")) {
-      try { const existing = JSON.parse(localStorage.getItem("emailTemplates") || "[]"); const updated = existing.filter(t => t.id !== id); localStorage.setItem("emailTemplates", JSON.stringify(updated)); setTemplates([defaultTemplate, ...updated]); if (selectedTemplate === id) setSelectedTemplate(""); } 
+      try { const existing = JSON.parse(localStorage.getItem("emailTemplates") || "[]"); const updated = existing.filter(t => t.id !== id); localStorage.setItem("emailTemplates", JSON.stringify(updated)); setTemplates([defaultTemplate, ...updated]); if (selectedTemplate === id) setSelectedTemplate(""); }
       catch (error) { console.error("Error deleting template:", error); }
     }
   };
 
   const applyTemplate = (id) => { if (!id) { setSelectedTemplate(""); return; } setSelectedTemplate(id); const temp = templates.find(t => t.id === id); if (temp && quillRef.current) quillRef.current.root.innerHTML = temp.content; setShowTemplateDropdown(false); };
   const selectFromEmail = (email) => { setFrom(email); setShowFromDropdown(false); };
-  
+
   const addNewEmail = () => {
     if (!newEmailField.trim()) { alert("Please enter an email address"); return; }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newEmailField)) { alert("Please enter a valid email address"); return; }
     try {
-      const updatedEmails = [...fromEmails, newEmailField.trim()];
+      const newEmailObj = { id: crypto.randomUUID(), email: newEmailField.trim() };
+      const updatedEmails = [...fromEmails, newEmailObj];
       setFromEmails(updatedEmails);
-      localStorage.setItem("fromEmails", JSON.stringify(updatedEmails.slice(2)));
-      setFrom(newEmailField.trim()); alert("Email added successfully!"); setShowAddForm(false); setNewEmailField(""); setNewDisplayName("");
+      localStorage.setItem("fromEmails", JSON.stringify(updatedEmails));
+      setFrom(newEmailField.trim());
+      alert("Email added successfully!");
+      setShowAddForm(false);
+      setNewEmailField("");
+      setNewDisplayName("");
     } catch (error) { console.error("Error adding email:", error); alert("Error adding email."); }
   };
 
-  const deleteFromEmail = (email, e) => {
+  const deleteFromEmail = (emailId, e) => {
     e.stopPropagation();
-    if (window.confirm(`Delete ${email} from list?`)) {
-      const updatedEmails = fromEmails.filter(e => e !== email);
+    const emailObj = fromEmails.find(e => e.id === emailId);
+    if (emailObj && window.confirm(`Delete ${emailObj.email} from list?`)) {
+      const updatedEmails = fromEmails.filter(e => e.id !== emailId);
       setFromEmails(updatedEmails);
-      const defaultEmails = ["mayank@gmail.com", "magan@gmail.com"];
-      const customEmails = updatedEmails.filter(e => !defaultEmails.includes(e));
-      localStorage.setItem("fromEmails", JSON.stringify(customEmails));
-      if (from === email) setFrom("");
+      localStorage.setItem("fromEmails", JSON.stringify(updatedEmails));
+      if (from === emailObj.email) setFrom("");
     }
   };
 
@@ -197,9 +207,11 @@ export default function EmailSection() {
     if (!quillRef.current) return;
     const messageText = quillRef.current.getText().trim();
     if (!messageText) { alert("Please write a message!"); return; }
-    const newEmail = { id: crypto.randomUUID(), from: from || "(no sender)", to: toEmail, subject: subject || "(no subject)", message: quillRef.current.root.innerHTML, status: "Sent", 
-      date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "2-digit", hour: "2-digit", minute: "2-digit" }) };
-    try { const updated = [newEmail, ...emailLogs]; setEmailLogs(updated); localStorage.setItem("emailLogs", JSON.stringify(updated)); resetForm(); alert("Email Sent Successfully!"); } 
+    const newEmail = {
+      id: crypto.randomUUID(), from: from || "(no sender)", to: toEmail, subject: subject || "(no subject)", message: quillRef.current.root.innerHTML, status: "Sent",
+      date: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "2-digit", hour: "2-digit", minute: "2-digit" })
+    };
+    try { const updated = [newEmail, ...emailLogs]; setEmailLogs(updated); localStorage.setItem("emailLogs", JSON.stringify(updated)); resetForm(); alert("Email Sent Successfully!"); }
     catch (error) { console.error("Error sending email:", error); alert("Error sending email."); }
   };
 
@@ -257,10 +269,10 @@ export default function EmailSection() {
               {showFromDropdown && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-sm shadow-lg max-h-60 overflow-y-auto hide-scrollbar">
                   <div onClick={() => selectFromEmail("")} className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-500">Select Email</div>
-                  {fromEmails.map((email, idx) => (
-                    <div key={idx} className="px-3 py-2 hover:bg-gray-100 cursor-pointer flex justify-between items-center group">
-                      <span onClick={() => selectFromEmail(email)} className="flex-1 text-gray-700">{email}</span>
-                      {idx >= 2 && <button onClick={(e) => deleteFromEmail(email, e)} className="ml-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity" title="Delete email"><Trash2 className="w-4 h-4" /></button>}
+                  {fromEmails.map((emailObj) => (
+                    <div key={emailObj.id} className="px-3 py-2 hover:bg-gray-100 cursor-pointer flex justify-between items-center group">
+                      <span onClick={() => selectFromEmail(emailObj.email)} className="flex-1 text-gray-700">{emailObj.email}</span>
+                      <button onClick={(e) => deleteFromEmail(emailObj.id, e)} className="ml-2 p-1 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity" title="Delete email"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   ))}
                 </div>
@@ -270,9 +282,11 @@ export default function EmailSection() {
           <button onClick={() => setShowAddForm(true)} className="bg-gray-500 text-white px-5 py-2.5 rounded hover:bg-gray-700 font-medium whitespace-nowrap">Add More</button>
         </div>
 
-        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">To</label><textarea className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100 resize-y hide-scrollbar" value={toEmail} onChange={(e) => setToEmail(e.target.value)} rows={1} /></div>
-        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">Subject</label><input type="text" className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100" value={subject} placeholder="Enter subject" onChange={(e) => setSubject(e.target.value)} /></div>
-        
+        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">To</label>
+          <textarea className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100 resize-y hide-scrollbar" value={toEmail} onChange={(e) => setToEmail(e.target.value)} rows={1} /></div>
+        <div className="mb-4"><label className="block mb-2 text-gray-700 font-medium">Subject</label>
+          <input type="text" className="border border-gray-300 w-full p-2.5 rounded-sm hover:bg-gray-100" value={subject} placeholder="Enter subject" onChange={(e) => setSubject(e.target.value)} /></div>
+
         <div className="mb-4 relative">
           <label className="block mb-2 text-gray-700 font-medium">Reply with Template</label>
           <div className="relative">
@@ -299,16 +313,16 @@ export default function EmailSection() {
             <div><div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">🔧 Source Code Mode - Edit HTML directly</div><textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." /></div>
           ) : (
             <div ref={editorContainerRef} className="border-2 border-gray-300 rounded overflow-hidden resizable-editor">
-              <div style={{background:'#f5f5f5',borderBottom:'1px solid #ccc',padding:'4px 8px'}}>
-                <MenuButton label="File" items={[{label:'New message',shortcut:'Ctrl+N',onClick:()=>handleFileAction('new')},{label:'Print',shortcut:'Ctrl+P',onClick:()=>handleFileAction('print')}]}/>
-                <MenuButton label="Edit" items={[{label:'Undo',shortcut:'Ctrl+Z',onClick:()=>handleEditAction('undo')},{label:'Redo',shortcut:'Ctrl+Y',onClick:()=>handleEditAction('redo')},'divider',{label:'Cut',shortcut:'Ctrl+X',onClick:()=>handleEditAction('cut')},{label:'Copy',shortcut:'Ctrl+C',onClick:()=>handleEditAction('copy')},{label:'Paste',shortcut:'Ctrl+V',onClick:()=>handleEditAction('paste')},'divider',{label:'Select all',shortcut:'Ctrl+A',onClick:()=>handleEditAction('selectAll')}]}/>
-                <MenuButton label="Insert" items={[{label:'Insert image',onClick:()=>handleInsertAction('image')},{label:'Insert link',shortcut:'Ctrl+K',onClick:()=>handleInsertAction('link')},{label:'Insert video',onClick:()=>handleInsertAction('video')},{label:'Insert table',onClick:()=>handleInsertAction('table')},{label:'Horizontal line',onClick:()=>handleInsertAction('hr')}]}/>
-                <MenuButton label="View" items={[{label:'Fullscreen',shortcut:'F11',onClick:()=>handleViewAction('fullscreen')},{label:'Source code',onClick:()=>handleViewAction('sourceCode')}]}/>
-                <MenuButton label="Format" items={[{label:'Bold',shortcut:'Ctrl+B',onClick:()=>handleFormatAction('bold')},{label:'Italic',shortcut:'Ctrl+I',onClick:()=>handleFormatAction('italic')},{label:'Underline',shortcut:'Ctrl+U',onClick:()=>handleFormatAction('underline')},{label:'Strikethrough',onClick:()=>handleFormatAction('strike')},'divider',{label:'Superscript',onClick:()=>handleFormatAction('script','super')},{label:'Subscript',onClick:()=>handleFormatAction('script','sub')}]}/>
-                <MenuButton label="Table" items={[{label:'Insert table',onClick:()=>handleInsertAction('table')}]}/>
-                <MenuButton label="Tools" items={[{label:'Source code',onClick:()=>handleViewAction('sourceCode')},{label:'Word count',onClick:()=>{const text=quillRef.current?.getText()||'';const words=text.trim().split(/\s+/).filter(w=>w).length;const chars=text.length;alert(`📊 Statistics:\n\nWords: ${words}\nCharacters: ${chars}`);}}]}/>
+              <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
+                <MenuButton label="File" items={[{ label: 'New message', shortcut: 'Ctrl+N', onClick: () => handleFileAction('new') }, { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleFileAction('print') }]} />
+                <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleEditAction('undo') }, { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleEditAction('redo') }, 'divider', { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleEditAction('cut') }, { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleEditAction('copy') }, { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleEditAction('paste') }, 'divider', { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleEditAction('selectAll') }]} />
+                <MenuButton label="Insert" items={[{ label: 'Insert image', onClick: () => handleInsertAction('image') }, { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleInsertAction('link') }, { label: 'Insert video', onClick: () => handleInsertAction('video') }, { label: 'Insert table', onClick: () => handleInsertAction('table') }, { label: 'Horizontal line', onClick: () => handleInsertAction('hr') }]} />
+                <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') }, { label: 'Source code', onClick: () => handleViewAction('sourceCode') }]} />
+                <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') }, { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') }, { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') }, { label: 'Strikethrough', onClick: () => handleFormatAction('strike') }, 'divider', { label: 'Superscript', onClick: () => handleFormatAction('script', 'super') }, { label: 'Subscript', onClick: () => handleFormatAction('script', 'sub') }]} />
+                <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleInsertAction('table') }]} />
+                <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') }, { label: 'Word count', onClick: () => { const text = quillRef.current?.getText() || ''; const words = text.trim().split(/\s+/).filter(w => w).length; const chars = text.length; alert(`📊 Statistics:\n\nWords: ${words}\nCharacters: ${chars}`); } }]} />
               </div>
-              <div id="editor" style={{minHeight:'150px',backgroundColor:'white'}}></div>
+              <div id="editor" style={{ minHeight: '150px', backgroundColor: 'white' }}></div>
             </div>
           )}
         </div>
