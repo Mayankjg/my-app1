@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function SendEntireList() {
     const router = useRouter();
-    const [totalRecipients] = useState(3);
+    const [totalRecipients] = useState(2);
     const [remainingEmails] = useState(0);
 
     const handleSend = () => {
@@ -42,16 +42,14 @@ export default function SendEntireList() {
                 <div className='w-full px-4 sm:px-6 py-8 pb-8'>
                     <div className='w-full'>
                         <div className='mb-8'>
-                            <h2 className='text-2xl font-normal text-gray-800 mb-6'>
+                            <h2 className='text-[20px] font-normal text-gray-800 mb-6'>
                                 We will deliver this email to <strong className="font-semibold">({totalRecipients}) recipients</strong>
                             </h2>
 
-                            <div className='space-y-3 text-base text-[#ef4444]'>
-                                <p className='leading-relaxed'>
-                                    Your mail deliver in approx 5 minutes.
-                                </p>
-                                <p className='leading-relaxed'>
-                                    If Same user(s) in one or more product then only 1 Mail at a time will be sent to that user(s).
+                            <div className='space-y-3 text-base text-red-500'>
+                                <p>
+                                    Your mail deliver in approx 5 minutes.<br/>
+                                    If Same user(s) in one or more product then only 1 Mail at a time will be sent to that user(s).<br/>
                                     Same EmailID in one or more Product Then All Product will Display Unique Emailid Count.
                                 </p>
                             </div>
