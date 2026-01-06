@@ -139,7 +139,7 @@ export default function TemplatesListPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full sm:w-[200px] text-black h-10 border border-gray-300 rounded-[5px] px-5 py-2 text-base sm:text-[18px] focus:outline-none focus:ring-1  focus:ring-black"
+              className="w-full sm:w-[200px] text-black h-10 border border-gray-300 rounded-[5px] px-5 py-2 text-base sm:text-[18px] focus:outline-none focus:ring-1 focus:ring-black"
             />
             <button 
               onClick={handleSearch}
