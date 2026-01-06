@@ -45,7 +45,6 @@ export default function SendEntireList() {
                             <h2 className='text-[20px] font-normal text-gray-800 mb-6'>
                                 We will deliver this email to <strong className="font-semibold">({totalRecipients}) recipients</strong>
                             </h2>
-
                             <div className='space-y-3 text-base text-red-500'>
                                 <p>
                                     Your mail deliver in approx 5 minutes.<br/>
@@ -58,19 +57,19 @@ export default function SendEntireList() {
                         <div className="flex flex-col sm:flex-row gap-3 mt-8">
                             <button
                                 onClick={handleSend}
-                                className="px-8 py-3 bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-medium text-base rounded shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                                className="px-8 py-2 bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-medium text-base rounded shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400"
                             >
                                 Send
                             </button>
                             <button
                                 onClick={handlePreview}
-                                className="px-8 py-3 bg-[#ef4444] hover:bg-[#dc2626] text-white font-medium text-base rounded shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+                                className="px-8 py-2 bg-[#ef4444] hover:bg-[#dc2626] text-white font-medium text-base rounded shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
                             >
                                 Preview
                             </button>
                             <button
                                 onClick={handleCancel}
-                                className="px-8 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium text-base rounded border border-gray-300 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                className="px-8 py-2 bg-white hover:bg-gray-50 text-gray-700 font-medium text-base rounded border border-gray-300 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300"
                             >
                                 Cancel
                             </button>
