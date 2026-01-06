@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 export default function SendEntireList() {
     const router = useRouter();
     const [totalRecipients] = useState(3);
-    const [remainingEmails] = useState(12362);
+    const [remainingEmails] = useState(0);
 
     const handleSend = () => {
         console.log('Sending mail...');
