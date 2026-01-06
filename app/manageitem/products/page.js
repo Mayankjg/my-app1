@@ -104,7 +104,32 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="bg-[#f9f9f9] min-h-screen w-full overflow-x-hidden">
+    <div className="bg-[#f9f9f9] min-h-screen w-full h-screen overflow-y-auto overflow-x-hidden">
+      <style>{`
+        /* Hide all scrollbars globally */
+        * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        
+        *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+        
+        body::-webkit-scrollbar,
+        html::-webkit-scrollbar {
+          display: none !important;
+        }
+        
+        body,
+        html {
+          -ms-overflow-style: none !important;
+          scrollbar-width: none !important;
+        }
+      `}</style>
+
       <div className="flex justify-center py-4 sm:py-8 px-2 sm:px-4 w-full">
         <div className="bg-white border border-[#d9d9d9] w-full max-w-7xl p-4 sm:p-6 rounded-lg shadow-sm">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
@@ -138,7 +163,7 @@ export default function ProductsPage() {
                 />
 
                 <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-3">
-                <button
+                  <button
                     className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto transition order-1 sm:order-2"
                     onClick={handleAddProduct}
                   >
@@ -167,12 +192,6 @@ export default function ProductsPage() {
               className="border text-black border-[#d9d9d9] rounded px-3 py-2 text-sm w-full sm:w-64 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
             />
           </div>
-
-          {/* {filtered.length > 0 && (
-            <div className="mb-4 text-sm text-gray-600">
-              {filtered.length} {filtered.length === 1 ? "Product" : "Products"}
-            </div>
-          )} */}
 
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full border-collapse text-gray-700">
