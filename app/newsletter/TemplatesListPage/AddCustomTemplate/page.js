@@ -386,7 +386,7 @@ export default function AddCustomTemplatePage() {
       `}</style>
       
       <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-y-auto hide-scrollbar flex justify-center items-start font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
-        <div ref={editorContainerRef} className="bg-white w-full border border-[black] max-w-[1400px]">
+        <div ref={editorContainerRef} className="bg-white w-full max-w-[1400px]">
           <div className="bg-white w-full px-4 sm:px-6 py-4 border-b border-gray-300">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <h1 className="text-xl sm:text-2xl font-normal text-gray-700">
