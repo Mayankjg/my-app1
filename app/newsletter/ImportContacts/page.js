@@ -40,7 +40,7 @@ export default function ImportContacts() {
   };
 
   const handleDownload = () => {
-    const csvContent = "Name,Email\nJohn Doe,john@gmail.com\nJane Smith,jane@gmail.com";
+    const csvContent = "Name,Email\nMayank Jaglaganeshwala,mayank.jwala@gmail.com\nlalu jaglaganeshwala,lalu.jwala@gmail.com";
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
