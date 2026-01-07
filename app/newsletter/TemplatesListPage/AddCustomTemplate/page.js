@@ -190,13 +190,15 @@ export default function AddCustomTemplatePage() {
 
   return (
     <>
-      <style>{`.hide-scrollbar::-webkit-scrollbar{display:none}.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
-.ql-container{font-family:inherit}.ql-editor{color:black!important}
-.ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
-.ql-tooltip{left:auto!important;right:0!important;transform:none!important}
-.ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
-.ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
-.resizable-editor{resize:vertical;overflow:auto;min-height:150px;max-height:600px}`}</style>
+      <style>{`
+              .hide-scrollbar::-webkit-scrollbar{display:none}.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+              .ql-container{font-family:inherit}.ql-editor{color:black!important}
+              .ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,
+              .ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
+              .ql-tooltip{left:auto!important;right:0!important;transform:none!important}
+              .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
+              .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
+              .resizable-editor{resize:vertical;overflow:auto;min-height:150px;max-height:600px}`}</style>
       
       <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-y-auto hide-scrollbar flex justify-center items-start font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
         <div ref={editorContainerRef} className="bg-white w-full max-w-[1400px]">
