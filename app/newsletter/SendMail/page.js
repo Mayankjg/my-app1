@@ -1,11 +1,20 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Template from './template/page';
 import CustomMessage from './CustomMessage/page';
 
 export default function SendMail() {
   const [messageType, setMessageType] = useState('template');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  useEffect(() => {
+    const mailSent = localStorage.getItem('mailSentSuccess');
+    if (mailSent === 'true') {
+      setShowSuccessMessage(true);
+      localStorage.removeItem('mailSentSuccess');
+    }
+  }, []);
 
   return (
     <>
@@ -16,6 +25,21 @@ export default function SendMail() {
         .hide-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        
+        .animate-slideDown {
+          animation: slideDown 0.5s ease-out;
         }
       `}</style>
 
@@ -39,6 +63,14 @@ export default function SendMail() {
               </div>
 
               <div className="p-6">
+                {showSuccessMessage && (
+                  <div className="bg-teal-100 border-l-4 border-teal-500 text-teal-700 px-6 py-4 mb-6 animate-slideDown">
+                    <p className="font-medium text-base">
+                      Thank you for using Tenacious sales. Your Message will be send within a few minute!
+                    </p>
+                  </div>
+                )}
+
                 <div className="mb-6">
                   <div className="flex items-center gap-8">
                     <label className="text-sm font-semibold text-gray-700">

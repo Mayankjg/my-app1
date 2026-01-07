@@ -294,6 +294,49 @@ export default function CustomMessage() {
     localStorage.setItem('selectedTemplateData', JSON.stringify(templateData));
     router.push('/newsletter/SendMail/SendSingleMail');
   };
+
+  const handleSendEntireList = () => {
+    // Validation
+    if (!selectedProduct) {
+      alert('Please select a product');
+      return;
+    }
+    
+    if (!selectedEmail) {
+      alert('Please select an email');
+      return;
+    }
+    
+    if (!selectedTemplate) {
+      alert('Please select a template');
+      return;
+    }
+    
+    if (!subject.trim()) {
+      alert('Please enter a subject');
+      return;
+    }
+    
+    const currentContent = showSourceCode ? sourceCode : (quillRef.current?.root.innerHTML || '');
+    const plainText = currentContent.replace(/<[^>]*>/g, '').trim();
+    
+    if (!plainText) {
+      alert('Please write a message');
+      return;
+    }
+    
+    // All validations passed, proceed to Send Entire List page
+    const templateData = {
+      content: currentContent,
+      subject: subject,
+      selectedProduct: selectedProduct,
+      selectedEmail: selectedEmail,
+      templateId: selectedTemplate,
+      templateName: selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.name : ''
+    };
+    localStorage.setItem('selectedTemplateData', JSON.stringify(templateData));
+    router.push('/newsletter/SendMail/SendEntireList');
+  };
   
   return (<>
     <style>{
@@ -483,7 +526,7 @@ export default function CustomMessage() {
         <div className="flex-1 w-full">
           <div className="flex flex-col sm:flex-row flex-wrap gap-4">
             <button onClick={handleSendSingleMail} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0"><span>Send single Mail</span></button>
-            <button onClick={() => alert('Entire list contacted!')} className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0"><span>Send Entire List</span></button>
+            <button onClick={handleSendEntireList} className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0"><span>Send Entire List</span></button>
             <button onClick={() => alert('Group contact notified!')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0"><span>Send Group Contact</span></button>
           </div>
         </div>
