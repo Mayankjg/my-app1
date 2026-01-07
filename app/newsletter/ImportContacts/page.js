@@ -61,16 +61,14 @@ export default function ImportContacts() {
       alert('The selected file is empty or could not be read');
       return;
     }
-
-    // Save data to localStorage to pass to next page
+    
     localStorage.setItem('importFileData', JSON.stringify({
       fileData: fileData,
       columnHeaders: columnHeaders,
       fileName: selectedFile.name
     }));
 
-    // Navigate to Import Contact Detail page
-    router.push('/newsletter/ImportContacts/ImportContactDetail');
+    router.push('/newsletter/ImportContactDetail');
   };
 
   const handleCancel = () => {

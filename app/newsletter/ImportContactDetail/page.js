@@ -13,19 +13,16 @@ export default function ImportContactDetail() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Load file data from localStorage
     const importData = localStorage.getItem('importFileData');
     if (importData) {
       const data = JSON.parse(importData);
       setFileData(data.fileData || []);
       setColumnHeaders(data.columnHeaders || []);
     } else {
-      // If no data, redirect back to import page
       alert('No file data found. Please import a file first.');
       router.push('/newsletter/ImportContacts');
     }
 
-    // Load products from localStorage
     const savedProducts = JSON.parse(localStorage.getItem("products") || "[]");
     setProducts(savedProducts);
   }, [router]);
@@ -65,7 +62,6 @@ export default function ImportContactDetail() {
     const allContacts = [...existingContacts, ...newContacts];
     localStorage.setItem('contacts', JSON.stringify(allContacts));
 
-    // Clear import data
     localStorage.removeItem('importFileData');
 
     alert(`${newContacts.length} contacts imported successfully!`);
@@ -73,7 +69,6 @@ export default function ImportContactDetail() {
   };
 
   const handleCancel = () => {
-    // Clear import data
     localStorage.removeItem('importFileData');
     router.push('/newsletter/ContactList');
   };
