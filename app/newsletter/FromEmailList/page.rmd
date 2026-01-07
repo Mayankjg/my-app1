@@ -12,7 +12,7 @@ export default function FromEmailList() {
 
     useEffect(() => {
         loadEmails();
-    
+        
         const handleStorageChange = (e) => {
             if (e.key === 'fromEmails') {
                 loadEmails();
@@ -105,18 +105,18 @@ export default function FromEmailList() {
                             </h1>
                         </div>
 
-                        <div className="bg-white px-4 sm:px-10 py-4 sm:py-6">
+                        <div className="bg-white px-4 sm:px-6 py-4 sm:py-6">
                             <div className="flex flex-col sm:flex-row justify-end gap-3 mb-6">
                                 <input
                                     type="text"
-                                    placeholder="Display Name/Email"
-                                    className="border border-gray-300 rounded px-4 py-2 w-full sm:w-50 text-sm text-gray-700 focus:outline-none focus:border-gray-400"
+                                    placeholder="Search Email"
+                                    className="border border-gray-300 rounded px-4 py-2 w-full sm:w-64 text-sm text-gray-700 focus:outline-none focus:border-gray-400"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                                 <button 
                                     onClick={handleSearch}
-                                    className="bg-[#0ea5e9] text-white px-4 py-2 rounded text-sm hover:bg-[#0284c7] w-full sm:w-auto transition-colors"
+                                    className="bg-[#0ea5e9] text-white px-8 py-2 rounded text-sm hover:bg-[#0284c7] w-full sm:w-auto transition-colors"
                                 >
                                     Search
                                 </button>
@@ -182,6 +182,18 @@ export default function FromEmailList() {
                                                 </tr>
                                             ))
                                         )}
+                                        
+                                        <tr>
+                                            <td colSpan="4" className="py-4 px-4 bg-white">
+                                                <button 
+                                                    className="bg-red-500 text-white px-6 py-2 rounded text-sm hover:bg-red-600"
+                                                    onClick={handleDeleteSelected}
+                                                    disabled={selectedRows.length === 0}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -244,16 +256,16 @@ export default function FromEmailList() {
                                         </div>
                                     ))
                                 )}
-                            </div>
-
-                            <div className="mt-6">
-                                <button 
-                                    className="bg-red-500 text-white px-6 py-2 rounded text-sm hover:bg-[#c82333] w-full sm:w-auto"
-                                    onClick={handleDeleteSelected}
-                                    disabled={selectedRows.length === 0}
-                                >
-                                    Delete
-                                </button>
+                                
+                                <div className="bg-white border border-gray-300 rounded-lg p-4">
+                                    <button 
+                                        className="bg-red-500 text-white px-6 py-2 rounded text-sm hover:bg-red-600 w-full"
+                                        onClick={handleDeleteSelected}
+                                        disabled={selectedRows.length === 0}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
