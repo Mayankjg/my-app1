@@ -5,14 +5,13 @@ import { useRouter } from 'next/navigation';
 
 export default function SendEntireList() {
     const router = useRouter();
-    const [totalRecipients] = useState(2);
+    const [totalRecipients, setTotalRecipients] = useState(0);
     const [remainingEmails] = useState(0);
     const [showPreview, setShowPreview] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState(null);
 
     useEffect(() => {
         const templateData = localStorage.getItem('selectedTemplateData');
-
         if (templateData) {
             try {
                 const template = JSON.parse(templateData);
@@ -22,11 +21,30 @@ export default function SendEntireList() {
                 console.error('Error parsing template data:', e);
             }
         }
+
+        const savedContacts = localStorage.getItem('contacts');
+        if (savedContacts) {
+            try {
+                const contacts = JSON.parse(savedContacts);
+                setTotalRecipients(contacts.length);
+                console.log('Total recipients:', contacts.length);
+            } catch (e) {
+                console.error('Error parsing contacts:', e);
+                setTotalRecipients(0);
+            }
+        } else {
+            setTotalRecipients(0);
+        }
     }, []);
 
     const handleSend = () => {
         if (!selectedTemplate || !selectedTemplate.content) {
             alert('No template content found. Please go back and select a template.');
+            return;
+        }
+        
+        if (totalRecipients === 0) {
+            alert('No recipients found. Please add contacts first.');
             return;
         }
         
@@ -104,7 +122,7 @@ export default function SendEntireList() {
                                     <div dangerouslySetInnerHTML={{ __html: selectedTemplate.content }} />
                                 ) : (
                                     <div className="text-center py-12">
-                                        <p className="text-gray-400 text-lg"> No template content available</p>
+                                        <p className="text-gray-400 text-lg">⚠️ No template content available</p>
                                         <p className="text-gray-500 text-sm mt-2">Please go back and select a template</p>
                                     </div>
                                 )}
