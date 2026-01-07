@@ -2,30 +2,22 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, AlignJustify, List,
-  ListOrdered, Link, Image, Table, Code, Palette, Type, Undo, Redo
-} from 'lucide-react';
+import { Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Link, Image, Table, Code, Palette, Type, Undo, Redo } from 'lucide-react';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
 const TEMPLATES = [
-  {
-    id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'],
-    content: { title: 'Tenacious Sales', subtitle: 'Your Lead Manager', description: 'Tenacious is one of the best online digital marketing agency for businesses and startups across the world for Website, Apps, SEO,SMM and SEM.', body: 'Tenacious Group was founded in 2011, and so far we have served more than 175 clients across 15 countries all around the globe. We have delivered more than 253+ successful projects till date.', callToAction: 'Get Started Today', footer: 'Thank you for choosing our services. We look forward to working with you.' }
-  },
-  {
-    id: 'default-02', name: 'Default 02', colors: ['#f5c4c4', '#e89c9c', '#c24040'],
-    content: { title: 'Food-Chow', subtitle: 'Online Ordering System', description: 'It includes point-of-sale software to manage billing, orders, and payments in-house.', body: 'FoodChow is a technology platform and software suite for online food ordering, restaurant point-of-sale (POS), and restaurant business management — primarily aimed at helping restaurants, cafés, cloud kitchens, and hospitality businesses go digital and accept orders without relying on third-party aggregators.', callToAction: 'View Our Portfolio', footer: 'Let\'s create something amazing together. Contact us today!' }
-  },
-  {
-    id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'],
-    content: { title: 'Point of Sale.', subtitle: 'POS as the cash counter + brain of the business.', description: 'It\'s the system where a sale happens—when a customer pays and the business records the transaction.', body: 'POS is the system where customers pay and businesses manage sales.', callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.' }
-  },
+  { id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'], content: { title: 'Tenacious Sales', subtitle: 'Your Lead Manager', description: 'Tenacious is one of the best online digital marketing agency for businesses and startups across the world for Website, Apps, SEO,SMM and SEM.', 
+    body: 'Tenacious Group was founded in 2011, and so far we have served more than 175 clients across 15 countries all around the globe. We have delivered more than 253+ successful projects till date.', callToAction: 'Get Started Today', footer: 'Thank you for choosing our services. We look forward to working with you.' } },
+  { id: 'default-02', name: 'Default 02', colors: ['#f5c4c4', '#e89c9c', '#c24040'], content: { title: 'Food-Chow', subtitle: 'Online Ordering System', description: 'It includes point-of-sale software to manage billing, orders, and payments in-house.',
+     body: 'FoodChow is a technology platform and software suite for online food ordering, restaurant point-of-sale (POS), and restaurant business management — primarily aimed at helping restaurants, cafés, cloud kitchens, and hospitality businesses go digital and accept orders without relying on third-party aggregators.', callToAction: 'View Our Portfolio', footer: 'Let\'s create something amazing together. Contact us today!' } },
+  { id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'], content: { title: 'Point of Sale.', subtitle: 'POS as the cash counter + brain of the business.', description: 'It\'s the system where a sale happens—when a customer pays and the business records the transaction.',
+     body: 'POS is the system where customers pay and businesses manage sales.', callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.' } },
 ];
 
-const COLORS = ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5',
-  '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#b2b200', '#006100',
-  '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', '#3d1466', '#ffffff'];
+const COLORS = ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', 
+                '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', 
+                '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', 
+                '#3d1466', '#ffffff'];
 
 export default function Template() {
   const router = useRouter();
@@ -40,14 +32,12 @@ export default function Template() {
   const [editedEmail, setEditedEmail] = useState('');
 
   useEffect(() => {
-    const loadProducts = () => setProducts(JSON.parse(localStorage.getItem("products") || "[]"));
-    loadProducts();
-    const handleStorageChange = (e) => e.key === 'products' && loadProducts();
-    window.addEventListener('storage', handleStorageChange);
-    const interval = setInterval(loadProducts, 1000);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange); clearInterval(interval);
-    };
+    const load = () => setProducts(JSON.parse(localStorage.getItem("products") || "[]"));
+    load();
+    const handler = (e) => e.key === 'products' && load();
+    window.addEventListener('storage', handler);
+    const interval = setInterval(load, 1000);
+    return () => { window.removeEventListener('storage', handler); clearInterval(interval); };
   }, []);
 
   useEffect(() => setEmails(JSON.parse(localStorage.getItem("fromEmails") || "[]")), []);
@@ -55,21 +45,20 @@ export default function Template() {
   const saveEmails = (list) => { setEmails(list); localStorage.setItem("fromEmails", JSON.stringify(list)); };
 
   const handleAddEmail = () => {
-    if (!newEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail.trim()))
-      return alert('Please enter a valid email address');
-    if (emails.some(e => e.email === newEmail.trim()))
-      return alert('This email already exists');
+    if (!newEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail.trim())) return alert('Please enter a valid email address');
+    if (emails.some(e => e.email === newEmail.trim())) return alert('This email already exists');
     const newItem = { id: Date.now(), email: newEmail.trim() };
     saveEmails([...emails, newItem]);
-    setNewEmail(''); setShowAddEmailForm(false);
+    setNewEmail(''); 
+    setShowAddEmailForm(false);
     setState(prev => ({ ...prev, selectedEmail: newItem.email }));
   };
 
   const handleUpdateEmail = (id) => {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editedEmail.trim()))
-      return alert('Please enter a valid email address');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editedEmail.trim())) return alert('Please enter a valid email address');
     saveEmails(emails.map((e) => e.id === id ? { ...e, email: editedEmail.trim() } : e));
-    setEditingEmailId(null); setEditedEmail('');
+    setEditingEmailId(null); 
+    setEditedEmail('');
   };
 
   const handleDeleteSingleEmail = (id) => {
@@ -79,47 +68,123 @@ export default function Template() {
     }
   };
 
-  const generateHtmlContent = (template, colors = template.colors) =>
-    `<!DOCTYPE html>
-  <html><head>
-  <meta charset="UTF-8">
-  <style>body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#f1f1f1ff}*{box-sizing:border-box}::selection{background-color:#3b82f6;color:white}[contenteditable]{cursor:text}[contenteditable]:focus{outline:2px solid #3b82f6;
-    outline-offset:2px}a[contenteditable="false"]{pointer-events:auto;cursor:pointer}</style>
-    </head>
-    <body contenteditable="true">
-    <div style="background:linear-gradient(135deg,${colors[0]} 0%,${colors[1]} 50%,${colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
-    <h1 style="color:#000000;font-size:32px;font-weight:bold;margin:0 0 10px 0">${template.content.title}
-    </h1>
-    <h2 style="color:#000000;font-size:20px;font-weight:600;margin:0 0 15px 0">${template.content.subtitle}
-    </h2>
-    <p style="color:#000000;font-size:16px;line-height:1.6;margin:0">${template.content.description}
-    </p></div>
+ const generateHtmlContent = (template) => `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: #f1f1f1ff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      ::selection {
+        background-color: #3b82f6;
+        color: white;
+      }
+      [contenteditable] {
+        cursor: text;
+      }
+      [contenteditable]:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+      }
+      a[contenteditable="false"] {
+        pointer-events: auto;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body contenteditable="true">
+    <!-- Header Section with Gradient -->
+    <div style="background:linear-gradient(135deg,${template.colors[0]} 0%,${template.colors[1]} 50%,${template.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
+      <h1 style="color:#000000;font-size:32px;font-weight:bold;margin:0 0 10px 0">
+        ${template.content.title}
+      </h1>
+      <h2 style="color:#000000;font-size:20px;font-weight:600;margin:0 0 15px 0">
+        ${template.content.subtitle}
+      </h2>
+      <p style="color:#000000;font-size:16px;line-height:1.6;margin:0">
+        ${template.content.description}
+      </p>
+    </div>
+
+    <!-- Main Content Section -->
     <div style="background:#fff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb">
-    <h3 style="color:#000000;font-size:22px;font-weight:bold;margin:0 0 20px 0">Welcome!</h3><p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 20px 0">${template.content.body}</p>
-    <p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 30px 0">We're excited to help you get started and look forward to supporting you every step of the way.</p>
-    <div style="text-align:center;margin:30px 0">
-    <a href="#" style="display:inline-block;background:linear-gradient(135deg,${colors[1]},${colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1)">${template.content.callToAction}
-    </a></div></div>
+      <h3 style="color:#000000;font-size:22px;font-weight:bold;margin:0 0 20px 0">
+        Welcome!
+      </h3>
+      <p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 20px 0">
+        ${template.content.body}
+      </p>
+      <p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 30px 0">
+        We're excited to help you get started and look forward to supporting you every step of the way.
+      </p>
+      
+      <!-- Call to Action Button -->
+      <div style="text-align:center;margin:30px 0">
+        <a href="#" style="display:inline-block;background:linear-gradient(135deg,${template.colors[1]},${template.colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1)">
+          ${template.content.callToAction}
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
     <div style="background:#f9fafb;padding:30px 40px;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none">
-    <p style="color:#000000;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center">${template.content.footer}
-    </p>
-    <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0"><p style="color:#000000;font-size:12px;text-align:center;margin:0">301, Milestone Vibrant, Ring Rd, opposite to Apple Hospital, Udhana Darwaja, Khatodra Wadi, Surat, Gujarat 395002</p>
-    <div style="text-align:center;margin:20px 0 10px 0">
-    <a href="https://www.facebook.com/TTechies/" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
-    <div style="width:40px;height:40px;border-radius:50%;background:#3b5998;display:inline-flex;align-items:center;justify-content:center">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-    </svg></div></a>
-    <a href="https://x.com/Tenacious88888" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none"><div style="width:40px;height:40px;border-radius:50%;background:#1DA1F2;display:inline-flex;align-items:center;justify-content:center">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-    </svg></div></a>
-    <a href="https://www.linkedin.com/company/tenacious-techies/?originalSubdomain=in" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
-    <div style="width:40px;height:40px;border-radius:50%;background:#0077b5;display:inline-flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-    </svg></div></a></div>
-    <p style="color:#000000;font-size:12px;text-align:center;margin:20px 0 0 0">copyright @ <a href="https://tenacioustechies.com" target="_blank" contenteditable="false" style="color:#3b82f6;text-decoration:none;font-weight:500">Tenacious Techies.com </a> all rights reserved.</p>
-    </div></body></html>`;
+      <p style="color:#000000;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center">
+        ${template.content.footer}
+      </p>
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0">
+      
+      <!-- Company Address -->
+      <p style="color:#000000;font-size:12px;text-align:center;margin:0">
+        301, Milestone Vibrant, Ring Rd, opposite to Apple Hospital, Udhana Darwaja, Khatodra Wadi, Surat, Gujarat 395002
+      </p>
+      
+      <!-- Social Media Icons -->
+      <div style="text-align:center;margin:20px 0 10px 0">
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/TTechies/" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
+          <div style="width:40px;height:40px;border-radius:50%;background:#3b5998;display:inline-flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </div>
+        </a>
+        
+        <!-- Twitter/X -->
+        <a href="https://x.com/Tenacious88888" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
+          <div style="width:40px;height:40px;border-radius:50%;background:#1DA1F2;display:inline-flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+            </svg>
+          </div>
+        </a>
+        
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/company/tenacious-techies/?originalSubdomain=in" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
+          <div style="width:40px;height:40px;border-radius:50%;background:#0077b5;display:inline-flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+      
+      <!-- Copyright -->
+      <p style="color:#000000;font-size:12px;text-align:center;margin:20px 0 0 0">
+        copyright @ <a href="https://tenacioustechies.com" target="_blank" contenteditable="false" style="color:#3b82f6;text-decoration:none;font-weight:500">Tenacious Techies.com</a> all rights reserved.
+      </p>
+    </div>
+  </body>
+</html>
+`;
 
   useEffect(() => {
     if (!state.selectedTemplate) return;
@@ -145,48 +210,43 @@ export default function Template() {
     const doc = iframeRef.current?.contentDocument;
     if (!doc && type !== 'file') return;
     const actions = {
-
       file: {
         new: () => window.confirm('Create new document? Unsaved changes will be lost.') && setState(prev => ({ ...prev, selectedTemplate: null, htmlContent: '' })),
         print: () => iframeRef.current?.contentWindow.print()
       },
-
-
       edit: {
         undo: () => doc.execCommand('undo'),
         redo: () => doc.execCommand('redo'),
         cut: () => doc.execCommand('cut'),
         copy: () => doc.execCommand('copy'),
         paste: () => doc.execCommand('paste'),
-        selectAll: () => {
-          const selection = doc.getSelection();
-          const range = doc.createRange();
-          range.selectNodeContents(doc.body);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
+        selectAll: () => { const sel = doc.getSelection(); const range = doc.createRange(); range.selectNodeContents(doc.body); sel.removeAllRanges(); sel.addRange(range); }
       },
-
-
       insert: {
         image: () => { const url = window.prompt('Enter image URL:'); url && doc.execCommand('insertImage', false, url); },
         link: () => { const url = window.prompt('Enter URL:'); url && doc.execCommand('createLink', false, url); },
         table: () => {
-          const r = window.prompt('Rows:', '3'); const c = window.prompt('Columns:', '3'); if (r && c) {
-            let tbl = '<table border="1" style="border-collapse:collapse;width:100%;margin:10px 0">'; for (let i = 0; i < parseInt(r); i++) { tbl += '<tr>'; for (let j = 0; j < parseInt(c); j++) tbl += '<td style="border:1px solid #ddd;padding:8px" contenteditable="true">Cell</td>'; tbl += '</tr>'; } tbl += '</table>'; doc.execCommand('insertHTML', false, tbl);
+          const r = window.prompt('Rows:', '3'); const c = window.prompt('Columns:', '3'); 
+          if (r && c) {
+            let tbl = '<table border="1" style="border-collapse:collapse;width:100%;margin:10px 0">';
+            for (let i = 0; i < parseInt(r); i++) { tbl += '<tr>'; for (let j = 0; j < parseInt(c); j++) tbl += '<td style="border:1px solid #ddd;padding:8px" contenteditable="true">Cell</td>'; tbl += '</tr>'; }
+            tbl += '</table>';
+            doc.execCommand('insertHTML', false, tbl);
           }
-        }, hr: () => doc.execCommand('insertHorizontalRule')
+        },
+        hr: () => doc.execCommand('insertHorizontalRule')
       },
-
-
       view: {
         sourceCode: () => {
-          if (!state.showSourceCode && iframeRef.current) { setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true })); }
-          else { setState(prev => ({ ...prev, showSourceCode: false })); }
-        }, fullscreen: () => { const container = document.querySelector('.editor-container'); if (!document.fullscreenElement) { container?.requestFullscreen().catch(e => console.log(e)); } else { document.exitFullscreen(); } }
+          if (!state.showSourceCode && iframeRef.current) setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true }));
+          else setState(prev => ({ ...prev, showSourceCode: false }));
+        },
+        fullscreen: () => {
+          const container = document.querySelector('.editor-container');
+          if (!document.fullscreenElement) container?.requestFullscreen().catch(e => console.log(e));
+          else document.exitFullscreen();
+        }
       },
-
-
       format: {
         bold: () => doc.execCommand('bold'),
         italic: () => doc.execCommand('italic'),
@@ -194,54 +254,37 @@ export default function Template() {
         strike: () => doc.execCommand('strikeThrough')
       }
     };
-
     actions[type]?.[action]?.();
     setState(prev => ({ ...prev, openMenu: null }));
   };
 
   const MenuButton = ({ label, items }) => (
     <div className="relative inline-block">
-      <button onClick={() => setState(prev => (
-        { ...prev, openMenu: prev.openMenu === label.toLowerCase() ? null : label.toLowerCase() }))}
-        className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors rounded">{label}</button>
+      <button onClick={() => setState(prev => ({ ...prev, openMenu: prev.openMenu === label.toLowerCase() ? null : label.toLowerCase() }))} className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors rounded">{label}</button>
       {state.openMenu === label.toLowerCase() && items && (
         <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 min-w-[200px] rounded">
-          {items.map((item, i) => item === 'divider' ?
-            <div key={i} className="border-t border-gray-200 my-1"></div> : <button key={i} onClick={item.onClick}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"><span>{item.label}</span>
-              {item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}</button>)}
+          {items.map((item, i) => item === 'divider' ? <div key={i} className="border-t border-gray-200 my-1"></div> : 
+            <button key={i} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
+              <span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}
+            </button>
+          )}
         </div>
       )}
     </div>
   );
 
   const ToolbarButton = ({ onClick, icon: Icon, title }) => (
-    <button onClick={onClick} title={title}
-      className="p-2 hover:bg-gray-200 rounded transition-colors"><Icon size={18}
-        className="text-gray-700" /></button>
+    <button onClick={onClick} title={title} className="p-2 hover:bg-gray-200 rounded transition-colors"><Icon size={18} className="text-gray-700" /></button>
   );
 
   const handleSendSingleMail = () => {
-    if (!state.selectedProduct)
-      return alert('Please select a product');
-    if (!state.selectedEmail)
-      return alert('Please select an email');
-    if (!state.selectedTemplate)
-      return alert('Please select a template');
-    if (!state.subject.trim())
-      return alert('Please enter a subject');
-    let currentContent = state.showSourceCode ? state.htmlContent : iframeRef.current?.contentDocument.documentElement.outerHTML;
-    if (!currentContent.replace(/<[^>]*>/g, '').trim())
-      return alert('Please write a message');
-
-    localStorage.setItem('selectedTemplateData', JSON.stringify({
-      content: currentContent,
-      subject: state.subject,
-      selectedProduct: state.selectedProduct,
-      selectedEmail: state.selectedEmail,
-      templateId: state.selectedTemplate.id,
-      templateName: state.selectedTemplate.name
-    }));
+    if (!state.selectedProduct) return alert('Please select a product');
+    if (!state.selectedEmail) return alert('Please select an email');
+    if (!state.selectedTemplate) return alert('Please select a template');
+    if (!state.subject.trim()) return alert('Please enter a subject');
+    const currentContent = state.showSourceCode ? state.htmlContent : iframeRef.current?.contentDocument.documentElement.outerHTML;
+    if (!currentContent.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
+    localStorage.setItem('selectedTemplateData', JSON.stringify({ content: currentContent, subject: state.subject, selectedProduct: state.selectedProduct, selectedEmail: state.selectedEmail, templateId: state.selectedTemplate.id, templateName: state.selectedTemplate.name }));
     router.push('/newsletter/SendMail/SendSingleMail');
   };
 
@@ -250,13 +293,13 @@ export default function Template() {
       <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Select Product</label>
         <div className="relative w-full sm:max-w-md sm:flex-1">
-          <select value={state.selectedProduct} onChange={(e) => setState(prev => ({ ...prev, selectedProduct: e.target.value }))}
-            className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
+          <select value={state.selectedProduct} onChange={(e) => setState(prev => ({ ...prev, selectedProduct: e.target.value }))} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
             <option value="">Select Products</option>
-            {products.map((product) => <option key={product.id} value={product.name}>{product.name}</option>)}
+            {products.map((p) => <option key={p.id} value={p.name}>{p.name}</option>)}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg></div>
+            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
+          </div>
         </div>
       </div>
 
@@ -264,12 +307,13 @@ export default function Template() {
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">From Email</label>
         <div className="flex items-center gap-2 flex-1 w-full">
           <div className="relative w-full sm:max-w-md">
-            <select value={state.selectedEmail} onChange={(e) => setState(prev => ({ ...prev, selectedEmail: e.target.value }))}
-              className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
+            <select value={state.selectedEmail} onChange={(e) => setState(prev => ({ ...prev, selectedEmail: e.target.value }))} className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 text-sm text-gray-700">
               <option value="">Select Email</option>
-              {emails.map((emailObj) => <option key={emailObj.id} value={emailObj.email}>{emailObj.email}</option>)}
+              {emails.map((e) => <option key={e.id} value={e.email}>{e.email}</option>)}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"><svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg></div>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.646 7.354a.75.75 0 011.06 1.06l-6.177 6.177a.75.75 0 01-1.06 0L3.354 8.414a.75.75 0 011.06-1.06l4.878 4.879z" /></svg>
+            </div>
           </div>
           <button onClick={() => setShowAddEmailForm(true)} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors flex-shrink-0" title="Add new email"><span className="text-xl font-light">+</span></button>
           <button onClick={() => setShowManageEmails(true)} className="text-gray-600 bg-gray-300 hover:bg-gray-400 border border-gray-300 rounded w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors flex-shrink-0" title="Manage emails"><span className="text-xl font-light">−</span></button>
@@ -279,14 +323,15 @@ export default function Template() {
       {showAddEmailForm && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white w-[90%] md:w-[430px] rounded-lg shadow-[0_0_25px_rgba(0,0,0,0.3)]">
-            <div className="border-b px-6 py-3">
-              <h2 className="text-xl font-semibold text-gray-800">Add New Email</h2></div>
+            <div className="border-b px-6 py-3"><h2 className="text-xl font-semibold text-gray-800">Add New Email</h2></div>
             <div className="px-6 py-4">
               <label className="block mb-2 text-sm text-gray-700">Email Address</label>
-              <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
-                className="w-full border border-gray-300 px-3 py-2 rounded text-black" placeholder="Enter email address" /></div>
-            <div className="px-6 py-4 flex justify-end gap-3 border-t"><button onClick={handleAddEmail}
-              className="px-5 py-2 rounded bg-sky-600 hover:bg-sky-700 text-white">Save</button><button onClick={() => { setShowAddEmailForm(false); setNewEmail(''); }} className="px-5 py-2 text-black rounded bg-gray-300 hover:bg-gray-400">Cancel</button></div>
+              <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black" placeholder="Enter email address" />
+            </div>
+            <div className="px-6 py-4 flex justify-end gap-3 border-t">
+              <button onClick={handleAddEmail} className="px-5 py-2 rounded bg-sky-600 hover:bg-sky-700 text-white">Save</button>
+              <button onClick={() => { setShowAddEmailForm(false); setNewEmail(''); }} className="px-5 py-2 text-black rounded bg-gray-300 hover:bg-gray-400">Cancel</button>
+            </div>
           </div>
         </div>
       )}
@@ -296,35 +341,30 @@ export default function Template() {
           <div className="bg-white w-full max-w-2xl rounded-sm shadow-[0_0_25px_rgba(0,0,0,0.3)] max-h-[80vh] overflow-hidden flex flex-col">
             <div className="border-b px-6 py-3 flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-800">Manage Emails</h2>
-              <button onClick={() => setShowManageEmails(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl">×</button></div>
+              <button onClick={() => setShowManageEmails(false)} className="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+            </div>
             <div className="flex-1 overflow-auto p-6">
               <div className="overflow-x-auto border border-gray-600">
                 <table className="w-full border-collapse text-sm">
-                  <thead className="bg-gray-100 text-gray-800 font-semibold"><tr>
-                    <th className="border p-2">SR. NO.</th>
-                    <th className="border p-2">EMAIL ADDRESS</th>
-                    <th className="border p-2 text-center">EDIT</th>
-                    <th className="border p-2 text-center">DELETE</th>
-                  </tr></thead>
-
+                  <thead className="bg-gray-100 text-gray-800 font-semibold">
+                    <tr><th className="border p-2">SR. NO.</th><th className="border p-2">EMAIL ADDRESS</th><th className="border p-2 text-center">EDIT</th><th className="border p-2 text-center">DELETE</th></tr>
+                  </thead>
                   <tbody>
-                    {emails.length === 0 ? <tr><td colSpan="4"
-                      className="border p-4 text-center text-gray-500">No emails found.</td></tr> : emails.map((emailObj, index) => (
-                        <tr key={emailObj.id} className="hover:bg-gray-50 text-gray-700">
-                          <td className="border p-2">{index + 1}</td>
-                          <td className="border p-2">{editingEmailId === emailObj.id ? <input type="email"
-                            className="border px-2 py-1 w-full rounded" value={editedEmail} onChange={(e) => setEditedEmail(e.target.value)}
-                          /> : emailObj.email}
+                    {emails.length === 0 ? <tr><td colSpan="4" className="border p-4 text-center text-gray-500">No emails found.</td></tr> : 
+                      emails.map((e, i) => (
+                        <tr key={e.id} className="hover:bg-gray-50 text-gray-700">
+                          <td className="border p-2">{i + 1}</td>
+                          <td className="border p-2">{editingEmailId === e.id ? <input type="email" className="border px-2 py-1 w-full rounded" value={editedEmail} onChange={(ev) => setEditedEmail(ev.target.value)} /> : e.email}</td>
+                          <td className="border p-2 text-center">
+                            {editingEmailId === e.id ? (
+                              <><button className="text-blue-600 font-semibold mr-2" onClick={() => handleUpdateEmail(e.id)}>Update</button>
+                                <button className="text-red-600 font-semibold" onClick={() => { setEditingEmailId(null); setEditedEmail(''); }}>Cancel</button></>
+                            ) : <button className="text-gray-600 hover:text-blue-600" onClick={() => { setEditingEmailId(e.id); setEditedEmail(e.email); }}><FaPen /></button>}
                           </td>
-                          <td className="border p-2 text-center">{editingEmailId === emailObj.id ? <>
-                            <button className="text-blue-600 font-semibold mr-2" onClick={() => handleUpdateEmail(emailObj.id)}>Update</button>
-                            <button className="text-red-600 font-semibold" onClick={() => { setEditingEmailId(null); setEditedEmail(''); }}>Cancel</button>
-                          </> :
-                            <button className="text-gray-600 hover:text-blue-600" onClick={() => { setEditingEmailId(emailObj.id); setEditedEmail(emailObj.email); }}><FaPen /></button>}</td>
-                          <td className="border p-2 text-center"><button onClick={() => handleDeleteSingleEmail(emailObj.id)} className="text-red-600 hover:text-red-700"><FaTrash /></button></td>
+                          <td className="border p-2 text-center"><button onClick={() => handleDeleteSingleEmail(e.id)} className="text-red-600 hover:text-red-700"><FaTrash /></button></td>
                         </tr>
-                      ))}
+                      ))
+                    }
                   </tbody>
                 </table>
               </div>
@@ -373,14 +413,7 @@ export default function Template() {
                 <div>
                   <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded flex items-center justify-between">
                     <span>🔧 Source Code Mode</span>
-                    <button onClick={() => {
-                      if (iframeRef.current) {
-                        const doc = iframeRef.current.contentDocument; doc.open();
-                        doc.write(state.htmlContent); doc.close();
-                      }
-                      setState(prev => ({ ...prev, showSourceCode: false }));
-                    }}
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
+                    <button onClick={() => { if (iframeRef.current) { const doc = iframeRef.current.contentDocument; doc.open(); doc.write(state.htmlContent); doc.close(); } setState(prev => ({ ...prev, showSourceCode: false })); }} className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
                   </div>
                   <textarea value={state.htmlContent} onChange={(e) => setState(prev => ({ ...prev, htmlContent: e.target.value }))} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." />
                 </div>
