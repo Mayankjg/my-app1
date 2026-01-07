@@ -6,18 +6,12 @@ import { Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRi
 import { FaPen, FaTrash } from 'react-icons/fa';
 
 const TEMPLATES = [
-  { id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'], content: { title: 'Tenacious Sales', subtitle: 'Your Lead Manager', description: 'Tenacious is one of the best online digital marketing agency for businesses and startups across the world for Website, Apps, SEO,SMM and SEM.', 
-    body: 'Tenacious Group was founded in 2011, and so far we have served more than 175 clients across 15 countries all around the globe. We have delivered more than 253+ successful projects till date.', callToAction: 'Get Started Today', footer: 'Thank you for choosing our services. We look forward to working with you.' } },
-  { id: 'default-02', name: 'Default 02', colors: ['#f5c4c4', '#e89c9c', '#c24040'], content: { title: 'Food-Chow', subtitle: 'Online Ordering System', description: 'It includes point-of-sale software to manage billing, orders, and payments in-house.',
-     body: 'FoodChow is a technology platform and software suite for online food ordering, restaurant point-of-sale (POS), and restaurant business management — primarily aimed at helping restaurants, cafés, cloud kitchens, and hospitality businesses go digital and accept orders without relying on third-party aggregators.', callToAction: 'View Our Portfolio', footer: 'Let\'s create something amazing together. Contact us today!' } },
-  { id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'], content: { title: 'Point of Sale.', subtitle: 'POS as the cash counter + brain of the business.', description: 'It\'s the system where a sale happens—when a customer pays and the business records the transaction.',
-     body: 'POS is the system where customers pay and businesses manage sales.', callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.' } },
+  { id: 'default-01', name: 'Default 01', colors: ['#e8d4c4', '#d4b89c', '#8b4513'], content: { title: 'Tenacious Sales', subtitle: 'Your Lead Manager', description: 'Tenacious is one of the best online digital marketing agency for businesses and startups across the world for Website, Apps, SEO,SMM and SEM.', body: 'Tenacious Group was founded in 2011, and so far we have served more than 175 clients across 15 countries all around the globe. We have delivered more than 253+ successful projects till date.', callToAction: 'Get Started Today', footer: 'Thank you for choosing our services. We look forward to working with you.' } },
+  { id: 'default-02', name: 'Default 02', colors: ['#f5c4c4', '#e89c9c', '#c24040'], content: { title: 'Food-Chow', subtitle: 'Online Ordering System', description: 'It includes point-of-sale software to manage billing, orders, and payments in-house.', body: 'FoodChow is a technology platform and software suite for online food ordering, restaurant point-of-sale (POS), and restaurant business management — primarily aimed at helping restaurants, cafés, cloud kitchens, and hospitality businesses go digital and accept orders without relying on third-party aggregators.', callToAction: 'View Our Portfolio', footer: 'Let\'s create something amazing together. Contact us today!' } },
+  { id: 'default-03', name: 'Default 03', colors: ['#d4c4b4', '#b4a494', '#6b5444'], content: { title: 'Point of Sale.', subtitle: 'POS as the cash counter + brain of the business.', description: 'It\'s the system where a sale happens—when a customer pays and the business records the transaction.', body: 'POS is the system where customers pay and businesses manage sales.', callToAction: 'Shop Now', footer: 'Enjoy fresh, organic goodness delivered to your door.' } },
 ];
 
-const COLORS = ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', 
-                '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', 
-                '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', 
-                '#3d1466', '#ffffff'];
+const COLORS = ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', '#3d1466', '#ffffff'];
 
 export default function Template() {
   const router = useRouter();
@@ -68,123 +62,16 @@ export default function Template() {
     }
   };
 
- const generateHtmlContent = (template) => `
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <style>
-      body {
-        margin: 0;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-        background: #f1f1f1ff;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      ::selection {
-        background-color: #3b82f6;
-        color: white;
-      }
-      [contenteditable] {
-        cursor: text;
-      }
-      [contenteditable]:focus {
-        outline: 2px solid #3b82f6;
-        outline-offset: 2px;
-      }
-      a[contenteditable="false"] {
-        pointer-events: auto;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-  <body contenteditable="true">
-    <!-- Header Section with Gradient -->
-    <div style="background:linear-gradient(135deg,${template.colors[0]} 0%,${template.colors[1]} 50%,${template.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center">
-      <h1 style="color:#000000;font-size:32px;font-weight:bold;margin:0 0 10px 0">
-        ${template.content.title}
-      </h1>
-      <h2 style="color:#000000;font-size:20px;font-weight:600;margin:0 0 15px 0">
-        ${template.content.subtitle}
-      </h2>
-      <p style="color:#000000;font-size:16px;line-height:1.6;margin:0">
-        ${template.content.description}
-      </p>
-    </div>
-
-    <!-- Main Content Section -->
-    <div style="background:#fff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb">
-      <h3 style="color:#000000;font-size:22px;font-weight:bold;margin:0 0 20px 0">
-        Welcome!
-      </h3>
-      <p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 20px 0">
-        ${template.content.body}
-      </p>
-      <p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 30px 0">
-        We're excited to help you get started and look forward to supporting you every step of the way.
-      </p>
-      
-      <!-- Call to Action Button -->
-      <div style="text-align:center;margin:30px 0">
-        <a href="#" style="display:inline-block;background:linear-gradient(135deg,${template.colors[1]},${template.colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1)">
-          ${template.content.callToAction}
-        </a>
-      </div>
-    </div>
-
-    <!-- Footer Section -->
-    <div style="background:#f9fafb;padding:30px 40px;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none">
-      <p style="color:#000000;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center">
-        ${template.content.footer}
-      </p>
-      
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0">
-      
-      <!-- Company Address -->
-      <p style="color:#000000;font-size:12px;text-align:center;margin:0">
-        301, Milestone Vibrant, Ring Rd, opposite to Apple Hospital, Udhana Darwaja, Khatodra Wadi, Surat, Gujarat 395002
-      </p>
-      
-      <!-- Social Media Icons -->
-      <div style="text-align:center;margin:20px 0 10px 0">
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/TTechies/" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
-          <div style="width:40px;height:40px;border-radius:50%;background:#3b5998;display:inline-flex;align-items:center;justify-content:center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-          </div>
-        </a>
-        
-        <!-- Twitter/X -->
-        <a href="https://x.com/Tenacious88888" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
-          <div style="width:40px;height:40px;border-radius:50%;background:#1DA1F2;display:inline-flex;align-items:center;justify-content:center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-            </svg>
-          </div>
-        </a>
-        
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/company/tenacious-techies/?originalSubdomain=in" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none">
-          <div style="width:40px;height:40px;border-radius:50%;background:#0077b5;display:inline-flex;align-items:center;justify-content:center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-          </div>
-        </a>
-      </div>
-      
-      <!-- Copyright -->
-      <p style="color:#000000;font-size:12px;text-align:center;margin:20px 0 0 0">
-        copyright @ <a href="https://tenacioustechies.com" target="_blank" contenteditable="false" style="color:#3b82f6;text-decoration:none;font-weight:500">Tenacious Techies.com</a> all rights reserved.
-      </p>
-    </div>
-  </body>
-</html>
-`;
+  const generateHtmlContent = (template) => `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#f1f1f1ff}*{box-sizing:border-box}::selection{background-color:#3b82f6;color:white}[contenteditable]{cursor:text}[contenteditable]:focus{outline:2px solid #3b82f6;outline-offset:2px}a[contenteditable="false"]{pointer-events:auto;cursor:pointer}</style></head><body contenteditable="true">
+<div style="background:linear-gradient(135deg,${template.colors[0]} 0%,${template.colors[1]} 50%,${template.colors[2]} 100%);padding:40px;border-radius:12px 12px 0 0;text-align:center"><h1 style="color:#000000;font-size:32px;font-weight:bold;margin:0 0 10px 0">${template.content.title}</h1><h2 style="color:#000000;font-size:20px;font-weight:600;margin:0 0 15px 0">${template.content.subtitle}</h2><p style="color:#000000;font-size:16px;line-height:1.6;margin:0">${template.content.description}</p></div>
+<div style="background:#fff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb"><h3 style="color:#000000;font-size:22px;font-weight:bold;margin:0 0 20px 0">Welcome!</h3><p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 20px 0">${template.content.body}</p><p style="color:#000000;font-size:16px;line-height:1.8;margin:0 0 30px 0">We're excited to help you get started and look forward to supporting you every step of the way.</p>
+<div style="text-align:center;margin:30px 0"><a href="#" style="display:inline-block;background:linear-gradient(135deg,${template.colors[1]},${template.colors[2]});color:#fff;text-decoration:none;padding:15px 40px;border-radius:8px;font-size:16px;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1)">${template.content.callToAction}</a></div></div>
+<div style="background:#f9fafb;padding:30px 40px;border-radius:0 0 12px 12px;border:1px solid #e5e7eb;border-top:none"><p style="color:#000000;font-size:14px;line-height:1.6;margin:0 0 15px 0;text-align:center">${template.content.footer}</p><hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0"><p style="color:#000000;font-size:12px;text-align:center;margin:0">301, Milestone Vibrant, Ring Rd, opposite to Apple Hospital, Udhana Darwaja, Khatodra Wadi, Surat, Gujarat 395002</p>
+<div style="text-align:center;margin:20px 0 10px 0"><a href="https://www.facebook.com/TTechies/" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none"><div style="width:40px;height:40px;border-radius:50%;background:#3b5998;display:inline-flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div></a>
+<a href="https://x.com/Tenacious88888" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none"><div style="width:40px;height:40px;border-radius:50%;background:#1DA1F2;display:inline-flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></div></a>
+<a href="https://www.linkedin.com/company/tenacious-techies/?originalSubdomain=in" target="_blank" contenteditable="false" style="display:inline-block;margin:0 8px;text-decoration:none"><div style="width:40px;height:40px;border-radius:50%;background:#0077b5;display:inline-flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div></a></div>
+<p style="color:#000000;font-size:12px;text-align:center;margin:20px 0 0 0">copyright @ <a href="https://tenacioustechies.com" target="_blank" contenteditable="false" style="color:#3b82f6;text-decoration:none;font-weight:500">Tenacious Techies.com </a> all rights reserved.</p></div></body></html>`;
 
   useEffect(() => {
     if (!state.selectedTemplate) return;
@@ -277,7 +164,7 @@ export default function Template() {
     <button onClick={onClick} title={title} className="p-2 hover:bg-gray-200 rounded transition-colors"><Icon size={18} className="text-gray-700" /></button>
   );
 
-  const handleSendSingleMail = () => {
+  const validateAndNavigate = (path) => {
     if (!state.selectedProduct) return alert('Please select a product');
     if (!state.selectedEmail) return alert('Please select an email');
     if (!state.selectedTemplate) return alert('Please select a template');
@@ -285,7 +172,7 @@ export default function Template() {
     const currentContent = state.showSourceCode ? state.htmlContent : iframeRef.current?.contentDocument.documentElement.outerHTML;
     if (!currentContent.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
     localStorage.setItem('selectedTemplateData', JSON.stringify({ content: currentContent, subject: state.subject, selectedProduct: state.selectedProduct, selectedEmail: state.selectedEmail, templateId: state.selectedTemplate.id, templateName: state.selectedTemplate.name }));
-    router.push('/newsletter/SendMail/SendSingleMail');
+    router.push(path);
   };
 
   return (
@@ -488,8 +375,8 @@ export default function Template() {
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <div className="sm:min-w-[120px]"></div>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:flex-1">
-          <button onClick={handleSendSingleMail} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Single Mail</button>
-          <button onClick={() => alert('Entire list contacted!')} className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Entire List</button>
+          <button onClick={() => validateAndNavigate('/newsletter/SendMail/SendSingleMail')} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Single Mail</button>
+          <button onClick={() => validateAndNavigate('/newsletter/SendMail/SendEntireList')} className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Entire List</button>
           <button onClick={() => alert('Group contact notified!')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto flex-shrink-0">Send Group Contact</button>
         </div>
       </div>
