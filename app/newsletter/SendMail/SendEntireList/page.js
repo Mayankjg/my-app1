@@ -32,10 +32,7 @@ export default function SendEntireList() {
         
         console.log('Sending mail...');
         
-        // Set success flag in localStorage
         localStorage.setItem('mailSentSuccess', 'true');
-        
-        // Redirect to Send Mail page immediately
         router.push('/newsletter/SendMail');
     };
 
@@ -86,13 +83,12 @@ export default function SendEntireList() {
                 }
             `}</style>
 
-            {/* Preview Modal */}
             {showPreview && (
                 <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
                         <div className="px-6 py-4 border-b border-gray-300 flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-800">📧 Email Preview</h2>
+                                <h2 className="text-xl font-bold text-gray-800">Email Preview</h2>
                             </div>
                             <button
                                 onClick={() => setShowPreview(false)}
@@ -108,7 +104,7 @@ export default function SendEntireList() {
                                     <div dangerouslySetInnerHTML={{ __html: selectedTemplate.content }} />
                                 ) : (
                                     <div className="text-center py-12">
-                                        <p className="text-gray-400 text-lg">⚠️ No template content available</p>
+                                        <p className="text-gray-400 text-lg"> No template content available</p>
                                         <p className="text-gray-500 text-sm mt-2">Please go back and select a template</p>
                                     </div>
                                 )}
