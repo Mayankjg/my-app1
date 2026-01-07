@@ -18,9 +18,6 @@ export default function ImportContactDetail() {
       const data = JSON.parse(importData);
       setFileData(data.fileData || []);
       setColumnHeaders(data.columnHeaders || []);
-    } else {
-      alert('No file data found. Please import a file first.');
-      router.push('/newsletter/ImportContacts');
     }
 
     const savedProducts = JSON.parse(localStorage.getItem("products") || "[]");
