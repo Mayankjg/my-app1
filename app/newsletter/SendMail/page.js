@@ -13,6 +13,10 @@ export default function SendMail() {
     if (mailSent === 'true') {
       setShowSuccessMessage(true);
       localStorage.removeItem('mailSentSuccess');
+      
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 7000);
     }
   }, []);
 
@@ -39,7 +43,7 @@ export default function SendMail() {
         }
         
         .animate-slideDown {
-          animation: slideDown 0.5s ease-out;
+          animation: slideDown 0.3s ease-out;
         }
       `}</style>
 
@@ -64,7 +68,7 @@ export default function SendMail() {
 
               <div className="p-6">
                 {showSuccessMessage && (
-                  <div className="bg-teal-100 border-l-4 border-teal-500 text-teal-700 px-6 py-4 mb-6 animate-slideDown">
+                  <div className="bg-teal-50 border-1 border-teal-700 text-teal-700 px-6 py-2 mb-6 rounded-sm animate-slideDown">
                     <p className="font-medium text-base">
                       Thank you for using Tenacious sales. Your Message will be send within a few minute!
                     </p>
