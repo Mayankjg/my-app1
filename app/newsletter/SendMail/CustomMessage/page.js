@@ -397,7 +397,7 @@ export default function CustomMessage() {
             <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <button onClick={() => validateAndNavigate('/newsletter/SendMail/SendSingleMail')} className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0">Send single Mail</button>
               <button onClick={() => validateAndNavigate('/newsletter/SendMail/SendEntireList')} className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0">Send Entire List</button>
-              <button onClick={() => alert('Group contact notified!')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0">Send Group Contact</button>
+              <button onClick={() => validateAndNavigate('/newsletter/SendMail/SendGroupContact')} className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-3 px-6 rounded-lg text-sm shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-75 transition-colors w-full sm:w-auto sm:flex-shrink-0">Send Group Contact</button>
             </div>
           </div>
         </div>

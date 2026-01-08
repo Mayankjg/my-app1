@@ -83,7 +83,7 @@ export default function SendGroupContact() {
 
     return (
         <div className='bg-[#dde1e4] p-0 h-screen overflow-y-auto flex justify-start items-start'>
-            <div className='bg-white w-full'>
+            <div className='bg-white max-w-6xl mt-5 mx-auto'>
                 <div className='bg-white w-full px-6 py-3 border-b border-gray-300'>
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl font-normal text-gray-600">
