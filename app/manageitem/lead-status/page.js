@@ -87,9 +87,9 @@ export default function LeadStatus() {
                 <label className="block mb-2 text-sm text-gray-700">Lead Status Name</label>
                 <input type="text" value={newStatusName} onChange={(e) => setNewStatusName(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Enter lead status name" />
                 <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddStatus}>
+                  <button className="bg-sky-400 hover:bg-sky-500 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddStatus}>
                     Save</button>
-                  <button className="bg-gray-300 hover:bg-gray-400 px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddModal(false); setNewStatusName(""); }}>
+                  <button className="bg-gray-200 hover:bg-gray-300 text-black px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddModal(false); setNewStatusName(""); }}>
                     Cancel</button>
                 </div>
               </div>
