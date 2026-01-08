@@ -6,11 +6,13 @@ import * as XLSX from 'xlsx';
 export default function SendGroupContact() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [totalRecipients, setTotalRecipients] = useState(0);
-    const [remainingEmails] = useState(500);
+    const [remainingEmails] = useState(0);
     const [showPreview, setShowPreview] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [fileData, setFileData] = useState([]);
     const [columnHeaders, setColumnHeaders] = useState([]);
+    const [showSendSection, setShowSendSection] = useState(false);
+
 
     useEffect(() => {
         const templateData = localStorage.getItem('selectedTemplateData');
@@ -27,7 +29,7 @@ export default function SendGroupContact() {
         const file = e.target.files[0];
         if (file) {
             setSelectedFile(file);
-            
+
             const reader = new FileReader();
             reader.onload = (event) => {
                 try {
@@ -42,7 +44,7 @@ export default function SendGroupContact() {
 
                         setColumnHeaders(headers);
                         setFileData(rows);
-                        setTotalRecipients(0); 
+                        setTotalRecipients(0);
                     }
                 } catch (error) {
                     alert('Error reading file. Please make sure it is a valid Excel or CSV file.');
@@ -58,24 +60,25 @@ export default function SendGroupContact() {
             alert('Please select an Excel file first');
             return;
         }
-        
+
         if (fileData.length === 0) {
             alert('The selected file is empty or could not be read');
             return;
         }
 
         const validRecipients = fileData.filter(row => {
-            const nameIndex = columnHeaders.findIndex(h => 
+            const nameIndex = columnHeaders.findIndex(h =>
                 h && h.toString().toLowerCase().includes('name')
             );
-            const emailIndex = columnHeaders.findIndex(h => 
+            const emailIndex = columnHeaders.findIndex(h =>
                 h && h.toString().toLowerCase().includes('email')
             );
-            
+
             return row[nameIndex] && row[emailIndex];
         });
 
         setTotalRecipients(validRecipients.length);
+        setShowSendSection(true);
         alert(`File uploaded successfully! Found ${validRecipients.length} valid recipients.`);
     };
 
@@ -97,12 +100,12 @@ export default function SendGroupContact() {
             alert('Please upload a file with recipients first.');
             return;
         }
-        
+
         if (!selectedTemplate || !selectedTemplate.content) {
             alert('No template content found. Please go back and select a template.');
             return;
         }
-        
+
         alert(`Sending emails to ${totalRecipients} recipients...`);
     };
 
@@ -202,19 +205,17 @@ export default function SendGroupContact() {
                                 <h2 className="text-xl font-normal text-gray-600 mb-6">
                                     Total email <span className="text-gray-600 font-normal">Recipients ({totalRecipients})</span>
                                 </h2>
-                                
-                                <div className="bg-gray-50 p-5 rounded">
-                                    <h3 className="font-semibold text-gray-700 mb-3">Ensure your file is formatted properly</h3>
-                                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                                        Please review the example file to be sure your file is formatted properly. You can also download the sample file.
-                                    </p>
-                                    <button
-                                        onClick={handleDownloadSample}
-                                        className="bg-[#00bcd4] hover:bg-[#00acc1] text-white font-medium px-6 py-2 rounded text-sm transition-colors"
-                                    >
-                                        Download sample
-                                    </button>
-                                </div>
+
+                                <h3 className="font-semibold text-gray-700 mb-3">Ensure your file is formatted properly</h3>
+                                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                                    Please review the example file to be sure your file is formatted properly. You can also download the sample file.
+                                </p>
+                                <button
+                                    onClick={handleDownloadSample}
+                                    className="bg-[#00bcd4] hover:bg-[#00acc1] text-white font-medium px-6 py-2 rounded text-sm transition-colors"
+                                >
+                                    Download sample
+                                </button>
                             </div>
                         </div>
 
