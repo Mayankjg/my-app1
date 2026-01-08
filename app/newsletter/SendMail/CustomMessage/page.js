@@ -223,7 +223,7 @@ export default function CustomMessage() {
     const content = showSourceCode ? sourceCode : (quillRef.current?.root.innerHTML || '');
     if (!content.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
     
-    // Save data to localStorage with fromEmail
+    
     const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
     const updatedContacts = contacts.map(contact => ({
       ...contact,

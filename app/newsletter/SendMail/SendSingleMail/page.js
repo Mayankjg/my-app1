@@ -19,7 +19,6 @@ export default function SendSingleMail() {
       }
     }
 
-    // Load contacts from localStorage
     const savedContacts = localStorage.getItem('singleMailContacts');
     if (savedContacts) {
       try {
@@ -30,7 +29,6 @@ export default function SendSingleMail() {
     }
   }, []);
 
-  // Save contacts to localStorage whenever contactList changes
   useEffect(() => {
     if (contactList.length > 0) {
       localStorage.setItem('singleMailContacts', JSON.stringify(contactList));
@@ -66,8 +64,7 @@ export default function SendSingleMail() {
     const selected = contactList.filter(c => c.selected);
     if (selected.length === 0) return alert('Please select at least one contact');
     if (!selectedTemplate?.content) return alert('No template content found. Please go back and select a template.');
-    
-    // Save selected contacts with fromEmail to localStorage
+
     localStorage.setItem('selectedSingleMailContacts', JSON.stringify(selected));
     alert(`Sending mail to ${selected.length} contact(s)`);
   };
