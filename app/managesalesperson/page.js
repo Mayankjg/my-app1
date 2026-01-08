@@ -331,7 +331,7 @@ export default function SalespersonList() {
                         {displayList.map((sp, index) => (
                             <div
                                 key={sp.id || index}
-                                className="flex flex-col lg:flex-row items-start min-h-[200px] bg-[#ffffff] hover:bg-[#f6f6f6] mb-2 border border-gray-200 rounded-[10px] p-4 shadow-sm hover:shadow-md transition-all duration-200"
+                                className="flex flex-col lg:flex-row items-start min-h-[100px] bg-[#ffffff] hover:bg-[#f6f6f6] mb-2 border border-gray-200 rounded-[10px] p-4 shadow-sm hover:shadow-md transition-all duration-200"
                             >
                                 <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 flex-1 w-full">
                                     <img
