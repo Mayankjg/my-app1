@@ -72,7 +72,7 @@ export default function LeadStatus() {
   return (
     <div className="bg-[#f9f9f9] min-h-screen w-full h-screen overflow-y-auto">
       <style>{`*{scrollbar-width:none!important;-ms-overflow-style:none!important}*::-webkit-scrollbar{display:none!important}`}</style>
-      
+
       <div className="flex justify-center py-4 sm:py-8 px-2 sm:px-4">
         <div className="bg-white border border-[#d9d9d9] w-full max-w-7xl p-4 sm:p-6 rounded-lg shadow-sm">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
@@ -87,8 +87,10 @@ export default function LeadStatus() {
                 <label className="block mb-2 text-sm text-gray-700">Lead Status Name</label>
                 <input type="text" value={newStatusName} onChange={(e) => setNewStatusName(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Enter lead status name" />
                 <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2" onClick={handleAddStatus}>Save</button>
-                  <button className="bg-gray-300 hover:bg-gray-400 px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto order-2 sm:order-1" onClick={() => { setShowAddModal(false); setNewStatusName(""); }}>Cancel</button>
+                  <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddStatus}>
+                    Save</button>
+                  <button className="bg-gray-300 hover:bg-gray-400 px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddModal(false); setNewStatusName(""); }}>
+                    Cancel</button>
                 </div>
               </div>
             </div>

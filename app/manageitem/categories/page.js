@@ -84,8 +84,10 @@ export default function CategoriesPage() {
                 <label className="block mb-2 text-sm text-gray-700">Category Name</label>
                 <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Enter category name" />
                 <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2" onClick={handleAddCategory}>Save</button>
-                  <button className="bg-gray-300 hover:bg-gray-400 px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto order-2 sm:order-1" onClick={() => { setShowAddForm(false); setNewCategory(""); }}>Cancel</button>
+                  <button className="bg-sky-400 hover:bg-sky-500 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddCategory}>
+                    Save</button>
+                  <button className="bg-gray-200 hover:bg-gray-300 text-black px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddForm(false); setNewCategory(""); }}>
+                    Cancel</button>
                 </div>
               </div>
             </div>

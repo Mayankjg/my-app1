@@ -74,7 +74,7 @@ export default function ProductsPage() {
   return (
     <div className="bg-[#f9f9f9] min-h-screen w-full h-screen overflow-y-auto">
       <style>{`*{scrollbar-width:none!important;-ms-overflow-style:none!important}*::-webkit-scrollbar{display:none!important}`}</style>
-      
+
       <div className="flex justify-center py-4 sm:py-8 px-2 sm:px-4 w-full">
         <div className="bg-white border border-[#d9d9d9] w-full max-w-7xl p-4 sm:p-6 rounded-lg shadow-sm">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
@@ -89,10 +89,13 @@ export default function ProductsPage() {
               <div className="bg-white w-full max-w-md rounded-lg shadow-xl p-4 sm:p-6">
                 <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-800 border-b pb-2">Add New Product</h3>
                 <label className="block mb-2 text-sm text-gray-700">Product Name</label>
-                <input type="text" value={newProduct} onChange={(e) => setNewProduct(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Enter product name" />
+                <input type="text" value={newProduct} onChange={(e) => setNewProduct(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  placeholder="Enter product name" />
                 <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto order-1 sm:order-2" onClick={handleAddProduct}>Save</button>
-                  <button className="bg-gray-300 hover:bg-gray-400 px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto order-2 sm:order-1" onClick={() => { setShowAddForm(false); setNewProduct(""); }}>Cancel</button>
+                  <button className="bg-sky-400 hover:bg-sky-500 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddProduct}>
+                    Save</button>
+                  <button className="bg-gray-200 hover:bg-gray-300 text-black px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddForm(false); setNewProduct(""); }}>
+                    Cancel</button>
                 </div>
               </div>
             </div>
