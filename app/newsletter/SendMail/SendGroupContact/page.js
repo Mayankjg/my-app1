@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 
 export default function SendGroupContact() {
@@ -9,6 +9,31 @@ export default function SendGroupContact() {
     const [remainingEmails] = useState(0);
     const [fileData, setFileData] = useState([]);
     const [columnHeaders, setColumnHeaders] = useState([]);
+    const [selectedEmail, setSelectedEmail] = useState('');
+
+    useEffect(() => {
+        // Load template data to get selectedEmail
+        const templateData = localStorage.getItem('selectedTemplateData');
+        if (templateData) {
+            try {
+                const parsed = JSON.parse(templateData);
+                setSelectedEmail(parsed.selectedEmail || '');
+            } catch (e) {
+                console.error('Error parsing template:', e);
+            }
+        }
+
+        // Load saved contacts from localStorage
+        const savedContacts = localStorage.getItem('groupContacts');
+        if (savedContacts) {
+            try {
+                const contacts = JSON.parse(savedContacts);
+                setTotalRecipients(contacts.length);
+            } catch (e) {
+                console.error('Error parsing saved contacts:', e);
+            }
+        }
+    }, []);
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -51,18 +76,26 @@ export default function SendGroupContact() {
             return;
         }
 
-        const validRecipients = fileData.filter(row => {
-            const nameIndex = columnHeaders.findIndex(h =>
-                h && h.toString().toLowerCase().includes('name')
-            );
-            const emailIndex = columnHeaders.findIndex(h =>
-                h && h.toString().toLowerCase().includes('email')
-            );
+        const nameIndex = columnHeaders.findIndex(h =>
+            h && h.toString().toLowerCase().includes('name')
+        );
+        const emailIndex = columnHeaders.findIndex(h =>
+            h && h.toString().toLowerCase().includes('email')
+        );
 
+        const validRecipients = fileData.filter(row => {
             return row[nameIndex] && row[emailIndex];
-        });
+        }).map(row => ({
+            name: row[nameIndex],
+            email: row[emailIndex],
+            fromEmail: selectedEmail
+        }));
 
         setTotalRecipients(validRecipients.length);
+
+        // Save only to groupContacts
+        localStorage.setItem('groupContacts', JSON.stringify(validRecipients));
+
         alert(`File uploaded successfully! Found ${validRecipients.length} valid recipients.`);
         
         window.location.href = '/newsletter/SendMail/SendGroupContact/Buttons';

@@ -222,8 +222,21 @@ export default function CustomMessage() {
     if (!subject.trim()) return alert('Please enter a subject');
     const content = showSourceCode ? sourceCode : (quillRef.current?.root.innerHTML || '');
     if (!content.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
+    
+    // Save data to localStorage with fromEmail
+    const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+    const updatedContacts = contacts.map(contact => ({
+      ...contact,
+      fromEmail: selectedEmail
+    }));
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+    
     localStorage.setItem('selectedTemplateData', JSON.stringify({
-      content, subject, selectedProduct, selectedEmail, templateId: selectedTemplate,
+      content, 
+      subject, 
+      selectedProduct, 
+      selectedEmail, 
+      templateId: selectedTemplate,
       templateName: templates.find(t => t.id === selectedTemplate)?.name || ''
     }));
     router.push(path);

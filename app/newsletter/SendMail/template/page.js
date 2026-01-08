@@ -171,7 +171,23 @@ export default function Template() {
     if (!state.subject.trim()) return alert('Please enter a subject');
     const currentContent = state.showSourceCode ? state.htmlContent : iframeRef.current?.contentDocument.documentElement.outerHTML;
     if (!currentContent.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
-    localStorage.setItem('selectedTemplateData', JSON.stringify({ content: currentContent, subject: state.subject, selectedProduct: state.selectedProduct, selectedEmail: state.selectedEmail, templateId: state.selectedTemplate.id, templateName: state.selectedTemplate.name }));
+    
+    // Save data to localStorage with fromEmail field
+    const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+    const updatedContacts = contacts.map(contact => ({
+      ...contact,
+      fromEmail: state.selectedEmail
+    }));
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+    
+    localStorage.setItem('selectedTemplateData', JSON.stringify({ 
+      content: currentContent, 
+      subject: state.subject, 
+      selectedProduct: state.selectedProduct, 
+      selectedEmail: state.selectedEmail, 
+      templateId: state.selectedTemplate.id, 
+      templateName: state.selectedTemplate.name 
+    }));
     router.push(path);
   };
 

@@ -18,12 +18,38 @@ export default function SendSingleMail() {
         console.error('Error parsing template:', e);
       }
     }
+
+    // Load contacts from localStorage
+    const savedContacts = localStorage.getItem('singleMailContacts');
+    if (savedContacts) {
+      try {
+        setContactList(JSON.parse(savedContacts));
+      } catch (e) {
+        console.error('Error parsing contacts:', e);
+      }
+    }
   }, []);
+
+  // Save contacts to localStorage whenever contactList changes
+  useEffect(() => {
+    if (contactList.length > 0) {
+      localStorage.setItem('singleMailContacts', JSON.stringify(contactList));
+    }
+  }, [contactList]);
 
   const handleAddContact = () => {
     if (!contactName.trim() || !contactEmail.trim()) return alert('Please enter both contact name and email');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) return alert('Please enter a valid email address');
-    setContactList([...contactList, { id: crypto.randomUUID(), name: contactName.trim(), email: contactEmail.trim(), selected: true }]);
+    
+    const newContact = { 
+      id: crypto.randomUUID(), 
+      name: contactName.trim(), 
+      email: contactEmail.trim(), 
+      selected: true,
+      fromEmail: selectedTemplate?.selectedEmail || ''
+    };
+    
+    setContactList([...contactList, newContact]);
     setContactName('');
     setContactEmail('');
   };
@@ -40,7 +66,10 @@ export default function SendSingleMail() {
     const selected = contactList.filter(c => c.selected);
     if (selected.length === 0) return alert('Please select at least one contact');
     if (!selectedTemplate?.content) return alert('No template content found. Please go back and select a template.');
-    alert(`Sending mail to ${selected.length} contact`);
+    
+    // Save selected contacts with fromEmail to localStorage
+    localStorage.setItem('selectedSingleMailContacts', JSON.stringify(selected));
+    alert(`Sending mail to ${selected.length} contact(s)`);
   };
 
   const handlePreview = () => {
@@ -49,7 +78,10 @@ export default function SendSingleMail() {
   };
 
   const handleCancel = () => {
-    if (window.confirm('Are you sure you want to cancel? All contacts will be cleared.')) setContactList([]);
+    if (window.confirm('Are you sure you want to cancel? All contacts will be cleared.')) {
+      setContactList([]);
+      localStorage.removeItem('singleMailContacts');
+    }
   };
 
   return (
@@ -124,7 +156,7 @@ export default function SendSingleMail() {
                   Add Contact</button>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-3">Contact List</h2>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-3">Contact List ({contactList.length})</h2>
 
                   <div className="border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                     <div className="bg-gray-100 grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-300">

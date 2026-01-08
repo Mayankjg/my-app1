@@ -23,23 +23,7 @@ export default function SendEntireList() {
         const savedContacts = localStorage.getItem('contacts');
         if (savedContacts) {
             try {
-                const contacts = JSON.parse(savedContacts);
-                setTotalRecipients(contacts.length);
-                
-                // Calculate recipients per sender email
-                const emailCountMap = {};
-                contacts.forEach(contact => {
-                    const fromEmail = contact.fromEmail || contact.from || 'Unknown';
-                    emailCountMap[fromEmail] = (emailCountMap[fromEmail] || 0) + 1;
-                });
-                
-                // Convert to array and sort by count
-                const emailCountArray = Object.entries(emailCountMap).map(([email, count]) => ({
-                    email,
-                    count
-                })).sort((a, b) => b.count - a.count);
-                
-                setSenderEmailCounts(emailCountArray);
+                setTotalRecipients(JSON.parse(savedContacts).length);
             } catch (e) {
                 console.error('Error parsing contacts:', e);
             }
@@ -128,7 +112,6 @@ export default function SendEntireList() {
                                     </p>
                                 </div>
                             </div>
-
 
                             <div className="flex flex-col sm:flex-row gap-3 mt-8">
                                 <button onClick={handleSend} className="px-8 py-2 bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-medium text-base rounded shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400">
