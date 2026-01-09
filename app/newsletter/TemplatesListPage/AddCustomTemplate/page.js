@@ -191,14 +191,39 @@ export default function AddCustomTemplatePage() {
   return (
     <>
       <style>{`
-              .hide-scrollbar::-webkit-scrollbar{display:none}.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
-              .ql-container{font-family:inherit}.ql-editor{color:black!important}
-              .ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,
-              .ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
-              .ql-tooltip{left:auto!important;right:0!important;transform:none!important}
-              .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
-              .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
-              .resizable-editor{resize:vertical;overflow:auto;min-height:150px;max-height:600px}`}</style>
+body{scrollbar-width:none!important;-ms-overflow-style:none!important}
+body::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+.hide-scrollbar{scrollbar-width:none!important;-ms-overflow-style:none!important}
+.hide-scrollbar::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+.ql-container{font-family:inherit;border:none!important;height:200px!important;overflow-y:auto!important}
+.ql-editor{color:black!important;outline:none!important;overflow-y:auto!important;height:100%!important;max-height:400px!important}
+.ql-editor:focus{outline:none!important;border:none!important}
+.ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
+.ql-tooltip{left:auto!important;right:0!important;transform:none!important}
+.ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
+.ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
+.resizable-editor{overflow:hidden!important}
+.ql-container::-webkit-scrollbar,.ql-editor::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+.ql-container::-webkit-scrollbar-track,.ql-editor::-webkit-scrollbar-track{background:#f1f1f1}
+.ql-container::-webkit-scrollbar-thumb,.ql-editor::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
+.ql-container::-webkit-scrollbar-thumb:hover,.ql-editor::-webkit-scrollbar-thumb:hover{background:#555}
+.ql-container{scrollbar-width:none!important;-ms-overflow-style:none!important}
+.ql-editor{scrollbar-width:none!important;-ms-overflow-style:none!important}
+.ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:4px!important;gap:4px!important;overflow-x:visible!important;width:100%!important}
+.ql-toolbar.ql-snow .ql-formats{margin-right:3px!important;margin-bottom:2px!important;display:inline-flex!important;gap:5px!important;flex-shrink:0!important}
+.ql-toolbar.ql-snow button{padding:2px!important;width:22px!important;height:22px!important;flex-shrink:0!important}
+.ql-toolbar.ql-snow .ql-picker{font-size:12px!important;flex-shrink:0!important}
+.ql-toolbar.ql-snow .ql-picker-label{padding:2px 4px!important;height:22px!important;line-height:18px!important}
+.ql-toolbar.ql-snow .ql-picker-options{max-height:200px!important;overflow-y:auto!important}
+.ql-container.ql-fullscreen,.ql-editor.ql-fullscreen,.fullscreen-container,.ql-snow.ql-fullscreen{background-color:white!important;background:white!important}
+.ql-container:-webkit-full-screen,.ql-container:-moz-full-screen,.ql-container:fullscreen{background-color:white!important}
+.ql-container:-webkit-full-screen .ql-editor,.ql-container:-moz-full-screen .ql-editor,.ql-container:fullscreen .ql-editor{background-color:white!important}
+*:fullscreen{background-color:white!important}
+*:-webkit-full-screen{background-color:white!important}
+*:-moz-full-screen{background-color:white!important}
+@media(max-width:768px){.ql-toolbar.ql-snow{padding:3px!important;gap:2px!important}.ql-toolbar.ql-snow button{width:20px!important;height:20px!important}.ql-toolbar.ql-snow .ql-picker{font-size:11px!important}.ql-toolbar.ql-snow .ql-picker-label{padding:1px 3px!important;height:20px!important;line-height:18px!important}}
+@media(max-width:480px){.ql-toolbar.ql-snow{flex-wrap:wrap!important;overflow-x:visible!important}.ql-toolbar.ql-snow .ql-formats{margin-bottom:2px!important}}
+`}</style>
       
       <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-y-auto hide-scrollbar flex justify-center items-start font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
         <div ref={editorContainerRef} className="bg-white w-full max-w-[1400px]">
