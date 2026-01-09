@@ -9,7 +9,7 @@ export default function CustomMessage() {
   const quillRef = useRef(null);
   const editorContainerRef = useRef(null);
   const editorElementRef = useRef(null);
-  
+
   const [selectedProduct, setSelectedProduct] = useState('');
   const [selectedEmail, setSelectedEmail] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
@@ -67,9 +67,9 @@ export default function CustomMessage() {
           placeholder: 'Write your message here...',
           modules: {
             toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-              ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }],
-              [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
-              ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
+            ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
+            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
           }
         });
       } catch (e) { console.error('Quill init error:', e); }
@@ -222,20 +222,20 @@ export default function CustomMessage() {
     if (!subject.trim()) return alert('Please enter a subject');
     const content = showSourceCode ? sourceCode : (quillRef.current?.root.innerHTML || '');
     if (!content.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
-    
-    
+
+
     const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
     const updatedContacts = contacts.map(contact => ({
       ...contact,
       fromEmail: selectedEmail
     }));
     localStorage.setItem('contacts', JSON.stringify(updatedContacts));
-    
+
     localStorage.setItem('selectedTemplateData', JSON.stringify({
-      content, 
-      subject, 
-      selectedProduct, 
-      selectedEmail, 
+      content,
+      subject,
+      selectedProduct,
+      selectedEmail,
       templateId: selectedTemplate,
       templateName: templates.find(t => t.id === selectedTemplate)?.name || ''
     }));
@@ -244,7 +244,7 @@ export default function CustomMessage() {
 
   return (
     <>
-      <style>{`.ql-container{font-family:inherit;border:none!important;height:100px!important;overflow-y:auto!important}
+<style>{`.ql-container{font-family:inherit;border:none!important;height:200px!important;overflow-y:auto!important}
 .ql-editor{color:black!important;outline:none!important;overflow-y:auto!important;height:100%!important;max-height:400px!important}
 .ql-editor:focus{outline:none!important;border:none!important}
 .ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
@@ -252,12 +252,24 @@ export default function CustomMessage() {
 .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
 .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
 .resizable-editor{overflow:hidden!important}
-.ql-container::-webkit-scrollbar,.ql-editor::-webkit-scrollbar{width:8px}
+.ql-container::-webkit-scrollbar,.ql-editor::-webkit-scrollbar{width:0px}
 .ql-container::-webkit-scrollbar-track,.ql-editor::-webkit-scrollbar-track{background:#f1f1f1}
 .ql-container::-webkit-scrollbar-thumb,.ql-editor::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
 .ql-container::-webkit-scrollbar-thumb:hover,.ql-editor::-webkit-scrollbar-thumb:hover{background:#555}
-.ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:8px!important}
-.ql-toolbar.ql-snow .ql-formats{margin-right:15px!important;margin-bottom:5px!important}`}</style>
+.ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:4px!important;gap:4px!important;overflow-x:visible!important;width:100%!important}
+.ql-toolbar.ql-snow .ql-formats{margin-right:3px!important;margin-bottom:2px!important;display:inline-flex!important;gap:5px!important;flex-shrink:0!important}
+.ql-toolbar.ql-snow button{padding:2px!important;width:22px!important;height:22px!important;flex-shrink:0!important}
+.ql-toolbar.ql-snow .ql-picker{font-size:12px!important;flex-shrink:0!important}
+.ql-toolbar.ql-snow .ql-picker-label{padding:2px 4px!important;height:22px!important;line-height:18px!important}
+.ql-toolbar.ql-snow .ql-picker-options{max-height:200px!important;overflow-y:auto!important}
+.ql-container.ql-fullscreen,.ql-editor.ql-fullscreen,.fullscreen-container,.ql-snow.ql-fullscreen{background-color:white!important;background:white!important}
+.ql-container:-webkit-full-screen,.ql-container:-moz-full-screen,.ql-container:fullscreen{background-color:white!important}
+.ql-container:-webkit-full-screen .ql-editor,.ql-container:-moz-full-screen .ql-editor,.ql-container:fullscreen .ql-editor{background-color:white!important}
+*:fullscreen{background-color:white!important}
+*:-webkit-full-screen{background-color:white!important}
+*:-moz-full-screen{background-color:white!important}
+@media(max-width:768px){.ql-toolbar.ql-snow{padding:3px!important;gap:2px!important}.ql-toolbar.ql-snow button{width:20px!important;height:20px!important}.ql-toolbar.ql-snow .ql-picker{font-size:11px!important}.ql-toolbar.ql-snow .ql-picker-label{padding:1px 3px!important;height:20px!important;line-height:18px!important}}
+@media(max-width:480px){.ql-toolbar.ql-snow{flex-wrap:wrap!important;overflow-x:visible!important}.ql-toolbar.ql-snow .ql-formats{margin-bottom:2px!important}}`}</style>
 
       <div className="p-4 sm:p-6 max-w-7xl mx-auto">
         <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
@@ -385,7 +397,7 @@ export default function CustomMessage() {
             {showSourceCode ? (
               <div>
                 <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">🔧 Source Code Mode</div>
-                <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[200px] bg-gray-50 resize-y" placeholder="HTML source code..." />
+                <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm text-black min-h-[200px] bg-gray-50 resize-y" placeholder="HTML source code..." />
               </div>
             ) : (
               <div ref={editorContainerRef} className="border-2 border-gray-300 rounded-lg overflow-hidden resizable-editor">

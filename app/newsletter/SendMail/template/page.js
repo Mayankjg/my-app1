@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Link, Image, Table, Code, Palette, Type, Undo, Redo } from 'lucide-react';
+import { Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Link, Image, Table, Code, Palette, Type, Undo, Redo, ChevronDown } from 'lucide-react';
 import { FaPen, FaTrash } from 'react-icons/fa';
 
 const TEMPLATES = [
@@ -125,8 +125,11 @@ export default function Template() {
       },
       view: {
         sourceCode: () => {
-          if (!state.showSourceCode && iframeRef.current) setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true }));
-          else setState(prev => ({ ...prev, showSourceCode: false }));
+          if (!state.showSourceCode && iframeRef.current) {
+            setState(prev => ({ ...prev, htmlContent: iframeRef.current.contentDocument.documentElement.outerHTML, showSourceCode: true }));
+          } else {
+            setState(prev => ({ ...prev, showSourceCode: false }));
+          }
         },
         fullscreen: () => {
           const container = document.querySelector('.editor-container');
@@ -139,19 +142,51 @@ export default function Template() {
         italic: () => doc.execCommand('italic'),
         underline: () => doc.execCommand('underline'),
         strike: () => doc.execCommand('strikeThrough')
+      },
+      tools: {
+        wordCount: () => {
+          const txt = doc?.body?.innerText || '';
+          const w = txt.trim().split(/\s+/).filter(x => x).length;
+          alert(`📊 Statistics:\n\nWords: ${w}\nCharacters: ${txt.length}`);
+        }
       }
     };
     actions[type]?.[action]?.();
     setState(prev => ({ ...prev, openMenu: null }));
   };
 
+  const handleApplySourceCode = () => {
+    if (iframeRef.current && state.htmlContent) {
+      const doc = iframeRef.current.contentDocument;
+      doc.open();
+      doc.write(state.htmlContent);
+      doc.close();
+    }
+    setState(prev => ({ ...prev, showSourceCode: false }));
+  };
+
   const MenuButton = ({ label, items }) => (
     <div className="relative inline-block">
-      <button onClick={() => setState(prev => ({ ...prev, openMenu: prev.openMenu === label.toLowerCase() ? null : label.toLowerCase() }))} className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors rounded">{label}</button>
+      <button 
+        onClick={(e) => {
+          e.stopPropagation();
+          setState(prev => ({ ...prev, openMenu: prev.openMenu === label.toLowerCase() ? null : label.toLowerCase() }));
+        }} 
+        className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-200 transition-colors"
+      >
+        {label} <ChevronDown className="inline" size={12} />
+      </button>
       {state.openMenu === label.toLowerCase() && items && (
-        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 min-w-[200px] rounded">
+        <div className="absolute top-full left-0 mt-0 bg-white border border-gray-300 shadow-lg z-50 min-w-[180px]">
           {items.map((item, i) => item === 'divider' ? <div key={i} className="border-t border-gray-200 my-1"></div> : 
-            <button key={i} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
+            <button 
+              key={i} 
+              onClick={(e) => {
+                e.stopPropagation();
+                item.onClick();
+              }} 
+              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+            >
               <span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}
             </button>
           )}
@@ -172,7 +207,6 @@ export default function Template() {
     const currentContent = state.showSourceCode ? state.htmlContent : iframeRef.current?.contentDocument.documentElement.outerHTML;
     if (!currentContent.replace(/<[^>]*>/g, '').trim()) return alert('Please write a message');
     
-    // Save data to localStorage with fromEmail field
     const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
     const updatedContacts = contacts.map(contact => ({
       ...contact,
@@ -190,6 +224,17 @@ export default function Template() {
     }));
     router.push(path);
   };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (state.openMenu) {
+        setState(prev => ({ ...prev, openMenu: null }));
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [state.openMenu]);
 
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto">
@@ -279,7 +324,7 @@ export default function Template() {
 
       <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label className="text-sm font-semibold text-gray-700 whitespace-nowrap sm:min-w-[120px]">Subject</label>
-        <input type="text" value={state.subject} onChange={(e) => setState(prev => ({ ...prev, subject: e.target.value }))} placeholder="Enter email subject" className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-1 hover:bg-gray-100 hover:bg-gray-50 text-sm" />
+        <input type="text" value={state.subject} onChange={(e) => setState(prev => ({ ...prev, subject: e.target.value }))} placeholder="Enter email subject" className="shadow appearance-none border border-gray-300 rounded w-full sm:max-w-md sm:flex-1 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-1 hover:bg-gray-50 text-sm" />
       </div>
 
       {state.selectedProduct && (
@@ -316,22 +361,20 @@ export default function Template() {
                 <div>
                   <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded flex items-center justify-between">
                     <span>🔧 Source Code Mode</span>
-                    <button onClick={() => { if (iframeRef.current) { const doc = iframeRef.current.contentDocument; doc.open(); doc.write(state.htmlContent); doc.close(); } setState(prev => ({ ...prev, showSourceCode: false })); }} className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
+                    <button onClick={handleApplySourceCode} className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs">Apply Changes</button>
                   </div>
                   <textarea value={state.htmlContent} onChange={(e) => setState(prev => ({ ...prev, htmlContent: e.target.value }))} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." />
                 </div>
               ) : (
                 <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
-                  <div className="bg-gray-50 border-b border-gray-300 px-2 py-1">
-                    <div className="flex items-center gap-0">
-                      <MenuButton label="File" items={[{ label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleAction('file', 'new') }, { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleAction('file', 'print') }]} />
-                      <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleAction('edit', 'undo') }, { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleAction('edit', 'redo') }, 'divider', { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleAction('edit', 'cut') }, { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleAction('edit', 'copy') }, { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleAction('edit', 'paste') }, 'divider', { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleAction('edit', 'selectAll') }]} />
-                      <MenuButton label="Insert" items={[{ label: 'Insert image', onClick: () => handleAction('insert', 'image') }, { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleAction('insert', 'link') }, { label: 'Insert table', onClick: () => handleAction('insert', 'table') }, { label: 'Horizontal line', onClick: () => handleAction('insert', 'hr') }]} />
-                      <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleAction('view', 'fullscreen') }, { label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }]} />
-                      <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleAction('format', 'bold') }, { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleAction('format', 'italic') }, { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleAction('format', 'underline') }, { label: 'Strikethrough', onClick: () => handleAction('format', 'strike') }]} />
-                      <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleAction('insert', 'table') }]} />
-                      <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }]} />
-                    </div>
+                  <div style={{ background: '#f5f5f5', borderBottom: '1px solid #ccc', padding: '4px 8px' }}>
+                    <MenuButton label="File" items={[{ label: 'New document', shortcut: 'Ctrl+N', onClick: () => handleAction('file', 'new') }, { label: 'Print', shortcut: 'Ctrl+P', onClick: () => handleAction('file', 'print') }]} />
+                    <MenuButton label="Edit" items={[{ label: 'Undo', shortcut: 'Ctrl+Z', onClick: () => handleAction('edit', 'undo') }, { label: 'Redo', shortcut: 'Ctrl+Y', onClick: () => handleAction('edit', 'redo') }, 'divider', { label: 'Cut', shortcut: 'Ctrl+X', onClick: () => handleAction('edit', 'cut') }, { label: 'Copy', shortcut: 'Ctrl+C', onClick: () => handleAction('edit', 'copy') }, { label: 'Paste', shortcut: 'Ctrl+V', onClick: () => handleAction('edit', 'paste') }, 'divider', { label: 'Select all', shortcut: 'Ctrl+A', onClick: () => handleAction('edit', 'selectAll') }]} />
+                    <MenuButton label="Insert" items={[{ label: 'Insert image', onClick: () => handleAction('insert', 'image') }, { label: 'Insert link', shortcut: 'Ctrl+K', onClick: () => handleAction('insert', 'link') }, { label: 'Insert table', onClick: () => handleAction('insert', 'table') }, { label: 'Horizontal line', onClick: () => handleAction('insert', 'hr') }]} />
+                    <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleAction('view', 'fullscreen') }, { label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }]} />
+                    <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleAction('format', 'bold') }, { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleAction('format', 'italic') }, { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleAction('format', 'underline') }, { label: 'Strikethrough', onClick: () => handleAction('format', 'strike') }]} />
+                    <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleAction('insert', 'table') }]} />
+                    <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleAction('view', 'sourceCode') }, { label: 'Word count', onClick: () => handleAction('tools', 'wordCount') }]} />
                   </div>
 
                   <div className="bg-white border-b border-gray-300 p-2">
