@@ -225,7 +225,6 @@ export default function Template() {
     router.push(path);
   };
 
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
       if (state.openMenu) {
