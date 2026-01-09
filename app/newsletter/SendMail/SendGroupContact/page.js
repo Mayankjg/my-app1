@@ -12,7 +12,6 @@ export default function SendGroupContact() {
     const [selectedEmail, setSelectedEmail] = useState('');
 
     useEffect(() => {
-        // Load template data to get selectedEmail
         const templateData = localStorage.getItem('selectedTemplateData');
         if (templateData) {
             try {
@@ -23,16 +22,15 @@ export default function SendGroupContact() {
             }
         }
 
-        // Load saved contacts from localStorage
-        const savedContacts = localStorage.getItem('groupContacts');
-        if (savedContacts) {
-            try {
-                const contacts = JSON.parse(savedContacts);
-                setTotalRecipients(contacts.length);
-            } catch (e) {
-                console.error('Error parsing saved contacts:', e);
-            }
-        }
+        // const savedContacts = localStorage.getItem('groupContacts');
+        // if (savedContacts) {
+        //     try {
+        //         const contacts = JSON.parse(savedContacts);
+        //         setTotalRecipients(contacts.length);
+        //     } catch (e) {
+        //         console.error('Error parsing saved contacts:', e);
+        //     }
+        // }
     }, []);
 
     const handleFileChange = async (e) => {
@@ -54,7 +52,19 @@ export default function SendGroupContact() {
 
                         setColumnHeaders(headers);
                         setFileData(rows);
-                        setTotalRecipients(0);
+                        
+                        const nameIndex = headers.findIndex(h =>
+                            h && h.toString().toLowerCase().includes('name')
+                        );
+                        const emailIndex = headers.findIndex(h =>
+                            h && h.toString().toLowerCase().includes('email')
+                        );
+
+                        const validCount = rows.filter(row => {
+                            return row[nameIndex] && row[emailIndex];
+                        }).length;
+
+                        setTotalRecipients(validCount);
                     }
                 } catch (error) {
                     alert('Error reading file. Please make sure it is a valid Excel or CSV file.');
@@ -93,8 +103,8 @@ export default function SendGroupContact() {
 
         setTotalRecipients(validRecipients.length);
 
-        // Save only to groupContacts
-        localStorage.setItem('groupContacts', JSON.stringify(validRecipients));
+        // localStorage.setItem('groupContacts', JSON.stringify(validRecipients));
+        localStorage.setItem('contacts', JSON.stringify(validRecipients));
 
         alert(`File uploaded successfully! Found ${validRecipients.length} valid recipients.`);
         
@@ -161,7 +171,7 @@ export default function SendGroupContact() {
 
                             <button
                                 onClick={handleUpload}
-                                className="bg-[#00bcd4] hover:bg-[#00acc1] text-white font-medium px-12 py-2 rounded text-base transition-colors focus:outline-none"
+                                className="bg-sky-400 hover:bg-sky-500 text-white font-medium px-7 py-1.5 rounded text-base transition-colors focus:outline-none"
                             >
                                 Upload
                             </button>
@@ -178,7 +188,7 @@ export default function SendGroupContact() {
                             </p>
                             <button
                                 onClick={handleDownloadSample}
-                                className="bg-[#00bcd4] hover:bg-[#00acc1] text-white font-medium px-6 py-2 rounded text-sm transition-colors"
+                                className="bg-teal-500 hover:bg-teal-600 text-white font-medium px-6 py-2 rounded text-sm transition-colors"
                             >
                                 Download sample
                             </button>
