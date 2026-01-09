@@ -32,9 +32,9 @@ export default function AddCustomTemplatePage() {
           placeholder: 'Write your template content here...',
           modules: {
             toolbar: [[{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-              ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub'}, { 'script': 'super' }],
-              [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
-              ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
+            ['bold', 'italic', 'underline', 'strike'], [{ 'color': [] }, { 'background': [] }], [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }], [{ 'direction': 'rtl' }, { 'align': [] }],
+            ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula'], ['clean']]
           }
         });
         loadEditData();
@@ -45,7 +45,7 @@ export default function AddCustomTemplatePage() {
       if (document.head.contains(link)) document.head.removeChild(link);
       if (document.body.contains(script)) document.body.removeChild(script);
     };
-  }, []); 
+  }, []);
 
   const loadEditData = () => {
     const editId = searchParams.get("edit");
@@ -53,11 +53,11 @@ export default function AddCustomTemplatePage() {
 
     setIsEditMode(true);
     setEditingTemplateId(editId);
-    
+
     const editingTemplate = JSON.parse(localStorage.getItem("editingTemplate") || "{}");
     const allTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
     const template = editingTemplate.id === editId ? editingTemplate : allTemplates.find(t => t.id === editId);
-    
+
     if (template) {
       setTemplateName(template.name || "");
       if (template.visibility) setVisibility(template.visibility);
@@ -88,8 +88,10 @@ export default function AddCustomTemplatePage() {
   const handleEditAction = (action) => {
     const editor = quillRef.current;
     if (!editor) return;
-    const actions = { undo: () => editor.history.undo(), redo: () => editor.history.redo(), cut: () => document.execCommand('cut'), 
-      copy: () => document.execCommand('copy'), paste: () => {}, selectAll: () => editor.setSelection(0, editor.getLength()) };
+    const actions = {
+      undo: () => editor.history.undo(), redo: () => editor.history.redo(), cut: () => document.execCommand('cut'),
+      copy: () => document.execCommand('copy'), paste: () => { }, selectAll: () => editor.setSelection(0, editor.getLength())
+    };
     actions[action]?.();
     setOpenMenu(null);
   };
@@ -99,8 +101,8 @@ export default function AddCustomTemplatePage() {
     if (!editor) return;
     const range = editor.getSelection();
     const index = range ? range.index : editor.getLength();
-    
-    switch(action) {
+
+    switch (action) {
       case 'image': const img = prompt('Enter image URL:'); if (img) editor.insertEmbed(index, 'image', img); break;
       case 'link': const url = prompt('Enter URL:');
         if (url) {
@@ -152,13 +154,15 @@ export default function AddCustomTemplatePage() {
     const existingTemplates = JSON.parse(localStorage.getItem("emailTemplates") || "[]");
 
     if (isEditMode && editingTemplateId) {
-      const updated = existingTemplates.map(t => t.id === editingTemplateId ? 
+      const updated = existingTemplates.map(t => t.id === editingTemplateId ?
         { ...t, name: templateName.trim(), content: editorContent, visibility, updatedAt: new Date().toISOString() } : t);
       localStorage.setItem("emailTemplates", JSON.stringify(updated));
       alert('Template updated successfully!');
     } else {
-      const template = { id: crypto.randomUUID(), name: templateName.trim(), content: editorContent, visibility, 
-        createdAt: new Date().toISOString(), isCustom: true };
+      const template = {
+        id: crypto.randomUUID(), name: templateName.trim(), content: editorContent, visibility,
+        createdAt: new Date().toISOString(), isCustom: true
+      };
       localStorage.setItem("emailTemplates", JSON.stringify([template, ...existingTemplates]));
       alert('Template saved successfully!');
     }
@@ -178,7 +182,7 @@ export default function AddCustomTemplatePage() {
       </button>
       {openMenu === label.toLowerCase() && items && (
         <div className="absolute top-full left-0 mt-0 bg-white border border-gray-300 shadow-lg z-50 min-w-[180px]">
-          {items.map((item, idx) => item === 'divider' ? <div key={idx} className="border-t border-gray-200 my-1"></div> : 
+          {items.map((item, idx) => item === 'divider' ? <div key={idx} className="border-t border-gray-200 my-1"></div> :
             <button key={idx} onClick={item.onClick} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
               <span>{item.label}</span>{item.shortcut && <span className="text-xs text-gray-400 ml-4">{item.shortcut}</span>}
             </button>
@@ -191,40 +195,39 @@ export default function AddCustomTemplatePage() {
   return (
     <>
       <style>{`
-body{scrollbar-width:none!important;-ms-overflow-style:none!important}
-body::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
-.hide-scrollbar{scrollbar-width:none!important;-ms-overflow-style:none!important}
-.hide-scrollbar::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
-.ql-container{font-family:inherit;border:none!important;height:200px!important;overflow-y:auto!important}
-.ql-editor{color:black!important;outline:none!important;overflow-y:auto!important;height:100%!important;max-height:400px!important}
-.ql-editor:focus{outline:none!important;border:none!important}
-.ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
-.ql-tooltip{left:auto!important;right:0!important;transform:none!important}
-.ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
-.ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
-.resizable-editor{overflow:hidden!important}
-.ql-container::-webkit-scrollbar,.ql-editor::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
-.ql-container::-webkit-scrollbar-track,.ql-editor::-webkit-scrollbar-track{background:#f1f1f1}
-.ql-container::-webkit-scrollbar-thumb,.ql-editor::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
-.ql-container::-webkit-scrollbar-thumb:hover,.ql-editor::-webkit-scrollbar-thumb:hover{background:#555}
-.ql-container{scrollbar-width:none!important;-ms-overflow-style:none!important}
-.ql-editor{scrollbar-width:none!important;-ms-overflow-style:none!important}
-.ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:4px!important;gap:4px!important;overflow-x:visible!important;width:100%!important}
-.ql-toolbar.ql-snow .ql-formats{margin-right:3px!important;margin-bottom:2px!important;display:inline-flex!important;gap:5px!important;flex-shrink:0!important}
-.ql-toolbar.ql-snow button{padding:2px!important;width:22px!important;height:22px!important;flex-shrink:0!important}
-.ql-toolbar.ql-snow .ql-picker{font-size:12px!important;flex-shrink:0!important}
-.ql-toolbar.ql-snow .ql-picker-label{padding:2px 4px!important;height:22px!important;line-height:18px!important}
-.ql-toolbar.ql-snow .ql-picker-options{max-height:200px!important;overflow-y:auto!important}
-.ql-container.ql-fullscreen,.ql-editor.ql-fullscreen,.fullscreen-container,.ql-snow.ql-fullscreen{background-color:white!important;background:white!important}
-.ql-container:-webkit-full-screen,.ql-container:-moz-full-screen,.ql-container:fullscreen{background-color:white!important}
-.ql-container:-webkit-full-screen .ql-editor,.ql-container:-moz-full-screen .ql-editor,.ql-container:fullscreen .ql-editor{background-color:white!important}
-*:fullscreen{background-color:white!important}
-*:-webkit-full-screen{background-color:white!important}
-*:-moz-full-screen{background-color:white!important}
-@media(max-width:768px){.ql-toolbar.ql-snow{padding:3px!important;gap:2px!important}.ql-toolbar.ql-snow button{width:20px!important;height:20px!important}.ql-toolbar.ql-snow .ql-picker{font-size:11px!important}.ql-toolbar.ql-snow .ql-picker-label{padding:1px 3px!important;height:20px!important;line-height:18px!important}}
-@media(max-width:480px){.ql-toolbar.ql-snow{flex-wrap:wrap!important;overflow-x:visible!important}.ql-toolbar.ql-snow .ql-formats{margin-bottom:2px!important}}
+                body{scrollbar-width:none!important;-ms-overflow-style:none!important}
+                body::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+              .hide-scrollbar{scrollbar-width:none!important;-ms-overflow-style:none!important}
+              .hide-scrollbar::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+              .ql-container{font-family:inherit;border:none!important;height:200px!important;overflow-y:auto!important}
+              .ql-editor{color:black!important;outline:none!important;overflow-y:auto!important;height:100%!important;max-height:400px!important}
+              .ql-editor:focus{outline:none!important;border:none!important}
+              .ql-editor p,.ql-editor h1,.ql-editor h2,.ql-editor h3,.ql-editor h4,.ql-editor h5,.ql-editor h6,.ql-editor span,.ql-editor div,.ql-editor li,.ql-editor ol,.ql-editor ul,.ql-editor strong,.ql-editor em,.ql-editor u{color:black!important}
+              .ql-tooltip{left:auto!important;right:0!important;transform:none!important}               .ql-editor table{border-collapse:collapse;width:100%;margin:10px 0}
+              .ql-editor table td,.ql-editor table th{border:1px solid #ddd;padding:8px}
+              .resizable-editor{overflow:hidden!important}
+              .ql-container::-webkit-scrollbar,.ql-editor::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+              .ql-container::-webkit-scrollbar-track,.ql-editor::-webkit-scrollbar-track{background:#f1f1f1}
+              .ql-container::-webkit-scrollbar-thumb,.ql-editor::-webkit-scrollbar-thumb{background:#888;border-radius:4px}
+              .ql-container::-webkit-scrollbar-thumb:hover,.ql-editor::-webkit-scrollbar-thumb:hover{background:#555}
+              .ql-container{scrollbar-width:none!important;-ms-overflow-style:none!important}
+              .ql-editor{scrollbar-width:none!important;-ms-overflow-style:none!important}
+              .ql-toolbar.ql-snow{display:flex!important;flex-wrap:wrap!important;border-bottom:1px solid #ccc!important;padding:4px!important;gap:4px!important;overflow-x:visible!important;width:100%!important}
+              .ql-toolbar.ql-snow .ql-formats{margin-right:3px!important;margin-bottom:2px!important;display:inline-flex!important;gap:5px!important;flex-shrink:0!important}
+              .ql-toolbar.ql-snow button{padding:2px!important;width:22px!important;height:22px!important;flex-shrink:0!important}
+              .ql-toolbar.ql-snow .ql-picker{font-size:12px!important;flex-shrink:0!important}
+              .ql-toolbar.ql-snow .ql-picker-label{padding:2px 4px!important;height:22px!important;line-height:18px!important}
+              .ql-toolbar.ql-snow .ql-picker-options{max-height:200px!important;overflow-y:auto!important}
+              .ql-container.ql-fullscreen,.ql-editor.ql-fullscreen,.fullscreen-container,.ql-snow.ql-fullscreen{background-color:white!important;background:white!important}
+              .ql-container:-webkit-full-screen,.ql-container:-moz-full-screen,.ql-container:fullscreen{background-color:white!important}
+              .ql-container:-webkit-full-screen .ql-editor,.ql-container:-moz-full-screen .ql-editor,.ql-container:fullscreen .ql-editor{background-color:white!important}
+              *:fullscreen{background-color:white!important}
+              *:-webkit-full-screen{background-color:white!important}
+              *:-moz-full-screen{background-color:white!important}
+              @media(max-width:768px){.ql-toolbar.ql-snow{padding:3px!important;gap:2px!important}.ql-toolbar.ql-snow button{width:20px!important;height:20px!important}.ql-toolbar.ql-snow .ql-picker{font-size:11px!important}.ql-toolbar.ql-snow .ql-picker-label{padding:1px 3px!important;height:20px!important;line-height:18px!important}}
+              @media(max-width:480px){.ql-toolbar.ql-snow{flex-wrap:wrap!important;overflow-x:visible!important}.ql-toolbar.ql-snow .ql-formats{margin-bottom:2px!important}}
 `}</style>
-      
+
       <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-y-auto hide-scrollbar flex justify-center items-start font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
         <div ref={editorContainerRef} className="bg-white w-full max-w-[1400px]">
           <div className="bg-white w-full px-4 sm:px-6 py-4 border-b border-gray-300">
@@ -250,7 +253,7 @@ body::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!im
               <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                 Message <strong className="text-red-500">(Note: Please Enter Plain Text Only For Better Result)</strong>
               </label>
-              
+
               {showSourceCode ? (
                 <div>
                   <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">🔧 Source Code Mode - Edit HTML directly</div>
@@ -265,7 +268,7 @@ body::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!im
                     <MenuButton label="View" items={[{ label: 'Fullscreen', shortcut: 'F11', onClick: () => handleViewAction('fullscreen') }, { label: 'Source code', onClick: () => handleViewAction('sourceCode') }]} />
                     <MenuButton label="Format" items={[{ label: 'Bold', shortcut: 'Ctrl+B', onClick: () => handleFormatAction('bold') }, { label: 'Italic', shortcut: 'Ctrl+I', onClick: () => handleFormatAction('italic') }, { label: 'Underline', shortcut: 'Ctrl+U', onClick: () => handleFormatAction('underline') }, { label: 'Strikethrough', onClick: () => handleFormatAction('strike') }, 'divider', { label: 'Superscript', onClick: () => handleFormatAction('script', 'super') }, { label: 'Subscript', onClick: () => handleFormatAction('script', 'sub') }]} />
                     <MenuButton label="Table" items={[{ label: 'Insert table', onClick: () => handleInsertAction('table') }]} />
-                    <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') }, { label: 'Word count', onClick: () => { const text = quillRef.current?.getText() || ''; const words = text.trim().split(/\s+/).filter(w => w).length; alert(`📊 Statistics:\n\nWords: ${words}\nCharacters: ${text.length}`); }}]} />
+                    <MenuButton label="Tools" items={[{ label: 'Source code', onClick: () => handleViewAction('sourceCode') }, { label: 'Word count', onClick: () => { const text = quillRef.current?.getText() || ''; const words = text.trim().split(/\s+/).filter(w => w).length; alert(`📊 Statistics:\n\nWords: ${words}\nCharacters: ${text.length}`); } }]} />
                   </div>
                   <div id="editor" style={{ minHeight: '150px', backgroundColor: 'white' }}></div>
                 </div>
