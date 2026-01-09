@@ -257,7 +257,7 @@ export default function AddCustomTemplatePage() {
               {showSourceCode ? (
                 <div>
                   <div className="mb-2 text-sm text-orange-600 bg-orange-50 p-2 rounded">🔧 Source Code Mode - Edit HTML directly</div>
-                  <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." />
+                  <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} className="w-full border-2 border-gray-300 rounded-lg p-4 font-mono text-sm text-black min-h-[400px] bg-gray-50 resize-y" placeholder="HTML source code..." />
                 </div>
               ) : (
                 <div className="border-2 border-gray-300 rounded-lg overflow-hidden resizable-editor">
