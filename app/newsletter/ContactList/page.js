@@ -88,67 +88,76 @@ export default function ContactList() {
   );
 
   return (
-    <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-hidden flex justify-center items-start">
-      <div className="bg-white w-full border max-w-[1400px] h-full overflow-y-auto">
-        <div className="bg-white w-full px-4 sm:px-6 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-xl sm:text-2xl font-normal text-gray-700">Contact <strong>List</strong></h1>
-            <button onClick={() => router.push('/newsletter/ImportContacts')}
-              className="w-full sm:w-auto bg-[#2d3e50] hover:bg-[#1a252f] text-white text-base px-5 py-2.5 rounded transition-colors">
-              Add Contacts
-            </button>
-          </div>
-          <hr className="-mx-4 sm:-mx-6 border-t border-gray-400 mt-4 mb-0" />
-        </div>
-
-        <div className="px-4 sm:px-6 py-4 bg-white">
-          <p className="text-sm">
-            <span className="text-red-600 font-semibold">Note :</span>{" "}
-            <span className="text-red-600">Unsubscribe User(s) will not display in this List.</span>
-          </p>
-        </div>
-
-        {contacts.length === 0 ? (
-          <div className="px-4 sm:px-6 py-12 text-center">
-            <p className="text-gray-500 text-lg">No contact found</p>
-          </div>
-        ) : (
-          <>
-            <div className="hidden md:block w-full px-4 sm:px-6 pb-6">
-              <div className="border border-gray-300 overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-gray-200">
-                      <th className="py-4 px-4 lg:px-6 text-left w-12 lg:w-16 border-r border-gray-300">
-                        <input type="checkbox" onChange={toggleSelectAll} 
-                          checked={selectedContacts.length === contacts.length && contacts.length > 0} className="w-4 h-4 cursor-pointer" />
-                      </th>
-                      {['SR NO.', 'NAME', 'EMAIL', 'PRODUCT'].map(h => (
-                        <th key={h} className="py-4 px-4 lg:px-6 text-left text-xs lg:text-sm font-bold text-gray-600 uppercase tracking-wide border-r border-gray-300">{h}</th>
-                      ))}
-                      <th className="py-4 px-4 lg:px-6 text-center text-xs lg:text-sm font-bold text-gray-600 uppercase tracking-wide">DELETE</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white">
-                    {contacts.map((contact, index) => <ContactRow key={contact.id} contact={contact} index={index} />)}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="md:hidden px-4 py-3 space-y-3">
-              {contacts.map((contact, index) => <MobileCard key={contact.id} contact={contact} index={index} />)}
-            </div>
-
-            <div className="px-4 sm:px-6 py-4 md:py-6">
-              <button onClick={bulkDelete}
-                className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white px-12 py-2.5 rounded text-sm font-medium transition-colors">
-                Delete
+    <>
+      <style>{`
+        body{scrollbar-width:none!important;-ms-overflow-style:none!important}
+        body::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+        .hide-scrollbar{scrollbar-width:none!important;-ms-overflow-style:none!important}
+        .hide-scrollbar::-webkit-scrollbar{width:0px!important;height:0px!important;display:none!important}
+      `}</style>
+      
+      <div className="bg-[#e5e7eb] p-0 sm:p-5 h-screen overflow-y-auto hide-scrollbar flex justify-center items-start">
+        <div className="bg-white w-full border max-w-[1400px]">
+          <div className="bg-white w-full px-4 sm:px-6 py-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h1 className="text-xl sm:text-2xl font-normal text-gray-700">Contact <strong>List</strong></h1>
+              <button onClick={() => router.push('/newsletter/ImportContacts')}
+                className="w-full sm:w-auto bg-[#2d3e50] hover:bg-[#1a252f] text-white text-base px-5 py-2.5 rounded transition-colors">
+                Add Contacts
               </button>
             </div>
-          </>
-        )}
+            <hr className="-mx-4 sm:-mx-6 border-t border-gray-400 mt-4 mb-0" />
+          </div>
+
+          <div className="px-4 sm:px-6 py-4 bg-white">
+            <p className="text-sm">
+              <span className="text-red-600 font-semibold">Note :</span>{" "}
+              <span className="text-red-600">Unsubscribe User(s) will not display in this List.</span>
+            </p>
+          </div>
+
+          {contacts.length === 0 ? (
+            <div className="px-4 sm:px-6 py-12 text-center">
+              <p className="text-gray-500 text-lg">No contact found</p>
+            </div>
+          ) : (
+            <>
+              <div className="hidden md:block w-full px-4 sm:px-6 pb-6">
+                <div className="border border-gray-300 overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-gray-200">
+                        <th className="py-4 px-4 lg:px-6 text-left w-12 lg:w-16 border-r border-gray-300">
+                          <input type="checkbox" onChange={toggleSelectAll} 
+                            checked={selectedContacts.length === contacts.length && contacts.length > 0} className="w-4 h-4 cursor-pointer" />
+                        </th>
+                        {['SR NO.', 'NAME', 'EMAIL', 'PRODUCT'].map((h, idx) => (
+                          <th key={`header-${idx}`} className="py-4 px-4 lg:px-6 text-left text-xs lg:text-sm font-bold text-gray-600 uppercase tracking-wide border-r border-gray-300">{h}</th>
+                        ))}
+                        <th className="py-4 px-4 lg:px-6 text-center text-xs lg:text-sm font-bold text-gray-600 uppercase tracking-wide">DELETE</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white">
+                      {contacts.map((contact, index) => <ContactRow key={contact.id} contact={contact} index={index} />)}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="md:hidden px-4 py-3 space-y-3">
+                {contacts.map((contact, index) => <MobileCard key={contact.id} contact={contact} index={index} />)}
+              </div>
+
+              <div className="px-4 sm:px-6 py-4 md:py-6">
+                <button onClick={bulkDelete}
+                  className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white px-12 py-2.5 rounded text-sm font-medium transition-colors">
+                  Delete
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
