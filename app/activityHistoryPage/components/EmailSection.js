@@ -321,7 +321,7 @@ export default function EmailSection() {
                   <td className="px-4 py-4 text-gray-600 border border-gray-300">{log.to}</td>
                   <td className="px-4 py-4 border border-gray-300"><span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">{log.status}</span></td>
                   <td className="px-4 py-4 text-[#00bcd4] font-medium border border-gray-300">{log.date}</td>
-                  <td className="px-4 py-4 border border-gray-300"><button onClick={() => deleteLog(log.id)} className="text-gray-500 hover:text-gray-700 transition"><Trash2 className="w-5 h-5" /></button></td>
+                  <td className="px-4 py-4 border border-gray-300"><button onClick={() => deleteLog(log.id)} className="text-red-400 hover:text-red-600 transition"><Trash2 className="w-5 h-5" /></button></td>
                 </tr>
               ))
             )}
