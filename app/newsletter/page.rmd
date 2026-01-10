@@ -12,3 +12,34 @@ export default function NewsLetterPage() {
 
   return null;
 }
+
+
+
+
+
+----------------   not running code    ---------------
+
+
+
+
+
+"use client";
+
+import ContactListPage from './ContactList/page';
+import FromEmailListPage from './FromEmailList/page';
+import ImportContactDetailPage from './ImportContactDetail/page';
+import ImportContactsPage from './ImportContacts/page';
+import InvalidEmailListPage from './InvalidEmailList/page';
+import SendMailPage from './SendMail/page';
+import TemplatesListPageMain from './TemplatesListPage/page';
+import UnsubscribeUserListPage from './UnsubscribeUserList/page';
+
+export default function NewsletterPage() {
+  return (
+    <div className="min-h-screen bg-[#f9f9f9]">
+      <style>{`*{scrollbar-width:none!important;-ms-overflow-style:none!important}*::-webkit-scrollbar{display:none!important}`}</style>
+      
+      <ContactListPage />
+    </div>
+  );
+}
