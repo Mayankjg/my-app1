@@ -213,7 +213,7 @@ export default function SendSingleMail() {
                               {contact.selected && (
                                 <button 
                                   onClick={() => handleDeleteContact(contact.id)}
-                                  className="text-red-400 hover:text-red-700 p-2 rounded transition-colors"
+                                  className="text-red-400 hover:text-red-700 p-0.5 rounded transition-colors"
                                   title="Delete contact"
                                 >
                                   <Trash2 size={18} />
