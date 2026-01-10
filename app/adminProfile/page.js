@@ -32,7 +32,6 @@ export default function AdminProfile() {
     const handleEmailUpdate = () => { console.log('Email updates:', emailUpdates); alert('Email preferences updated successfully!'); };
     const handleDeleteAccount = () => { if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) { console.log('Account deletion requested'); alert('Account deletion process initiated'); } };
     const handleReminderDateUpdate = () => { setShowSuccess(true); setTimeout(() => setShowSuccess(false), 3000); };
-    const handleTimezoneUpdate = () => { console.log('Timezone updated:', timezone); alert('Timezone updated successfully!'); };
 
     const InputField = ({ label, name, type = "text", placeholder, value, readonly }) => (
         <div>
