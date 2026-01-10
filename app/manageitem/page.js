@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import CategoriesPage from './categories/page';
+import LeadSourcePage from './lead-source/page';
+import LeadStatusPage from './lead-status/page';
+import ProductsPage from './products/page';
 
 export default function ManageItemPage() {
-  const router = useRouter();
-  
-  useEffect(() => {
-    router.push('/manageitem/products');
-    // router.push('/manageitem/categories');
-    // router.push('/manageitem/lead-source');
-    // router.push('/manageitem/lead-status');
-  }, [router]);
-
-  return null;
+  return (
+    <div className="min-h-screen bg-[#f9f9f9]">
+      <style>{`*{scrollbar-width:none!important;-ms-overflow-style:none!important}*::-webkit-scrollbar{display:none!important}`}</style>
+      
+      <LeadSourcePage />
+    </div>
+  );
 }
