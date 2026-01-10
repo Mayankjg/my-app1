@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ArrowRight, Calendar, ArrowLeft } from 'lucide-react';
 
 export default function LeadDateTimePicker() {
