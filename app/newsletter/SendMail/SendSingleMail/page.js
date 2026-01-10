@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { Trash2 } from 'lucide-react';
 
 export default function SendSingleMail() {
   const [contactName, setContactName] = useState('');
@@ -43,7 +44,7 @@ export default function SendSingleMail() {
       id: crypto.randomUUID(), 
       name: contactName.trim(), 
       email: contactEmail.trim(), 
-      selected: true,
+      selected: false,
       fromEmail: selectedTemplate?.selectedEmail || ''
     };
     
@@ -58,6 +59,29 @@ export default function SendSingleMail() {
 
   const handleToggleAllContacts = (e) => {
     setContactList(contactList.map(c => ({ ...c, selected: e.target.checked })));
+  };
+
+  const handleDeleteContact = (id) => {
+    if (window.confirm('Are you sure you want to delete this contact?')) {
+      const updatedList = contactList.filter(c => c.id !== id);
+      setContactList(updatedList);
+      if (updatedList.length === 0) {
+        localStorage.removeItem('singleMailContacts');
+      }
+    }
+  };
+
+  const handleDeleteSelected = () => {
+    const selectedCount = contactList.filter(c => c.selected).length;
+    if (selectedCount === 0) return alert('Please select at least one contact to delete');
+    
+    if (window.confirm(`Are you sure you want to delete ${selectedCount} selected contact(s)?`)) {
+      const updatedList = contactList.filter(c => !c.selected);
+      setContactList(updatedList);
+      if (updatedList.length === 0) {
+        localStorage.removeItem('singleMailContacts');
+      }
+    }
   };
 
   const handleSendMail = () => {
@@ -160,17 +184,17 @@ export default function SendSingleMail() {
                       <div className="col-span-1 flex items-center">
                         <input type="checkbox" checked={contactList.length > 0 && contactList.every(c => c.selected)} onChange={handleToggleAllContacts} className="w-4 h-4 cursor-pointer accent-cyan-500" />
                       </div>
-                      <div className="col-span-5">
+                      <div className="col-span-4">
                         <span className="text-blue-600 font-bold text-sm uppercase tracking-wide">NAME</span>
                       </div>
-                      <div className="col-span-6">
+                      <div className="col-span-5">
                         <span className="text-blue-600 font-bold text-sm uppercase tracking-wide">EMAIL</span>
                       </div>
                     </div>
 
                     {contactList.length === 0 ? (
                       <div className="text-center py-5">
-                        <p className="text-red-400 text-lg font-medium">📭 No contacts added yet</p>
+                        <p className="text-red-400 text-lg font-medium"> No contacts added</p>
                       </div>
                     ) : (
                       <div className="divide-y divide-gray-200">
@@ -179,11 +203,22 @@ export default function SendSingleMail() {
                             <div className="col-span-1 flex items-center">
                               <input type="checkbox" checked={contact.selected} onChange={() => handleToggleContact(contact.id)} className="w-4 h-4 cursor-pointer accent-cyan-500" />
                             </div>
-                            <div className="col-span-5 flex items-center">
+                            <div className="col-span-4 flex items-center">
                               <span className="text-gray-700 text-sm font-medium">{contact.name}</span>
                             </div>
-                            <div className="col-span-6 flex items-center">
+                            <div className="col-span-5 flex items-center">
                               <span className="text-gray-600 text-sm">{contact.email}</span>
+                            </div>
+                            <div className="col-span-2 flex items-center">
+                              {contact.selected && (
+                                <button 
+                                  onClick={() => handleDeleteContact(contact.id)}
+                                  className="text-red-400 hover:text-red-700 p-2 rounded transition-colors"
+                                  title="Delete contact"
+                                >
+                                  <Trash2 size={18} />
+                                </button>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -193,13 +228,15 @@ export default function SendSingleMail() {
                 </div>
 
                 {contactList.length > 0 && (
-                  <div className="flex flex-col sm:flex-row sm:justify-end gap-3 mt-6 mb-6">
-                    <button onClick={handleSendMail} className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors">
-                      Send Mail</button>
-                    <button onClick={handlePreview} className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors">
-                      Preview</button>
-                    <button onClick={handleCancel} className="w-full sm:w-auto bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors">
-                      Cancel</button>
+                  <div className="flex flex-col sm:flex-row sm:justify-between gap-3 mt-6 mb-6">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <button onClick={handleSendMail} className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-colors">
+                        Send Mail</button>
+                      <button onClick={handlePreview} className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors">
+                        Preview</button>
+                      <button onClick={handleCancel} className="w-full sm:w-auto bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium py-2 px-6 rounded focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors">
+                        Cancel</button>
+                    </div>
                   </div>
                 )}
               </div>

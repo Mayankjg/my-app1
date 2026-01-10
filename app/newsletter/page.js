@@ -7,7 +7,7 @@ export default function NewsLetterPage() {
   const router = useRouter();
   
   useEffect(() => {
-    router.push('/newsletter/ContactList');
+    router.push('/newsletter/SendMail');
   }, [router]);
 
   return null;
