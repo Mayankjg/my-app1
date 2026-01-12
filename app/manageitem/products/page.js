@@ -1,7 +1,9 @@
+// @/app/manageitem/products/page.js
 "use client";
 
 import { useState, useEffect } from "react";
 import { FaPen, FaTrash, FaEye } from "react-icons/fa";
+import ProductsTableModal from "./ProductsTableModal";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -84,22 +86,14 @@ export default function ProductsPage() {
             </button>
           </div>
 
-          {showAddForm && (
-            <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-              <div className="bg-white w-full max-w-md rounded-lg shadow-xl p-4 sm:p-6">
-                <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-800 border-b pb-2">Add New Product</h3>
-                <label className="block mb-2 text-sm text-gray-700">Product Name</label>
-                <input type="text" value={newProduct} onChange={(e) => setNewProduct(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                  placeholder="Enter product name" />
-                <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button className="bg-sky-400 hover:bg-sky-500 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddProduct}>
-                    Save</button>
-                  <button className="bg-gray-200 hover:bg-gray-300 text-black px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddForm(false); setNewProduct(""); }}>
-                    Cancel</button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Modal Component */}
+          <ProductsTableModal
+            showPopup={showAddForm}
+            setShowPopup={setShowAddForm}
+            newProduct={newProduct}
+            setNewProduct={setNewProduct}
+            handleSaveProduct={handleAddProduct}
+          />
 
           <div className="flex justify-end mb-4">
             <input type="text" placeholder="Search Product..." value={search} onChange={(e) => setSearch(e.target.value)} className="border text-black border-[#d9d9d9] rounded px-3 py-2 text-sm w-full sm:w-64 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />

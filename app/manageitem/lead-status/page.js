@@ -1,7 +1,9 @@
+// @/app/manageitem/lead-status/page.js
 "use client";
 
 import { useState, useEffect } from "react";
 import { FaPen, FaTrash, FaEye } from "react-icons/fa";
+import LeadStatusModal from "./LeadStatusModal";
 
 export default function LeadStatus() {
   const [statuses, setStatuses] = useState([]);
@@ -80,21 +82,14 @@ export default function LeadStatus() {
             <button onClick={() => setShowAddModal(true)} className="bg-blue-900 hover:bg-blue-800 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded font-medium text-sm w-full sm:w-auto transition">Add Lead Status</button>
           </div>
 
-          {showAddModal && (
-            <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-              <div className="bg-white w-full max-w-md rounded-lg shadow-[0_0_20px_rgba(0,0,0,0.3)] p-4 sm:p-6">
-                <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-800 border-b pb-2">Add New Lead Status</h3>
-                <label className="block mb-2 text-sm text-gray-700">Lead Status Name</label>
-                <input type="text" value={newStatusName} onChange={(e) => setNewStatusName(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Enter lead status name" />
-                <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button className="bg-sky-400 hover:bg-sky-500 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddStatus}>
-                    Save</button>
-                  <button className="bg-gray-200 hover:bg-gray-300 text-black px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddModal(false); setNewStatusName(""); }}>
-                    Cancel</button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Modal Component */}
+          <LeadStatusModal
+            showModal={showAddModal}
+            setShowModal={setShowAddModal}
+            newLeadStatus={newStatusName}
+            setNewLeadStatus={setNewStatusName}
+            handleAddLeadStatus={handleAddStatus}
+          />
 
           <div className="flex justify-end mb-4">
             <input type="text" placeholder="Search Lead Status..." value={search} onChange={(e) => setSearch(e.target.value)} className="border text-black border-[#d9d9d9] rounded px-3 py-2 text-sm w-full sm:w-64 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />

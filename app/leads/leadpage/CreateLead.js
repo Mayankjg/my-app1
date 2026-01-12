@@ -1,4 +1,4 @@
-// frontend/app/leads/CreateLead.jsx - COMPLETE FIXED VERSION
+// my-app/app/leads/leadpage/CreateLead.js - FINAL VERSION WITHOUT TAGMODAL
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -8,11 +8,10 @@ import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 
 import ActivityHistory from "./ActivityHistoryPage.js/ActivityHistory";
-import CategoriesModal from "@/app/manage-items/categories/CategoriesModal";
-import LeadSourceModal from "@/app/manage-items/lead-source/LeadSourceModal";
-import LeadStatusModal from "@/app/manage-items/lead-status/LeadStatusModal";
-import ProductsTableModal from "@/app/manage-items/products/ProductsTableModal";
-import TagModal from "@/app/manage-items/tags/TagModal";
+import CategoriesModal from "@/app/manageitem/categories/CategoriesModal";
+import LeadSourceModal from "@/app/manageitem/lead-source/LeadSourceModal";
+import LeadStatusModal from "@/app/manageitem/lead-status/LeadStatusModal";
+import ProductsTableModal from "@/app/manageitem/products/ProductsTableModal";
 
 export default function CreateLead({ onSave, onCancel, existingData }) {
   const API_BASE =
@@ -53,7 +52,7 @@ export default function CreateLead({ onSave, onCancel, existingData }) {
       product: "",
       leadSource: "",
       leadStatus: "",
-      tags: [], // ✅ Store as array of strings
+      tags: [],
       leadStartDate: now.toISOString().split("T")[0],
       leadStartTime: now.toTimeString().slice(0, 5),
       leadRemindDate: now.toISOString().split("T")[0],
@@ -115,67 +114,54 @@ export default function CreateLead({ onSave, onCancel, existingData }) {
   }, [fetchDropdownData]);
 
   /* --------------------------- EDIT MODE - FIXED --------------------------- */
-// Edit Mode Tag Normalization Section
-// Replace this section in your CreateLead.jsx (around line 100-120)
+  useEffect(() => {
+    if (isEditMode && existingData && tags.length > 0) {
+      console.log("📝 Edit Mode - Processing tags:", existingData.tags);
+      console.log("📝 Available tags in dropdown:", tags);
 
-/* --------------------------- EDIT MODE - FIXED --------------------------- */
-useEffect(() => {
-  if (isEditMode && existingData && tags.length > 0) {
-    console.log("📝 Edit Mode - Processing tags:", existingData.tags);
-    console.log("📝 Available tags in dropdown:", tags);
-
-    // ✅ CRITICAL FIX: Handle both ObjectId strings and tag names
-    const normalizedTags = existingData.tags?.map((t) => {
-      // If it's already a plain tag name string (not an ObjectId), use it
-      if (typeof t === 'string') {
-        // Check if it's an ObjectId (24 hex characters)
-        if (t.length === 24 && /^[a-f0-9]{24}$/i.test(t)) {
-          console.log(`⚠️ Found ObjectId: ${t}, trying to find tag name`);
-          // Try to find the tag by _id
-          const foundTag = tags.find(tag => tag._id === t);
+      const normalizedTags = existingData.tags?.map((t) => {
+        if (typeof t === 'string') {
+          if (t.length === 24 && /^[a-f0-9]{24}$/i.test(t)) {
+            console.log(`⚠️ Found ObjectId: ${t}, trying to find tag name`);
+            const foundTag = tags.find(tag => tag._id === t);
+            if (foundTag) {
+              console.log(`✅ Converted ObjectId ${t} to tag name: ${foundTag.name}`);
+              return foundTag.name;
+            }
+            console.warn(`❌ Could not find tag with _id: ${t}`);
+            return null;
+          }
+          console.log(`✅ Using existing tag name: ${t}`);
+          return t;
+        }
+        
+        if (t && typeof t === 'object' && t.name) {
+          console.log(`✅ Extracted tag name from object: ${t.name}`);
+          return t.name;
+        }
+        
+        if (t && typeof t === 'object' && t._id) {
+          const foundTag = tags.find(tag => tag._id === t._id);
           if (foundTag) {
-            console.log(`✅ Converted ObjectId ${t} to tag name: ${foundTag.name}`);
+            console.log(`✅ Found tag by _id: ${foundTag.name}`);
             return foundTag.name;
           }
-          console.warn(`❌ Could not find tag with _id: ${t}`);
-          return null; // Don't use ObjectIds
         }
-        // It's already a tag name, use it
-        console.log(`✅ Using existing tag name: ${t}`);
-        return t;
-      }
-      
-      // If it's an object with name property
-      if (t && typeof t === 'object' && t.name) {
-        console.log(`✅ Extracted tag name from object: ${t.name}`);
-        return t.name;
-      }
-      
-      // If it's an object with _id property
-      if (t && typeof t === 'object' && t._id) {
-        const foundTag = tags.find(tag => tag._id === t._id);
-        if (foundTag) {
-          console.log(`✅ Found tag by _id: ${foundTag.name}`);
-          return foundTag.name;
-        }
-      }
-      
-      console.warn("❌ Could not process tag:", t);
-      return null;
-    }).filter(Boolean) || []; // Remove null values
+        
+        console.warn("❌ Could not process tag:", t);
+        return null;
+      }).filter(Boolean) || [];
 
-    console.log("✅ Final normalized tags:", normalizedTags);
+      console.log("✅ Final normalized tags:", normalizedTags);
 
-    setFormData({
-      ...defaultForm(),
-      ...existingData,
-      tags: normalizedTags, // ✅ Always store as string array of tag NAMES
-      salesperson: existingData.salesperson || "",
-    });
-  }
-}, [isEditMode, existingData, defaultForm, tags]); // ✅ Add 'tags' dependency
-
-// Keep the rest of your CreateLead.jsx code unchanged
+      setFormData({
+        ...defaultForm(),
+        ...existingData,
+        tags: normalizedTags,
+        salesperson: existingData.salesperson || "",
+      });
+    }
+  }, [isEditMode, existingData, defaultForm, tags]);
 
   useEffect(() => {
     if (!isEditMode && isSalesperson && loggedUser?.username) {
@@ -244,11 +230,10 @@ useEffect(() => {
     try {
       let res;
       if (isEditMode) {
-        // Send tags as array of strings
         const updatePayload = {
           ...formData,
           comment: latestComment,
-          tags: formData.tags || [], // ✅ Send tag names as strings
+          tags: formData.tags || [],
         };
 
         console.log("🚀 Sending Update:", updatePayload);
@@ -258,10 +243,9 @@ useEffect(() => {
           updatePayload
         );
       } else {
-        // Send tags as array of strings
         const createPayload = {
           ...formData,
-          tags: formData.tags || [], // ✅ Send tag names as strings
+          tags: formData.tags || [],
         };
         
         console.log("🚀 Creating Lead:", createPayload);
@@ -302,17 +286,11 @@ useEffect(() => {
   const [showProductModal, setShowProductModal] = useState(false);
   const [showLeadSourceModal, setShowLeadSourceModal] = useState(false);
   const [showLeadStatusModal, setShowLeadStatusModal] = useState(false);
-  const [showTagModal, setShowTagModal] = useState(false);
 
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newProduct, setNewProduct] = useState("");
   const [newLeadName, setNewLeadName] = useState("");
   const [newLeadStatus, setNewLeadStatus] = useState("");
-  const [newTag, setNewTag] = useState({
-    name: "",
-    color: "#3B82F6",
-    description: "",
-  });
 
   const addCategory = async () => {
     try {
@@ -378,37 +356,6 @@ useEffect(() => {
     }
   };
 
-  const addTag = async () => {
-    if (!newTag.name.trim()) {
-      toast.error("Tag name is required");
-      return;
-    }
-
-    try {
-      const res = await axios.post(
-        `${API_BASE}/api/manage-items/tags/create-tag`,
-        newTag
-      );
-
-      const createdTag = res.data;
-
-      // ✅ Add to tags array
-      setTags((p) => [...p, createdTag]);
-
-      // ✅ Add tag NAME (string) to formData
-      setFormData((p) => ({
-        ...p,
-        tags: [...(p.tags || []), createdTag.name], // ✅ Store tag name as string
-      }));
-
-      setShowTagModal(false);
-      setNewTag({ name: "", color: "#3B82F6", description: "" });
-      toast.success("Tag added successfully");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to add tag");
-    }
-  };
-
   // Tag Toggle - Store tag names as strings
   const handleTagToggle = (tag) => {
     setFormData((prev) => {
@@ -419,7 +366,7 @@ useEffect(() => {
         ...prev,
         tags: exists
           ? prev.tags.filter((t) => t !== tagName)
-          : [...(prev.tags || []), tagName], // ✅ Store tag name as string
+          : [...(prev.tags || []), tagName],
       };
     });
   };
@@ -444,10 +391,20 @@ useEffect(() => {
   ];
 
   /* ----------------------------------------------------
-      UI — FULL PAGE LAYOUT (RESPONSIVE)
+      UI — FULL PAGE LAYOUT (RESPONSIVE) WITH HIDDEN SCROLLBAR
      ---------------------------------------------------- */
   return (
-    <div className="min-h-screen bg-gray-100 p-3 sm:p-6">
+    <div className="min-h-screen bg-gray-100 p-3 sm:p-6 overflow-y-scroll scrollbar-hide">
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
       <ToastContainer position="top-right" autoClose={2000} />
 
       <form
@@ -661,17 +618,10 @@ useEffect(() => {
               )}
             </div>
 
-            {/* TAGS SECTION */}
+            {/* TAGS SECTION - WITHOUT ADD BUTTON */}
             <div>
-              <div className="flex gap-2 items-center mb-2">
+              <div className="mb-2">
                 <label className="font-medium text-sm">Tags</label>
-                <button
-                  type="button"
-                  onClick={() => setShowTagModal(true)}
-                  className="bg-gray-300 hover:bg-gray-400 w-[30px] h-[30px] flex-shrink-0 rounded text-lg transition-colors"
-                >
-                  +
-                </button>
               </div>
 
               <div className="flex flex-wrap gap-2 max-h-[120px] overflow-y-auto p-2 border rounded-sm bg-gray-50">
@@ -680,7 +630,6 @@ useEffect(() => {
                     const tagName = typeof tag === 'string' ? tag : tag.name;
                     const tagColor = typeof tag === 'object' && tag.color ? tag.color : '#3B82F6';
                     
-                    // Check if tag name is selected
                     const selected = formData.tags?.includes(tagName);
 
                     return (
@@ -1009,14 +958,6 @@ useEffect(() => {
         newLeadStatus={newLeadStatus}
         setNewLeadStatus={setNewLeadStatus}
         handleAddLeadStatus={addLeadStatus}
-      />
-
-      <TagModal
-        showModal={showTagModal}
-        setShowModal={setShowTagModal}
-        newTag={newTag}
-        setNewTag={setNewTag}
-        handleAddTag={addTag}
       />
 
       {/* -------------------- ACTIVITY HISTORY - ONLY IN EDIT MODE -------------------- */}

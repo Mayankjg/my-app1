@@ -1,7 +1,9 @@
+// @/app/manageitem/categories/page.js
 "use client";
 
 import { useState, useEffect } from "react";
 import { FaPen, FaTrash, FaEye } from "react-icons/fa";
+import CategoriesModal from "./CategoriesModal";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -77,21 +79,14 @@ export default function CategoriesPage() {
             </button>
           </div>
 
-          {showAddForm && (
-            <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-              <div className="bg-white w-full max-w-md rounded-lg shadow-[0_0_20px_rgba(0,0,0,0.3)] p-4 sm:p-6">
-                <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-800 border-b pb-2">Add New Category</h3>
-                <label className="block mb-2 text-sm text-gray-700">Category Name</label>
-                <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="w-full border border-gray-300 px-3 py-2 rounded text-black mb-4 text-sm sm:text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Enter category name" />
-                <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button className="bg-sky-400 hover:bg-sky-500 text-white px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={handleAddCategory}>
-                    Save</button>
-                  <button className="bg-gray-200 hover:bg-gray-300 text-black px-4 sm:px-5 py-2 rounded text-sm sm:text-base w-full sm:w-auto" onClick={() => { setShowAddForm(false); setNewCategory(""); }}>
-                    Cancel</button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Modal Component */}
+          <CategoriesModal
+            showModal={showAddForm}
+            setShowModal={setShowAddForm}
+            newCategoryName={newCategory}
+            setNewCategoryName={setNewCategory}
+            handleAddCategory={handleAddCategory}
+          />
 
           <div className="flex justify-end mb-4">
             <input type="text" placeholder="Search Category..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="border text-black border-[#d9d9d9] rounded px-3 py-2 text-sm w-full sm:w-64 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
