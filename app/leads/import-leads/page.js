@@ -116,7 +116,17 @@ export default function CreateLead() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="h-screen bg-gray-100 p-6 overflow-y-scroll scrollbar-hide">
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
       {/* Toast Container */}
       <ToastContainer position="top-right" autoClose={2000} />
 

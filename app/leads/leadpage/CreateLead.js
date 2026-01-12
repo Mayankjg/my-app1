@@ -1,7 +1,7 @@
 // frontend/app/leads/CreateLead.jsx - COMPLETE FIXED VERSION
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
