@@ -10,7 +10,7 @@ export default function ManageItemPage() {
     <div className="min-h-screen bg-[#f9f9f9]">
       <style>{`*{scrollbar-width:none!important;-ms-overflow-style:none!important}*::-webkit-scrollbar{display:none!important}`}</style>
       
-      <LeadSourcePage />
+      <CategoriesPage />
     </div>
   );
 }
