@@ -3,6 +3,7 @@
 import { useState } from "react";
 import CommentsSection from "./components/CommentsSection";
 import EmailSection from "./components/EmailSection";
+import { setFlagsFromString } from "v8";
 
 export default function ActivityHistoryPage() {
   const [activeTab, setActiveTab] = useState("comments");
